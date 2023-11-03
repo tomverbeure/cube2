@@ -4,9 +4,9 @@ Cube2
 
 # macOS
 
+```
 brew install openfpgaloader
-
-/opt/homebrew/bin/openFPGALoader
+```
 
 ```
 tomverbeure@Toms-Air 5a-75b % /opt/homebrew/bin/openFPGALoader --scan-usb
@@ -31,6 +31,12 @@ index 0:
 	model  LFE5UM-25
 	irlength 8
 ```
+
+# SpinalHDL
+
+
+See https://spinalhdl.github.io/SpinalDoc-RTD/master/SpinalHDL/Getting%20Started/Install%20and%20setup.html#mac-os-x-installation
+
 
 
 
