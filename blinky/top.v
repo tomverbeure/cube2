@@ -6,6 +6,14 @@ module top (
     input       button,
     output      led
 );
+    wire clk;
+
+    pll50 u_pll(
+        .clk25(     osc_clk25),
+        .clk50(     clk),
+        .locked()
+    );
+
 
     // External oscillator runs at 25MHz
 
@@ -13,7 +21,7 @@ module top (
 
     reg [24:0]  cntr = 0;
 
-    always @(posedge osc_clk25) begin
+    always @(posedge clk) begin
         cntr <= cntr + 1;
     end
 
