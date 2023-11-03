@@ -31,3 +31,26 @@ index 0:
 	model  LFE5UM-25
 	irlength 8
 ```
+
+
+
+# Build prjtrellis
+
+```
+git clone --recursive git@github.com:YosysHQ/prjtrellis.git
+cd prjtrellis/libtrellis
+cmake -DCMAKE_INSTALL_PREFIX=/opt/prjtrellis .
+make -j$(nproc)
+sudo make install
+```
+
+# Build nextpnr
+
+```
+git clone git@github.com:YosysHQ/nextpnr.git
+cd nextpnr
+mkdir build
+cd build
+cmake .. -DARCH=ecp5 -DTRELLIS_INSTALL_PREFIX=/opt/prjtrellis -DCMAKE_INSTALL_PREFIX=/opt/nextpnr
+make -j$(nproc)
+```
