@@ -1,4 +1,4 @@
-package projectname
+package cube2
 
 import spinal.core._
 import spinal.core.sim._

@@ -1,10 +1,10 @@
-package projectname
+package cube2
 
 import spinal.core._
 import spinal.core.sim._
 
-object MyTopLevelSim extends App {
-  Config.sim.compile(MyTopLevel()).doSim { dut =>
+object Cube2Sim extends App {
+  Config.sim.compile(Cube2()).doSim { dut =>
     // Fork a process to generate the reset and the clock on the dut
     dut.clockDomain.forkStimulus(period = 10)
 

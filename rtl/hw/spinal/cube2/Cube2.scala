@@ -1,9 +1,9 @@
-package projectname
+package cube2
 
 import spinal.core._
 
 // Hardware definition
-case class MyTopLevel() extends Component {
+case class Cube2() extends Component {
   val io = new Bundle {
     val cond0 = in  Bool()
     val cond1 = in  Bool()
@@ -21,10 +21,10 @@ case class MyTopLevel() extends Component {
   io.flag := (counter === 0) | io.cond1
 }
 
-object MyTopLevelVerilog extends App {
-  Config.spinal.generateVerilog(MyTopLevel())
+object Cube2Verilog extends App {
+  Config.spinal.generateVerilog(Cube2())
 }
 
-object MyTopLevelVhdl extends App {
-  Config.spinal.generateVhdl(MyTopLevel())
+object Cube2Vhdl extends App {
+  Config.spinal.generateVhdl(Cube2())
 }
