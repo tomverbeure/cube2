@@ -1,3 +1,4 @@
 *.bit
 *.config
 *.json
+*.svf
