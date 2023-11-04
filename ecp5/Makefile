@@ -23,5 +23,8 @@ pll50.v:
 upload: top.bit
 	openfpgaloader  --vid 0x0403 --pid 0x6014 top.bit
 
+flash: top.bit
+	openfpgaloader  --vid 0x0403 --pid 0x6014 --unprotect-flash --write-flash top.bit
+
 clean:
 	rm -f *.json *.config *.svf *.bit *.vcd pll50.v
