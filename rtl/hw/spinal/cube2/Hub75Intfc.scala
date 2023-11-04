@@ -121,18 +121,18 @@ case class Hub75Config(
     println(s"pixels_per_panel: $pixels_per_panel")
 }
 
-case class Hub75Intfc(nr_channels: Int, nr_row_bits : Int) extends Bundle {
+case class Hub75Intfc(conf: Hub75Config) extends Bundle {
     val clk         = Bool
     val lat         = Bool
     val oe_         = Bool
-    val row         = UInt(nr_row_bits bits)
+    val row         = UInt(conf.nr_row_bits bits)
 
-    val r0          = Bits(nr_channels bit)
-    val g0          = Bits(nr_channels bit)
-    val b0          = Bits(nr_channels bit)
+    val r0          = Bits(conf.nr_channels bit)
+    val g0          = Bits(conf.nr_channels bit)
+    val b0          = Bits(conf.nr_channels bit)
 
-    val r1          = Bits(nr_channels bit)
-    val g1          = Bits(nr_channels bit)
-    val b1          = Bits(nr_channels bit)
+    val r1          = Bits(conf.nr_channels bit)
+    val g1          = Bits(conf.nr_channels bit)
+    val b1          = Bits(conf.nr_channels bit)
 }
 

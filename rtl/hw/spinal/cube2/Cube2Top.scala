@@ -47,8 +47,6 @@ class Cube2Top(isSim : Boolean = true) extends Component {
         val osc_clk25       = in(Bool)
         val phy_reset_n     = out(Bool)
 
-        //val hub75       = out(Hub75Intfc(hub75Config.nr_row_bits))
-
         val hub75_clk       = out(Bool)
         val hub75_lat       = out(Bool)
         val hub75_oe_       = out(Bool)
@@ -216,7 +214,7 @@ class Cube2Top(isSim : Boolean = true) extends Component {
         // HUB75 Phy
         //============================================================
 
-        val hub75 = Hub75Intfc(hub75Config.nr_channels, hub75Config.nr_row_bits)
+        val hub75 = Hub75Intfc(hub75Config)
 
         val u_hub75phy = new Hub75Phy(main_clk_speed, hub75Config)
         u_hub75phy.io.rgb   <> u_hub75_streamer_light.io.rgb
