@@ -4,10 +4,11 @@ import spinal.core._
 import spinal.core.sim._
 
 object Cube2Sim extends App {
-  Config.sim.compile(Cube2()).doSim { dut =>
+  Config.sim.compile(new Cube2Top(isSim = true)).doSim { dut =>
     // Fork a process to generate the reset and the clock on the dut
     dut.clockDomain.forkStimulus(period = 10)
 
+/*
     var modelState = 0
     for (idx <- 0 to 99) {
       // Drive the dut inputs with random values
@@ -27,5 +28,6 @@ object Cube2Sim extends App {
         modelState = (modelState + 1) & 0xff
       }
     }
+*/
   }
 }
