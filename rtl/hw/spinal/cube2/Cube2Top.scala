@@ -43,14 +43,80 @@ class Cube2Top(isSim : Boolean = true) extends Component {
 //    val ledMemConfig = LedMemConfig(memWords = 2 * 6 * 32 * 32, bpc = 6)
 
     val io = new Bundle {
-        val osc_clk25   = in(Bool)
+        val osc_clk25       = in(Bool)
+        val phy_reset_n     = out(Bool)
 
-        val hub75       = out(Hub75Intfc(hub75Config.nr_row_bits))
+        //val hub75       = out(Hub75Intfc(hub75Config.nr_row_bits))
 
-        val led         = out(Bool)
+        val hub75_clk       = out(Bool)
+        val hub75_lat       = out(Bool)
+        val hub75_oe_       = out(Bool)
+
+        val hub75_row       = out(UInt(hub75Config.nr_row_bits bits))
+
+        val hub75_j1_r0     = out(Bool)
+        val hub75_j1_g0     = out(Bool)
+        val hub75_j1_b0     = out(Bool)
+        val hub75_j1_r1     = out(Bool)
+        val hub75_j1_g1     = out(Bool)
+        val hub75_j1_b1     = out(Bool)
+
+        val hub75_j2_r0     = out(Bool)
+        val hub75_j2_g0     = out(Bool)
+        val hub75_j2_b0     = out(Bool)
+        val hub75_j2_r1     = out(Bool)
+        val hub75_j2_g1     = out(Bool)
+        val hub75_j2_b1     = out(Bool)
+
+        val hub75_j3_r0     = out(Bool)
+        val hub75_j3_g0     = out(Bool)
+        val hub75_j3_b0     = out(Bool)
+        val hub75_j3_r1     = out(Bool)
+        val hub75_j3_g1     = out(Bool)
+        val hub75_j3_b1     = out(Bool)
+
+        val hub75_j4_r0     = out(Bool)
+        val hub75_j4_g0     = out(Bool)
+        val hub75_j4_b0     = out(Bool)
+        val hub75_j4_r1     = out(Bool)
+        val hub75_j4_g1     = out(Bool)
+        val hub75_j4_b1     = out(Bool)
+
+        val hub75_j5_r0     = out(Bool)
+        val hub75_j5_g0     = out(Bool)
+        val hub75_j5_b0     = out(Bool)
+        val hub75_j5_r1     = out(Bool)
+        val hub75_j5_g1     = out(Bool)
+        val hub75_j5_b1     = out(Bool)
+
+        val hub75_j6_r0     = out(Bool)
+        val hub75_j6_g0     = out(Bool)
+        val hub75_j6_b0     = out(Bool)
+        val hub75_j6_r1     = out(Bool)
+        val hub75_j6_g1     = out(Bool)
+        val hub75_j6_b1     = out(Bool)
+
+        val hub75_j7_r0     = out(Bool)
+        val hub75_j7_g0     = out(Bool)
+        val hub75_j7_b0     = out(Bool)
+        val hub75_j7_r1     = out(Bool)
+        val hub75_j7_g1     = out(Bool)
+        val hub75_j7_b1     = out(Bool)
+
+        val hub75_j8_r0     = out(Bool)
+        val hub75_j8_g0     = out(Bool)
+        val hub75_j8_b0     = out(Bool)
+        val hub75_j8_r1     = out(Bool)
+        val hub75_j8_g1     = out(Bool)
+        val hub75_j8_b1     = out(Bool)
+
+        val led             = out(Bool)
+        val button          = in(Bool)
     }
 
     noIoPrefix()
+
+    io.phy_reset_n  := True
 
     val main_clk = Bool
     val main_clk_speed = if (isSim) 2 MHz else 50 MHz
@@ -80,9 +146,10 @@ class Cube2Top(isSim : Boolean = true) extends Component {
     val main_reset_gen = new ClockingArea(mainClkRawDomain) {
         val reset_unbuffered_ = True
 
-        val reset_cntr = Reg(UInt(20 bits)) init(0)
+        val reset_cntr = Reg(UInt(16 bits)) init(0)
         when(reset_cntr =/= U(reset_cntr.range -> true)){
             reset_cntr := reset_cntr + 1
+            // Keep reset low when counter is still running
             reset_unbuffered_ := False
         }
 
@@ -93,7 +160,7 @@ class Cube2Top(isSim : Boolean = true) extends Component {
         clock = main_clk,
         reset = main_reset_,
         config = ClockDomainConfig(
-            resetKind = SYNC,
+            resetKind = ASYNC,
             resetActiveLevel = LOW
         )
     )
@@ -107,7 +174,8 @@ class Cube2Top(isSim : Boolean = true) extends Component {
         val led_counter = Reg(UInt(24 bits))
         led_counter := led_counter + 1
 
-        io.led  := led_counter.msb
+        io.led  := led_counter.msb ^ io.button
+        //io.led  := io.button
     }
 
     val core = new ClockingArea(mainClkDomain) {
@@ -147,10 +215,73 @@ class Cube2Top(isSim : Boolean = true) extends Component {
         // HUB75 Phy
         //============================================================
 
+        val hub75 = Hub75Intfc(hub75Config.nr_row_bits)
+
         val u_hub75phy = new Hub75Phy(main_clk_speed, hub75Config)
         u_hub75phy.io.rgb   <> u_hub75_streamer_light.io.rgb
-        u_hub75phy.io.hub75 <> io.hub75
+        u_hub75phy.io.hub75 <> hub75
 
+        io.hub75_clk       := hub75.clk
+        io.hub75_lat       := hub75.lat
+        io.hub75_oe_       := hub75.oe_
+
+        io.hub75_row       := hub75.row
+
+        io.hub75_j1_r0     := hub75.r0
+        io.hub75_j1_g0     := hub75.g0
+        io.hub75_j1_b0     := hub75.b0
+        io.hub75_j1_r1     := hub75.r1
+        io.hub75_j1_g1     := hub75.g1
+        io.hub75_j1_b1     := hub75.b1
+
+        io.hub75_j2_r0     := hub75.r0
+        io.hub75_j2_g0     := hub75.g0
+        io.hub75_j2_b0     := hub75.b0
+        io.hub75_j2_r1     := hub75.r1
+        io.hub75_j2_g1     := hub75.g1
+        io.hub75_j2_b1     := hub75.b1
+
+        io.hub75_j3_r0     := hub75.r0
+        io.hub75_j3_g0     := hub75.g0
+        io.hub75_j3_b0     := hub75.b0
+        io.hub75_j3_r1     := hub75.r1
+        io.hub75_j3_g1     := hub75.g1
+        io.hub75_j3_b1     := hub75.b1
+
+        io.hub75_j4_r0     := hub75.r0
+        io.hub75_j4_g0     := hub75.g0
+        io.hub75_j4_b0     := hub75.b0
+        io.hub75_j4_r1     := hub75.r1
+        io.hub75_j4_g1     := hub75.g1
+        io.hub75_j4_b1     := hub75.b1
+
+        io.hub75_j5_r0     := hub75.r0
+        io.hub75_j5_g0     := hub75.g0
+        io.hub75_j5_b0     := hub75.b0
+        io.hub75_j5_r1     := hub75.r1
+        io.hub75_j5_g1     := hub75.g1
+        io.hub75_j5_b1     := hub75.b1
+
+        io.hub75_j6_r0     := hub75.r0
+        io.hub75_j6_g0     := hub75.g0
+        io.hub75_j6_b0     := hub75.b0
+        io.hub75_j6_r1     := hub75.r1
+        io.hub75_j6_g1     := hub75.g1
+        io.hub75_j6_b1     := hub75.b1
+
+        io.hub75_j7_r0     := hub75.r0
+        io.hub75_j7_g0     := hub75.g0
+        io.hub75_j7_b0     := hub75.b0
+        io.hub75_j7_r1     := hub75.r1
+        io.hub75_j7_g1     := hub75.g1
+        io.hub75_j7_b1     := hub75.b1
+
+        io.hub75_j8_r0     := hub75.r0
+        io.hub75_j8_g0     := hub75.g0
+        io.hub75_j8_b0     := hub75.b0
+        io.hub75_j8_r1     := hub75.r1
+        io.hub75_j8_g1     := hub75.g1
+        io.hub75_j8_b1     := hub75.b1
     }
 
 

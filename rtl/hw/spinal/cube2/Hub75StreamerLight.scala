@@ -162,13 +162,14 @@ class Hub75StreamerLight(conf: Hub75Config) extends Component {
 //    val led_mem_r = io.led_mem_rd_data((ledMemConf.bpc * 1 -1) downto ledMemConf.bpc * 0) ## U(0, 8-ledMemConf.bpc bits) >> (8-conf.bpc)
 //    val led_mem_g = io.led_mem_rd_data((ledMemConf.bpc * 2 -1) downto ledMemConf.bpc * 1) ## U(0, 8-ledMemConf.bpc bits) >> (8-conf.bpc)
 //    val led_mem_b = io.led_mem_rd_data((ledMemConf.bpc * 3 -1) downto ledMemConf.bpc * 2) ## U(0, 8-ledMemConf.bpc bits) >> (8-conf.bpc)
-    val led_mem_r = B( 10, conf.bpc bits)
-    val led_mem_g = B(  0, conf.bpc bits)
-    val led_mem_b = B(  0, conf.bpc bits)
+    val led_mem_r = B( 15, conf.bpc bits)
+    val led_mem_g = B( 15, conf.bpc bits)
+    val led_mem_b = B( 15, conf.bpc bits)
 
     val gammaTable = for(index <-  0 to (1<<conf.bpc)-1) yield {
         val ratio = index.toFloat / ((1<<conf.bpc)-1).toFloat
-        val gammaValue = Math.pow(ratio, 2.2) * ((1<<conf.bpc)-1)
+        //val gammaValue = Math.pow(ratio, 2.2) * ((1<<conf.bpc)-1)
+        val gammaValue = Math.pow(ratio, 1) * ((1<<conf.bpc)-1)
         U(gammaValue.toInt, conf.bpc bits)
     }
 

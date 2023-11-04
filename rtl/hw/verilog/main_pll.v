@@ -30,9 +30,9 @@ EHXPLLL #(
     ) pll_i (
         .RST(1'b0),
         .STDBY(1'b0),
-        .CLKI(clk25),
-        .CLKOP(clk50),
-        .CLKFB(clk50),
+        .CLKI(clk_in),
+        .CLKOP(clk_out),
+        .CLKFB(clk_out),
         .CLKINTFB(),
         .PHASESEL0(1'b0),
         .PHASESEL1(1'b0),
