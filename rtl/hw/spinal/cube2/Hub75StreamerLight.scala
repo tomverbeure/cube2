@@ -15,7 +15,7 @@ object Hub75StreamerLight {
 class Hub75StreamerLight(conf: Hub75Config) extends Component {
 
     val io = new Bundle {
-        val rgb               = master(Stream(Bits(13 bits)))
+        val rgb               = master(Stream(Hub75PhyFeed(conf)))
 
         val panel_infos       = in(Vec(PanelInfoHW(conf), conf.panels.size))
 
@@ -42,8 +42,8 @@ class Hub75StreamerLight(conf: Hub75Config) extends Component {
     }
 
     val output_fifo_depth = 2 * conf.panel_cols * conf.panels.size/2
-    val output_fifo_wr = Stream(Bits(io.rgb.payload.getWidth bits))
-    val output_fifo_rd = Stream(Bits(io.rgb.payload.getWidth bits))
+    val output_fifo_wr    = Stream(io.rgb.payload)
+    val output_fifo_rd    = Stream(io.rgb.payload)
     val output_fifo_availability = UInt(log2Up(output_fifo_depth+1) bits)
        
     val col_cntr        = Counter(conf.panel_cols)
@@ -205,32 +205,28 @@ class Hub75StreamerLight(conf: Hub75Config) extends Component {
     val fifo_wr_p2      = RegNext(led_mem_rd_p1 && led_mem_phase_p1 === 3) init(False)
     val sof_p2          = RegNext(sof_p1) init(False)
 
-    output_fifo_wr.valid  := fifo_wr_p2
+    output_fifo_wr.valid        := fifo_wr_p2
+    output_fifo_wr.payload.sof  := sof_p2
 
-    output_fifo_wr.payload( 0) := r_vec(0)
-    output_fifo_wr.payload( 1) := g_vec(0)
-    output_fifo_wr.payload( 2) := b_vec(0)
-    output_fifo_wr.payload( 3) := r_vec(1)
-    output_fifo_wr.payload( 4) := g_vec(1)
-    output_fifo_wr.payload( 5) := b_vec(1)
-    output_fifo_wr.payload( 6) := r_vec(2)
-    output_fifo_wr.payload( 7) := g_vec(2)
-    output_fifo_wr.payload( 8) := b_vec(2)
-    output_fifo_wr.payload( 9) := r_vec(3)
-    output_fifo_wr.payload(10) := g_vec(3)
-    output_fifo_wr.payload(11) := b_vec(3)
-    output_fifo_wr.payload(12) := sof_p2
+    for(i <- 0 until conf.nr_channels){
+        output_fifo_wr.payload.r0(i) := r_vec(0)
+        output_fifo_wr.payload.g0(i) := g_vec(0)
+        output_fifo_wr.payload.b0(i) := b_vec(0)
 
+        output_fifo_wr.payload.r1(i) := r_vec(1)
+        output_fifo_wr.payload.g1(i) := g_vec(1)
+        output_fifo_wr.payload.b1(i) := b_vec(1)
+    }
 
     val u_output_fifo = StreamFifo(
-                            dataType  = Bits(13 bits),
+                            dataType  = Hub75PhyFeed(conf),
                             depth     = output_fifo_depth
                         )
     u_output_fifo.io.push         << output_fifo_wr
     u_output_fifo.io.pop          >> output_fifo_rd
     u_output_fifo.io.availability <> output_fifo_availability
 
-    io.rgb.valid    := output_fifo_rd.valid && (!output_fifo_rd.payload(12) || output_fifo_availability <= 2)
+    io.rgb.valid    := output_fifo_rd.valid && (!output_fifo_rd.payload.sof || output_fifo_availability <= 2)
     io.rgb.payload  := output_fifo_rd.payload
     output_fifo_rd.ready  := io.rgb.ready
 

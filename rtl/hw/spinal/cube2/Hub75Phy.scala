@@ -7,6 +7,17 @@ import spinal.lib.io._
 import spinal.lib.bus.misc._
 import spinal.lib.bus.simple._
 
+case class Hub75PhyFeed(conf: Hub75Config) extends Bundle {
+    val sof         = Bool
+
+    val r0          = Bits(conf.nr_channels bits)
+    val g0          = Bits(conf.nr_channels bits)
+    val b0          = Bits(conf.nr_channels bits)
+
+    val r1          = Bits(conf.nr_channels bits)
+    val g1          = Bits(conf.nr_channels bits)
+    val b1          = Bits(conf.nr_channels bits)
+}
 
 // Input: 
 //      rgb     : a valid/ready receiving interface that carries 4 24-bit colors.
@@ -28,7 +39,7 @@ class Hub75Phy(oscSpeed: HertzNumber, conf: Hub75Config) extends Component {
     println(s"Actual sclk:  $sclk_actual")
 
     val io = new Bundle {
-        val rgb             = slave(Stream(Bits(13 bits)))
+        val rgb             = slave(Stream(Hub75PhyFeed(conf)))
         val hub75           = out(Hub75Intfc(conf))
     }
 
@@ -65,7 +76,7 @@ class Hub75Phy(oscSpeed: HertzNumber, conf: Hub75Config) extends Component {
         when(!io.rgb.valid){
             force_clear_no_data := True
         }
-        .elsewhen(io.rgb.valid && ((io.rgb.payload(12) && !need_sof) || (!io.rgb.payload(12) && need_sof) )){
+        .elsewhen(io.rgb.valid && ((io.rgb.payload.sof && !need_sof) || (!io.rgb.payload.sof && need_sof) )){
             force_clear_desync := True
         }
         .otherwise{
@@ -86,12 +97,12 @@ class Hub75Phy(oscSpeed: HertzNumber, conf: Hub75Config) extends Component {
     io.hub75.lat      := RegNext(bin_dec_phase === 0 && col_cntr === (conf.panels.size/2 * conf.panel_cols)+1) init(False)
 
     for(i <- 0 until conf.nr_channels){
-        io.hub75.r0(i)       := RegNextWhen(io.rgb.payload( 0), io.rgb.valid && io.rgb.ready)
-        io.hub75.g0(i)       := RegNextWhen(io.rgb.payload( 1), io.rgb.valid && io.rgb.ready)
-        io.hub75.b0(i)       := RegNextWhen(io.rgb.payload( 2), io.rgb.valid && io.rgb.ready)
-        io.hub75.r1(i)       := RegNextWhen(io.rgb.payload( 3), io.rgb.valid && io.rgb.ready)
-        io.hub75.g1(i)       := RegNextWhen(io.rgb.payload( 4), io.rgb.valid && io.rgb.ready)
-        io.hub75.b1(i)       := RegNextWhen(io.rgb.payload( 5), io.rgb.valid && io.rgb.ready)
+        io.hub75.r0(i)       := RegNextWhen(io.rgb.payload.r0(i), io.rgb.valid && io.rgb.ready)
+        io.hub75.g0(i)       := RegNextWhen(io.rgb.payload.g0(i), io.rgb.valid && io.rgb.ready)
+        io.hub75.b0(i)       := RegNextWhen(io.rgb.payload.b0(i), io.rgb.valid && io.rgb.ready)
+        io.hub75.r1(i)       := RegNextWhen(io.rgb.payload.r1(i), io.rgb.valid && io.rgb.ready)
+        io.hub75.g1(i)       := RegNextWhen(io.rgb.payload.g1(i), io.rgb.valid && io.rgb.ready)
+        io.hub75.b1(i)       := RegNextWhen(io.rgb.payload.b1(i), io.rgb.valid && io.rgb.ready)
     }
 
     io.hub75.row      := RegNextWhen(row_cntr.value, col_cntr.willOverflow) init(0)
