@@ -34,6 +34,7 @@ class Cube2Top(isSim : Boolean = true) extends Component {
     panels += PanelInfo(-1, 1, 1,     0,   true,    180,    1,-1, 0)
 
     val hub75Config = Hub75Config(
+                        nr_channels   = 8,
                         panel_rows    = 64,
                         panel_cols    = 64,
                         bpc           = if (isSim) 4 else 6,
@@ -215,7 +216,7 @@ class Cube2Top(isSim : Boolean = true) extends Component {
         // HUB75 Phy
         //============================================================
 
-        val hub75 = Hub75Intfc(hub75Config.nr_row_bits)
+        val hub75 = Hub75Intfc(hub75Config.nr_channels, hub75Config.nr_row_bits)
 
         val u_hub75phy = new Hub75Phy(main_clk_speed, hub75Config)
         u_hub75phy.io.rgb   <> u_hub75_streamer_light.io.rgb
@@ -227,61 +228,61 @@ class Cube2Top(isSim : Boolean = true) extends Component {
 
         io.hub75_row       := hub75.row
 
-        io.hub75_j1_r0     := hub75.r0
-        io.hub75_j1_g0     := hub75.g0
-        io.hub75_j1_b0     := hub75.b0
-        io.hub75_j1_r1     := hub75.r1
-        io.hub75_j1_g1     := hub75.g1
-        io.hub75_j1_b1     := hub75.b1
+        io.hub75_j1_r0     := hub75.r0(0)
+        io.hub75_j1_g0     := hub75.g0(0)
+        io.hub75_j1_b0     := hub75.b0(0)
+        io.hub75_j1_r1     := hub75.r1(0)
+        io.hub75_j1_g1     := hub75.g1(0)
+        io.hub75_j1_b1     := hub75.b1(0)
 
-        io.hub75_j2_r0     := hub75.r0
-        io.hub75_j2_g0     := hub75.g0
-        io.hub75_j2_b0     := hub75.b0
-        io.hub75_j2_r1     := hub75.r1
-        io.hub75_j2_g1     := hub75.g1
-        io.hub75_j2_b1     := hub75.b1
+        io.hub75_j2_r0     := hub75.r0(1)
+        io.hub75_j2_g0     := hub75.g0(1)
+        io.hub75_j2_b0     := hub75.b0(1)
+        io.hub75_j2_r1     := hub75.r1(1)
+        io.hub75_j2_g1     := hub75.g1(1)
+        io.hub75_j2_b1     := hub75.b1(1)
 
-        io.hub75_j3_r0     := hub75.r0
-        io.hub75_j3_g0     := hub75.g0
-        io.hub75_j3_b0     := hub75.b0
-        io.hub75_j3_r1     := hub75.r1
-        io.hub75_j3_g1     := hub75.g1
-        io.hub75_j3_b1     := hub75.b1
+        io.hub75_j3_r0     := hub75.r0(2)
+        io.hub75_j3_g0     := hub75.g0(2)
+        io.hub75_j3_b0     := hub75.b0(2)
+        io.hub75_j3_r1     := hub75.r1(2)
+        io.hub75_j3_g1     := hub75.g1(2)
+        io.hub75_j3_b1     := hub75.b1(2)
 
-        io.hub75_j4_r0     := hub75.r0
-        io.hub75_j4_g0     := hub75.g0
-        io.hub75_j4_b0     := hub75.b0
-        io.hub75_j4_r1     := hub75.r1
-        io.hub75_j4_g1     := hub75.g1
-        io.hub75_j4_b1     := hub75.b1
+        io.hub75_j4_r0     := hub75.r0(3)
+        io.hub75_j4_g0     := hub75.g0(3)
+        io.hub75_j4_b0     := hub75.b0(3)
+        io.hub75_j4_r1     := hub75.r1(3)
+        io.hub75_j4_g1     := hub75.g1(3)
+        io.hub75_j4_b1     := hub75.b1(3)
 
-        io.hub75_j5_r0     := hub75.r0
-        io.hub75_j5_g0     := hub75.g0
-        io.hub75_j5_b0     := hub75.b0
-        io.hub75_j5_r1     := hub75.r1
-        io.hub75_j5_g1     := hub75.g1
-        io.hub75_j5_b1     := hub75.b1
+        io.hub75_j5_r0     := hub75.r0(4)
+        io.hub75_j5_g0     := hub75.g0(4)
+        io.hub75_j5_b0     := hub75.b0(4)
+        io.hub75_j5_r1     := hub75.r1(4)
+        io.hub75_j5_g1     := hub75.g1(4)
+        io.hub75_j5_b1     := hub75.b1(4)
 
-        io.hub75_j6_r0     := hub75.r0
-        io.hub75_j6_g0     := hub75.g0
-        io.hub75_j6_b0     := hub75.b0
-        io.hub75_j6_r1     := hub75.r1
-        io.hub75_j6_g1     := hub75.g1
-        io.hub75_j6_b1     := hub75.b1
+        io.hub75_j6_r0     := hub75.r0(5)
+        io.hub75_j6_g0     := hub75.g0(5)
+        io.hub75_j6_b0     := hub75.b0(5)
+        io.hub75_j6_r1     := hub75.r1(5)
+        io.hub75_j6_g1     := hub75.g1(5)
+        io.hub75_j6_b1     := hub75.b1(5)
 
-        io.hub75_j7_r0     := hub75.r0
-        io.hub75_j7_g0     := hub75.g0
-        io.hub75_j7_b0     := hub75.b0
-        io.hub75_j7_r1     := hub75.r1
-        io.hub75_j7_g1     := hub75.g1
-        io.hub75_j7_b1     := hub75.b1
+        io.hub75_j7_r0     := hub75.r0(6)
+        io.hub75_j7_g0     := hub75.g0(6)
+        io.hub75_j7_b0     := hub75.b0(6)
+        io.hub75_j7_r1     := hub75.r1(6)
+        io.hub75_j7_g1     := hub75.g1(6)
+        io.hub75_j7_b1     := hub75.b1(6)
 
-        io.hub75_j8_r0     := hub75.r0
-        io.hub75_j8_g0     := hub75.g0
-        io.hub75_j8_b0     := hub75.b0
-        io.hub75_j8_r1     := hub75.r1
-        io.hub75_j8_g1     := hub75.g1
-        io.hub75_j8_b1     := hub75.b1
+        io.hub75_j8_r0     := hub75.r0(7)
+        io.hub75_j8_g0     := hub75.g0(7)
+        io.hub75_j8_b0     := hub75.b0(7)
+        io.hub75_j8_r1     := hub75.r1(7)
+        io.hub75_j8_g1     := hub75.g1(7)
+        io.hub75_j8_b1     := hub75.b1(7)
     }
 
 
