@@ -323,17 +323,27 @@ uint32_t dot_color = 0x92b1f8;
 
 void led_mem_wr(int buffer_nr, int side, int x, int y, unsigned char r, unsigned char g, unsigned char b)
 {
-        MEM_WR(LED_MEM, buffer_nr * 6 * 32 * 32 + side * 32 * 32 + y*32 + x, r | (g<<8) | (b<<16));
+        MEM_WR(LED_MEM, buffer_nr * 6 * HUB75S_SIDE_HEIGHT * HUB75S_SIDE_WIDTH + side * HUB75S_SIDE_HEIGHT * HUB75S_SIDE_WIDTH + y * HUB75S_SIDE_WIDTH + x, r | (g<<8) | (b<<16));
 }
 
 void led_mem_fill(int buffer_nr, unsigned char r, unsigned char g, unsigned char b)
 {
-    for(int side = 0; side < 6; ++side){
-	    for(int row=0;row<64;++row){
-	        for(int col=0;col<64;++col){
-	            led_mem_wr(buffer_nr, side, col, row, r, g, b);
-	        }
-	    }
+    for(int row=0;row<64;++row){
+        for(int col=0;col<64;++col){
+            MEM_WR(LED_MEM,           row*64 + col, 0);
+            MEM_WR(LED_MEM, 1*64*64 + row*64 + col, 0);
+            MEM_WR(LED_MEM, 2*64*64 + row*64 + col, 0);
+            MEM_WR(LED_MEM, 3*64*64 + row*64 + col, 0);
+            MEM_WR(LED_MEM, 4*64*64 + row*64 + col, 0);
+            MEM_WR(LED_MEM, 5*64*64 + row*64 + col, 0);
+
+            //led_mem_wr(buffer_nr, 0, col, row, r, g, b);
+            //led_mem_wr(buffer_nr, 1, col, row, r, g, b);
+            //led_mem_wr(buffer_nr, 2, col, row, r, g, b);
+            //led_mem_wr(buffer_nr, 3, col, row, r, g, b);
+            //led_mem_wr(buffer_nr, 4, col, row, r, g, b);
+            //led_mem_wr(buffer_nr, 5, col, row, r, g, b);
+        }
     }
 }
 
@@ -496,31 +506,49 @@ void render_bitmap_2bpp(uint32_t *bitmap, uint32_t *colors, int size_x, int size
 
 void play_basic(int total_nr_frames)
 {
-    //led_mem_fill(0, 31, 31, 0);
-    //led_mem_fill(1, 31, 31, 0);
+    led_mem_fill(0, 0, 0, 0);
+    //led_mem_fill(1, 0, 0, 0);
 
     uint32_t scratch_buf = 0;
     uint32_t start_frame = REG_RD(HUB75S_FRAME_CNTR);
 
+    //hub75s_config();
+
+    int intensity = 32;
+
+    hub75s_start();
+
+    while(1){
+    for(int x=0;x<64;++x){
     for(int p=0; p<6; ++p){
         uint32_t color = 0;
         switch(p){
-            case 0: color   = (0  << 16) | (0  << 8) | 15; break;
-            case 1: color   = (0  << 16) | (15 << 8) |  0; break;
-            case 2: color   = (15 << 16) | (0  << 8) |  0; break;
+            case 0: color   = (0  << 16) | (0  << 8) | intensity; break;
+            case 1: color   = (0  << 16) | (intensity << 8) |  0; break;
+            case 2: color   = (intensity << 16) | (0  << 8) |  0; break;
 
-            case 3: color   = (0  << 16) | (15 << 8) | 15; break;
-            case 4: color   = (15 << 16) | (15 << 8) |  0; break;
-            case 5: color   = (15 << 16) | (0  << 8) | 15; break;
+            case 3: color   = (0  << 16) | (intensity << 8) | intensity; break;
+            case 4: color   = (intensity << 16) | (intensity << 8) |  0; break;
+            case 5: color   = (intensity << 16) | (0  << 8) | intensity; break;
         }
 
         for(int y=0;y<HUB75S_SIDE_HEIGHT/2;++y){
-            for(int x=0;x<HUB75S_SIDE_WIDTH/2;++x){
-                uint32_t phys_addr = p*64*64 + y*64 + x;
+            //for(int x=0;x<HUB75S_SIDE_WIDTH/2;++x){
+            {
+                uint32_t phys_addr = p * HUB75S_SIDE_HEIGHT * HUB75S_SIDE_WIDTH + y * HUB75S_SIDE_WIDTH + x;
                 MEM_WR(LED_MEM, phys_addr, color);
             }
         }
+
+        for(volatile int i=0;i<10000;++i)
+            ;
     }
+    }
+    }
+
+
+    REG_WR_FIELD(HUB75S_CONFIG, BUFFER_NR, 0);
+    while(1);
 
     while(REG_RD(HUB75S_FRAME_CNTR) < start_frame + total_nr_frames){
         //led_mem_clear(scratch_buf);
@@ -670,8 +698,8 @@ void play_mario(int total_nr_frames)
 
 int main() {
 
-    hub75s_config();
-    hub75s_start();
+    //hub75s_config();
+    //hub75s_start();
 
     REG_WR(LED_DIR, 0xff);
 

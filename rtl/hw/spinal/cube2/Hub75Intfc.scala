@@ -14,10 +14,12 @@ case class PanelInfoHW(conf: Hub75Config) extends Bundle {
     val topLeftYCoord           = SInt(2 bits)
     val topLeftZCoord           = SInt(2 bits)
 
+    /*
     val memAddrStartPh0         = UInt(log2Up(conf.total_nr_pixels+1) bits)
     val memAddrStartPh1         = UInt(log2Up(conf.total_nr_pixels+1) bits)
     val memAddrColMul           = SInt(log2Up(conf.panel_cols)+2 bits)
     val memAddrRowMul           = SInt(log2Up(conf.panel_cols)+2 bits)
+    */
 
     val xIncr                   = SInt(2 bits)
     val yIncr                   = SInt(2 bits)
@@ -47,8 +49,9 @@ case class PanelInfo(
         piHW.topLeftYCoord      := topLeftYCoord
         piHW.topLeftZCoord      := topLeftZCoord
 
-        var memAddrStartPh0     = side * 2 * conf.pixels_per_panel
-        var memAddrStartPh1     = side * 2 * conf.pixels_per_panel
+        /*
+        var memAddrStartPh0     = side * conf.pixels_per_panel
+        var memAddrStartPh1     = side * conf.pixels_per_panel
         var memAddrColMul       = 1
         var memAddrRowMul       = 1
 
@@ -95,6 +98,7 @@ case class PanelInfo(
         piHW.memAddrStartPh1    := memAddrStartPh1
         piHW.memAddrColMul      := memAddrColMul
         piHW.memAddrRowMul      := memAddrRowMul
+        */
 
         piHW.xIncr              := xIncr
         piHW.yIncr              := yIncr

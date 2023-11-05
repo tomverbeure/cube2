@@ -62,9 +62,8 @@ class Hub75Streamer(conf: Hub75Config, ledMemConf: LedMemConfig) extends Compone
 
     val cur_state = Reg(FsmState()) init(FsmState.FetchPhase0)
 
-    val led_mem_rd        = RegInit(False)
-    val led_mem_rd_addr   = Reg(SInt(ledMemConf.ramInstanceAddrBits+1 bits)) init(0)
-    val led_mem_phase     = Reg(UInt(1 bits)) init(0)
+    val led_mem_rd_p1        = RegInit(False)
+    val led_mem_rd_addr_p1   = Reg(SInt(ledMemConf.ramInstanceAddrBits+1 bits)) init(0)
 
     val active            = RegInit(False).setWhen(io.start).clearWhen(io.eof || !io.enable)
 
@@ -74,38 +73,50 @@ class Hub75Streamer(conf: Hub75Config, ledMemConf: LedMemConfig) extends Compone
         bit_cntr.clear()
     }
 
+    val ramAddrBits = ledMemConf.ramInstanceAddrBits
+/*
     val cur_memAddrStart   =  (cur_state === FsmState.FetchPhase0) ? cur_panel_info.memAddrStartPh0 |
                                                                      cur_panel_info.memAddrStartPh1 
 
     val cur_memAddrRowMul  =  cur_panel_info.memAddrRowMul
     val cur_memAddrColMul  =  cur_panel_info.memAddrColMul
 
-    val ramAddrBits = ledMemConf.ramInstanceAddrBits
 
     val led_mem_rd_addr_comb = ((False ## (io.cur_buffer_nr * conf.total_nr_pixels)).resize(ramAddrBits+1).asSInt
                                   + cur_memAddrStart.resize(ledMemConf.ramInstanceAddrBits+1).asSInt
                                   + ((False ## row_cntr.value).asSInt * cur_memAddrRowMul).resize(ramAddrBits+1)
                                   + ((False ## col_cntr.value).asSInt * cur_memAddrColMul).resize(ramAddrBits+1))
+*/
 
+    val led_mem_phase_p0    = UInt(1 bits)
+    val led_mem_rd_addr_p0  = ((False ## (io.cur_buffer_nr * conf.total_nr_pixels)).resize(ramAddrBits+1).asSInt
+                                  + (led_mem_phase_p0 * 32 * 64).resize(ramAddrBits+1).asSInt
+                                  + (row_cntr.value * 64).resize(ramAddrBits+1).asSInt
+                                  + col_cntr.value.resize(ramAddrBits+1).asSInt)
+
+
+    led_mem_phase_p0   := 0
     switch(cur_state){
         is(FsmState.FetchPhase0){
           when(active && output_fifo_availability > 2){
                 // Fetch subchannel 0
-                led_mem_rd        := True
-                led_mem_rd_addr   := led_mem_rd_addr_comb
-                led_mem_phase     := 0
+                led_mem_phase_p0    := 0
+
+                led_mem_rd_p1       := True
+                led_mem_rd_addr_p1  := led_mem_rd_addr_p0
 
                 cur_state   := FsmState.FetchPhase1
             }
             .otherwise{
-                led_mem_rd        := False
+                led_mem_rd_p1       := False
             }
         }
         is(FsmState.FetchPhase1){
             // Fetch subchannel 1
-            led_mem_rd        := True
-            led_mem_phase     := 1
-            led_mem_rd_addr   := led_mem_rd_addr_comb
+            led_mem_phase_p0    := 1
+
+            led_mem_rd_p1       := True
+            led_mem_rd_addr_p1  := led_mem_rd_addr_p0
 
             col_cntr.increment()
 
@@ -113,13 +124,13 @@ class Hub75Streamer(conf: Hub75Config, ledMemConf: LedMemConfig) extends Compone
         }
     }
 
-    io.led_mem_rd       := led_mem_rd
-    io.led_mem_rd_addr  := led_mem_rd_addr.resize(ramAddrBits).asUInt
+    io.led_mem_rd       := led_mem_rd_p1
+    io.led_mem_rd_addr  := led_mem_rd_addr_p1.resize(ramAddrBits).asUInt
 
-    val led_mem_rd_p1     = RegNext(led_mem_rd) init(False)
-    val led_mem_phase_p1  = RegNext(led_mem_phase) init(0)
-    val bit_cntr_p1       = Delay(bit_cntr.value, 2)
-    val sof_p1            = Delay((col_cntr === 0 && row_cntr === 0 && bit_cntr === 0), 2)
+    val led_mem_rd_p2     = RegNext(led_mem_rd_p1) init(False)
+    val led_mem_phase_p2  = Delay(led_mem_phase_p0, 2) init(0)
+    val bit_cntr_p2       = Delay(bit_cntr.value, 2)
+    val sof_p2            = Delay((col_cntr === 0 && row_cntr === 0 && bit_cntr === 0), 2)
 
     val gammaTable = for(index <-  0 to (1<<conf.bpc)-1) yield {
         val ratio = index.toFloat / ((1<<conf.bpc)-1).toFloat
@@ -127,15 +138,23 @@ class Hub75Streamer(conf: Hub75Config, ledMemConf: LedMemConfig) extends Compone
         U(gammaValue.toInt, conf.bpc bits)
     }
 
-    val r_vec = Reg(Bits(conf.nr_channels * 2 bits)) 
-    val g_vec = Reg(Bits(conf.nr_channels * 2 bits)) 
-    val b_vec = Reg(Bits(conf.nr_channels * 2 bits)) 
+    val r_vec = Reg(Bits(conf.nr_channels * 2 bits)) init(0)
+    val g_vec = Reg(Bits(conf.nr_channels * 2 bits)) init(0)
+    val b_vec = Reg(Bits(conf.nr_channels * 2 bits)) init(0)
+
+    val led_r_debug = Vec(Bits(conf.bpc bits), conf.nr_channels)
+    val led_g_debug = Vec(Bits(conf.bpc bits), conf.nr_channels)
+    val led_b_debug = Vec(Bits(conf.bpc bits), conf.nr_channels)
 
     for(chanNr <- 0 until conf.nr_channels){
         // Convert from ledMemConf.bpc to conf.bpc
-        val led_mem_r = (io.led_mem_rd_data(chanNr)((ledMemConf.bpc * 1 -1) downto ledMemConf.bpc * 0) ## U(0, 8-ledMemConf.bpc bits) >> (8-conf.bpc)) >> 1
-        val led_mem_g = (io.led_mem_rd_data(chanNr)((ledMemConf.bpc * 2 -1) downto ledMemConf.bpc * 1) ## U(0, 8-ledMemConf.bpc bits) >> (8-conf.bpc)) >> 1
-        val led_mem_b = (io.led_mem_rd_data(chanNr)((ledMemConf.bpc * 3 -1) downto ledMemConf.bpc * 2) ## U(0, 8-ledMemConf.bpc bits) >> (8-conf.bpc)) >> 1
+        val led_mem_r = (io.led_mem_rd_data(chanNr)((ledMemConf.bpc * 1 -1) downto ledMemConf.bpc * 0) ## U(0, 8-ledMemConf.bpc bits) >> (8-conf.bpc))
+        val led_mem_g = (io.led_mem_rd_data(chanNr)((ledMemConf.bpc * 2 -1) downto ledMemConf.bpc * 1) ## U(0, 8-ledMemConf.bpc bits) >> (8-conf.bpc))
+        val led_mem_b = (io.led_mem_rd_data(chanNr)((ledMemConf.bpc * 3 -1) downto ledMemConf.bpc * 2) ## U(0, 8-ledMemConf.bpc bits) >> (8-conf.bpc))
+
+        led_r_debug(chanNr)     := led_mem_r
+        led_g_debug(chanNr)     := led_mem_g
+        led_b_debug(chanNr)     := led_mem_b
 
         val r = Bool
         val g = Bool
@@ -154,9 +173,9 @@ class Hub75Streamer(conf: Hub75Config, ledMemConf: LedMemConfig) extends Compone
             val g_dimmed = (g_gamma * io.g_dim)
             val b_dimmed = (b_gamma * io.b_dim)
 
-            r := (r_dimmed.asBits.resizeLeft(led_mem_r.getWidth) >> bit_cntr_p1)(0)
-            g := (g_dimmed.asBits.resizeLeft(led_mem_g.getWidth) >> bit_cntr_p1)(0)
-            b := (b_dimmed.asBits.resizeLeft(led_mem_b.getWidth) >> bit_cntr_p1)(0)
+            r := (r_dimmed.asBits.resizeLeft(led_mem_r.getWidth) >> bit_cntr_p2)(0)
+            g := (g_dimmed.asBits.resizeLeft(led_mem_g.getWidth) >> bit_cntr_p2)(0)
+            b := (b_dimmed.asBits.resizeLeft(led_mem_b.getWidth) >> bit_cntr_p2)(0)
 
         }
         else{
@@ -164,24 +183,98 @@ class Hub75Streamer(conf: Hub75Config, ledMemConf: LedMemConfig) extends Compone
             //val led_mem_g   = U(14, ledMemConf.bpc bits).asBits
             //val led_mem_b   = U(14, ledMemConf.bpc bits).asBits
 
-            r := (led_mem_r.asBits.resizeLeft(led_mem_r.getWidth) >> bit_cntr_p1)(0)
-            g := (led_mem_g.asBits.resizeLeft(led_mem_g.getWidth) >> bit_cntr_p1)(0)
-            b := (led_mem_b.asBits.resizeLeft(led_mem_b.getWidth) >> bit_cntr_p1)(0)
+            r := (led_mem_r.asBits.resizeLeft(led_mem_r.getWidth) >> bit_cntr_p2)(0)
+            g := (led_mem_g.asBits.resizeLeft(led_mem_g.getWidth) >> bit_cntr_p2)(0)
+            b := (led_mem_b.asBits.resizeLeft(led_mem_b.getWidth) >> bit_cntr_p2)(0)
+
         }
 
+        when(led_mem_rd_p2){
+            if (chanNr == 0){
+                when(led_mem_phase_p2===0){
+                    r_vec(0)    := r
+                    g_vec(0)    := g
+                    b_vec(0)    := b
+                }.otherwise{
+                    r_vec(1)    := r
+                    g_vec(1)    := g
+                    b_vec(1)    := b
+                }
+            }
+            if (chanNr == 1){
+                when(led_mem_phase_p2===0){
+                    r_vec(2)    := r
+                    g_vec(2)    := g
+                    b_vec(2)    := b
+                }.otherwise{
+                    r_vec(3)    := r
+                    g_vec(3)    := g
+                    b_vec(3)    := b
+                }
+            }
+            if (chanNr == 2){
+                when(led_mem_phase_p2===0){
+                    r_vec(4)    := r
+                    g_vec(4)    := g
+                    b_vec(4)    := b
+                }.otherwise{
+                    r_vec(5)    := r
+                    g_vec(5)    := g
+                    b_vec(5)    := b
+                }
+            }
+            if (chanNr == 3){
+                when(led_mem_phase_p2===0){
+                    r_vec(6)    := r
+                    g_vec(6)    := g
+                    b_vec(6)    := b
+                }.otherwise{
+                    r_vec(7)    := r
+                    g_vec(7)    := g
+                    b_vec(7)    := b
+                }
+            }
+            if (chanNr == 4){
+                when(led_mem_phase_p2===0){
+                    r_vec(8)    := r
+                    g_vec(8)    := g
+                    b_vec(8)    := b
+                }.otherwise{
+                    r_vec(9)    := r
+                    g_vec(9)    := g
+                    b_vec(9)    := b
+                }
+            }
+            if (chanNr == 5){
+                when(led_mem_phase_p2===0){
+                    r_vec(10)    := r
+                    g_vec(10)    := g
+                    b_vec(10)    := b
+                }.otherwise{
+                    r_vec(11)    := r
+                    g_vec(11)    := g
+                    b_vec(11)    := b
+                }
+            }
+            //r_vec(2*chanNr + led_mem_phase_p2) := r
+            //g_vec(2*chanNr + led_mem_phase_p2) := g
+            //b_vec(2*chanNr + led_mem_phase_p2) := b
 
-        when(led_mem_rd_p1){
-            r_vec(2*chanNr + led_mem_phase_p1) := r
-            g_vec(2*chanNr + led_mem_phase_p1) := g
-            b_vec(2*chanNr + led_mem_phase_p1) := b
+            //r_vec   := B(r, 12 bits)
+            //g_vec   := B(g, 12 bits)
+            //b_vec   := B(b, 12 bits)
+
+            //r_vec       := (r_vec & ~((B(1, 12 bits)<<(2*chanNr + led_mem_phase_p2)).resize(12))) | (B(r, 12 bits)<<(2*chanNr + led_mem_phase_p2)).resize(12)
+            //g_vec       := (g_vec & ~((B(1, 12 bits)<<(2*chanNr + led_mem_phase_p2)).resize(12))) | (B(g, 12 bits)<<(2*chanNr + led_mem_phase_p2)).resize(12)
+            //b_vec       := (b_vec & ~((B(1, 12 bits)<<(2*chanNr + led_mem_phase_p2)).resize(12))) | (B(b, 12 bits)<<(2*chanNr + led_mem_phase_p2)).resize(12)
         }
     }
 
-    val fifo_wr_p2      = RegNext(led_mem_rd_p1 && led_mem_phase_p1 === 1) init(False)
-    val sof_p2          = RegNext(sof_p1) init(False)
+    val fifo_wr_p3      = RegNext(led_mem_rd_p2 && led_mem_phase_p2 === 1) init(False)
+    val sof_p3          = RegNext(sof_p2) init(False)
 
-    output_fifo_wr.valid  := fifo_wr_p2
-    output_fifo_wr.payload.sof  := sof_p2
+    output_fifo_wr.valid  := fifo_wr_p3
+    output_fifo_wr.payload.sof  := sof_p3
 
     for(chanNr <- 0 until conf.nr_channels){
         output_fifo_wr.payload.r0(chanNr) := r_vec(2*chanNr + 0)
@@ -221,11 +314,13 @@ class Hub75Streamer(conf: Hub75Config, ledMemConf: LedMemConfig) extends Compone
               io.panel_infos(i).yIncr := busCtrl.createReadAndWrite(PanelInfoHW(conf).yIncr, addr + 0x00, 10) init(info_hw.yIncr)
               io.panel_infos(i).zIncr := busCtrl.createReadAndWrite(PanelInfoHW(conf).zIncr, addr + 0x00, 12) init(info_hw.zIncr)
 
+/*
               io.panel_infos(i).memAddrStartPh0 := busCtrl.createReadAndWrite(PanelInfoHW(conf).memAddrStartPh0, addr + 0x04, 0) init(info_hw.memAddrStartPh0)
               io.panel_infos(i).memAddrStartPh1 := busCtrl.createReadAndWrite(PanelInfoHW(conf).memAddrStartPh1, addr + 0x08, 0) init(info_hw.memAddrStartPh1)
 
               io.panel_infos(i).memAddrColMul := busCtrl.createReadAndWrite(PanelInfoHW(conf).memAddrColMul, addr + 0x0c, 0) init(info_hw.memAddrColMul)
               io.panel_infos(i).memAddrRowMul := busCtrl.createReadAndWrite(PanelInfoHW(conf).memAddrRowMul, addr + 0x10, 0) init(info_hw.memAddrRowMul)
+*/
           }
 
 

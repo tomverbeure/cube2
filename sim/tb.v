@@ -12,7 +12,7 @@ module tb;
 
     integer i;
     initial begin
-        for(i=0;i<200000;i=i+1) begin
+        for(i=0;i<500000;i=i+1) begin
             clk25   <= 1'b0;
             #5;
             clk25   <= 1'b1;
