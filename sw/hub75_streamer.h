@@ -7,8 +7,8 @@ typedef enum {
     RING_LBoRT      = 2,
 } e_hub75_ring;
 
-#define HUB75S_SIDE_HEIGHT   32
-#define HUB75S_SIDE_WIDTH    32
+#define HUB75S_SIDE_HEIGHT   64
+#define HUB75S_SIDE_WIDTH    64
 #define HUB75S_SIDE_SIZE     (HUB75S_SIDE_HEIGHT * HUB75S_SIDE_WIDTH)
 
 #define HUB75S_STRIP_HEIGHT  HUB75S_SIDE_HEIGHT

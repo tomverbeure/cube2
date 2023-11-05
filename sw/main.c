@@ -329,8 +329,8 @@ void led_mem_wr(int buffer_nr, int side, int x, int y, unsigned char r, unsigned
 void led_mem_fill(int buffer_nr, unsigned char r, unsigned char g, unsigned char b)
 {
     for(int side = 0; side < 6; ++side){
-	    for(int row=0;row<32;++row){
-	        for(int col=0;col<32;++col){
+	    for(int row=0;row<64;++row){
+	        for(int col=0;col<64;++col){
 	            led_mem_wr(buffer_nr, side, col, row, r, g, b);
 	        }
 	    }
@@ -488,9 +488,20 @@ void render_bitmap_2bpp(uint32_t *bitmap, uint32_t *colors, int size_x, int size
 
 void play_basic(int total_nr_frames)
 {
-    uint32_t scratch_buf = 1;
+    led_mem_fill(0, 31, 31, 0);
+    led_mem_fill(1, 31, 31, 0);
 
+    uint32_t scratch_buf = 0;
     uint32_t start_frame = REG_RD(HUB75S_FRAME_CNTR);
+
+    uint32_t color = 15;
+
+    for(int y=0;y<HUB75S_SIDE_HEIGHT;++y){
+        for(int x=0;x<HUB75S_STRIP_WIDTH;++x){
+            uint32_t phys_addr = y*64 + x;
+            MEM_WR(LED_MEM, phys_addr, color);
+        }
+    }
 
     while(REG_RD(HUB75S_FRAME_CNTR) < start_frame + total_nr_frames){
         //led_mem_clear(scratch_buf);
@@ -645,6 +656,7 @@ int main() {
 
     REG_WR(LED_DIR, 0xff);
 
+    /*
     for(volatile int i=0;i<10;++i){
         //for(volatile int j=0;j<1000000;++j);
         for(volatile int j=0;j<10;++j);
@@ -653,14 +665,16 @@ int main() {
         for(volatile int j=0;j<10;++j);
         REG_WR(LED_WRITE, 0x0);
     }
+    */ 
 
     hub75s_dim(0x40, 0x40, 0x40);
 
-    play_basic(120 * 3);
+    while(1)
+        play_basic(120 * 3);
 
     while(1){
-        play_rick(120 * 3);
+        //play_rick(120 * 3);
         play_pacman(120 * 15);
-        play_mario(120 * 6);
+        //play_mario(120 * 6);
     }
 }

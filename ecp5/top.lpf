@@ -10,11 +10,18 @@ LOCATE COMP "hub75_clk"      SITE "C18";
 LOCATE COMP "hub75_lat"      SITE "J18";
 LOCATE COMP "hub75_oe_"      SITE "H16";
 
+#LOCATE COMP "hub75_row[0]"   SITE "F1";
+#LOCATE COMP "hub75_row[1]"   SITE "E2";
+#LOCATE COMP "hub75_row[2]"   SITE "E1";
+#LOCATE COMP "hub75_row[3]"   SITE "F2";
+#LOCATE COMP "hub75_row[4]"   SITE "J17";
+
 LOCATE COMP "hub75_row[0]"   SITE "F1";
-LOCATE COMP "hub75_row[1]"   SITE "E2";
+LOCATE COMP "hub75_row[4]"   SITE "E2";
 LOCATE COMP "hub75_row[2]"   SITE "E1";
 LOCATE COMP "hub75_row[3]"   SITE "F2";
-LOCATE COMP "hub75_row[4]"   SITE "J17";
+LOCATE COMP "hub75_row[1]"   SITE "J17";
+
 
 LOCATE COMP "hub75_j1_r0" SITE "B3";
 LOCATE COMP "hub75_j1_g0" SITE "A2";

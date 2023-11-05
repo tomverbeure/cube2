@@ -131,35 +131,42 @@ class Hub75Streamer(conf: Hub75Config, ledMemConf: LedMemConfig) extends Compone
 
     for(chanNr <- 0 until conf.nr_channels){
         // Convert from ledMemConf.bpc to conf.bpc
-        //val led_mem_r = io.led_mem_rd_data(chanNr)((ledMemConf.bpc * 1 -1) downto ledMemConf.bpc * 0) ## U(0, 8-ledMemConf.bpc bits) >> (8-conf.bpc)
-        //val led_mem_g = io.led_mem_rd_data(chanNr)((ledMemConf.bpc * 2 -1) downto ledMemConf.bpc * 1) ## U(0, 8-ledMemConf.bpc bits) >> (8-conf.bpc)
-        //val led_mem_b = io.led_mem_rd_data(chanNr)((ledMemConf.bpc * 3 -1) downto ledMemConf.bpc * 2) ## U(0, 8-ledMemConf.bpc bits) >> (8-conf.bpc)
+        val led_mem_r = (io.led_mem_rd_data(chanNr)((ledMemConf.bpc * 1 -1) downto ledMemConf.bpc * 0) ## U(0, 8-ledMemConf.bpc bits) >> (8-conf.bpc)) >> 1
+        val led_mem_g = (io.led_mem_rd_data(chanNr)((ledMemConf.bpc * 2 -1) downto ledMemConf.bpc * 1) ## U(0, 8-ledMemConf.bpc bits) >> (8-conf.bpc)) >> 1
+        val led_mem_b = (io.led_mem_rd_data(chanNr)((ledMemConf.bpc * 3 -1) downto ledMemConf.bpc * 2) ## U(0, 8-ledMemConf.bpc bits) >> (8-conf.bpc)) >> 1
 
-        /*
-        val gamma_rom_r = Mem(UInt(conf.bpc bits), initialContent = gammaTable)
-        val gamma_rom_g = Mem(UInt(conf.bpc bits), initialContent = gammaTable)
-        val gamma_rom_b = Mem(UInt(conf.bpc bits), initialContent = gammaTable)
+        val r = Bool
+        val g = Bool
+        val b = Bool
+
+        if (false){
+            val gamma_rom_r = Mem(UInt(conf.bpc bits), initialContent = gammaTable)
+            val gamma_rom_g = Mem(UInt(conf.bpc bits), initialContent = gammaTable)
+            val gamma_rom_b = Mem(UInt(conf.bpc bits), initialContent = gammaTable)
     
-        val r_gamma = gamma_rom_r.readAsync(U(led_mem_r))
-        val g_gamma = gamma_rom_g.readAsync(U(led_mem_g))
-        val b_gamma = gamma_rom_b.readAsync(U(led_mem_b))
+            val r_gamma = gamma_rom_r.readAsync(U(led_mem_r))
+            val g_gamma = gamma_rom_g.readAsync(U(led_mem_g))
+            val b_gamma = gamma_rom_b.readAsync(U(led_mem_b))
     
-        val r_dimmed = (r_gamma * io.r_dim)
-        val g_dimmed = (g_gamma * io.g_dim)
-        val b_dimmed = (b_gamma * io.b_dim)
+            val r_dimmed = (r_gamma * io.r_dim)
+            val g_dimmed = (g_gamma * io.g_dim)
+            val b_dimmed = (b_gamma * io.b_dim)
 
-        val r = (r_dimmed.asBits.resizeLeft(led_mem_r.getWidth) >> bit_cntr_p1)(0)
-        val g = (g_dimmed.asBits.resizeLeft(led_mem_g.getWidth) >> bit_cntr_p1)(0)
-        val b = (b_dimmed.asBits.resizeLeft(led_mem_b.getWidth) >> bit_cntr_p1)(0)
-        */
+            r := (r_dimmed.asBits.resizeLeft(led_mem_r.getWidth) >> bit_cntr_p1)(0)
+            g := (g_dimmed.asBits.resizeLeft(led_mem_g.getWidth) >> bit_cntr_p1)(0)
+            b := (b_dimmed.asBits.resizeLeft(led_mem_b.getWidth) >> bit_cntr_p1)(0)
 
-        val led_mem_r   = U(31, ledMemConf.bpc bits).asBits
-        val led_mem_g   = U(31, ledMemConf.bpc bits).asBits
-        val led_mem_b   = U(31, ledMemConf.bpc bits).asBits
+        }
+        else{
+            //val led_mem_r   = U(14, ledMemConf.bpc bits).asBits
+            //val led_mem_g   = U(14, ledMemConf.bpc bits).asBits
+            //val led_mem_b   = U(14, ledMemConf.bpc bits).asBits
 
-        val r = (led_mem_r.asBits.resizeLeft(led_mem_r.getWidth) >> bit_cntr_p1)(0)
-        val g = (led_mem_g.asBits.resizeLeft(led_mem_g.getWidth) >> bit_cntr_p1)(0)
-        val b = (led_mem_b.asBits.resizeLeft(led_mem_b.getWidth) >> bit_cntr_p1)(0)
+            r := (led_mem_r.asBits.resizeLeft(led_mem_r.getWidth) >> bit_cntr_p1)(0)
+            g := (led_mem_g.asBits.resizeLeft(led_mem_g.getWidth) >> bit_cntr_p1)(0)
+            b := (led_mem_b.asBits.resizeLeft(led_mem_b.getWidth) >> bit_cntr_p1)(0)
+        }
+
 
         when(led_mem_rd_p1){
             r_vec(2*chanNr + led_mem_phase_p1) := r
