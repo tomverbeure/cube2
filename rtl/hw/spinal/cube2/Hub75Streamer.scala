@@ -27,8 +27,8 @@ class Hub75Streamer(conf: Hub75Config, ledMemConf: LedMemConfig) extends Compone
         val b_dim             = in(UInt(8 bits))
 
         val led_mem_rd        = out(Bool)
-        val led_mem_rd_addr   = out(UInt(ledMemConf.addrBits bits))
-        val led_mem_rd_data   = in(Vec(Bits(ledMemConf.dataBits bits), ledMemConf.nrInstances))
+        val led_mem_rd_addr   = out(UInt(ledMemConf.ramInstanceAddrBits bits))
+        val led_mem_rd_data   = in(Vec(Bits(ledMemConf.ramInstanceDataBits bits), ledMemConf.nrInstances))
 
         val cur_buffer_nr     = in(UInt(1 bits))
         val cur_row_nr        = out(UInt(log2Up(conf.panel_rows/2) bits))
@@ -63,7 +63,7 @@ class Hub75Streamer(conf: Hub75Config, ledMemConf: LedMemConfig) extends Compone
     val cur_state = Reg(FsmState()) init(FsmState.FetchPhase0)
 
     val led_mem_rd        = RegInit(False)
-    val led_mem_rd_addr   = Reg(SInt(ledMemConf.addrBits+1 bits)) init(0)
+    val led_mem_rd_addr   = Reg(SInt(ledMemConf.ramInstanceAddrBits+1 bits)) init(0)
     val led_mem_phase     = Reg(UInt(1 bits)) init(0)
 
     val active            = RegInit(False).setWhen(io.start).clearWhen(io.eof || !io.enable)
@@ -80,10 +80,12 @@ class Hub75Streamer(conf: Hub75Config, ledMemConf: LedMemConfig) extends Compone
     val cur_memAddrRowMul  =  cur_panel_info.memAddrRowMul
     val cur_memAddrColMul  =  cur_panel_info.memAddrColMul
 
-    val led_mem_rd_addr_comb = ((False ## (io.cur_buffer_nr * conf.total_nr_pixels)).resize(ledMemConf.addrBits+1).asSInt
-                                  + cur_memAddrStart.resize(ledMemConf.addrBits+1).asSInt
-                                  + ((False ## row_cntr.value).asSInt * cur_memAddrRowMul).resize(ledMemConf.addrBits+1)
-                                  + ((False ## col_cntr.value).asSInt * cur_memAddrColMul).resize(ledMemConf.addrBits+1))
+    val ramAddrBits = ledMemConf.ramInstanceAddrBits
+
+    val led_mem_rd_addr_comb = ((False ## (io.cur_buffer_nr * conf.total_nr_pixels)).resize(ramAddrBits+1).asSInt
+                                  + cur_memAddrStart.resize(ledMemConf.ramInstanceAddrBits+1).asSInt
+                                  + ((False ## row_cntr.value).asSInt * cur_memAddrRowMul).resize(ramAddrBits+1)
+                                  + ((False ## col_cntr.value).asSInt * cur_memAddrColMul).resize(ramAddrBits+1))
 
     switch(cur_state){
         is(FsmState.FetchPhase0){
@@ -112,7 +114,7 @@ class Hub75Streamer(conf: Hub75Config, ledMemConf: LedMemConfig) extends Compone
     }
 
     io.led_mem_rd       := led_mem_rd
-    io.led_mem_rd_addr  := led_mem_rd_addr.resize(ledMemConf.addrBits).asUInt
+    io.led_mem_rd_addr  := led_mem_rd_addr.resize(ramAddrBits).asUInt
 
     val led_mem_rd_p1     = RegNext(led_mem_rd) init(False)
     val led_mem_phase_p1  = RegNext(led_mem_phase) init(0)

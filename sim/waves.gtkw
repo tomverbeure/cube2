@@ -1,39 +1,70 @@
 [*]
 [*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
-[*] Sun Nov  5 15:18:37 2023
+[*] Sun Nov  5 20:06:51 2023
 [*]
-[dumpfile] "/Users/tomverbeure/projects/cube2/sim/tb.vcd"
-[dumpfile_mtime] "Sun Nov  5 15:15:51 2023"
-[dumpfile_size] 32452750
+[dumpfile] "/Users/tomverbeure/projects/cube2/sim/tb.fst"
+[dumpfile_mtime] "Sun Nov  5 20:05:24 2023"
+[dumpfile_size] 154783
 [savefile] "/Users/tomverbeure/projects/cube2/sim/waves.gtkw"
 [timestart] 0
 [size] 1648 933
 [pos] -1 -1
-*-24.000000 3365000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+*-32.954369 738165000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb.
 [treeopen] tb.u_cube2top.
-[treeopen] tb.u_cube2top.core_u_cpu.
 [treeopen] tb.u_cube2top.core_u_hub75_streamer.
-[sst_width] 465
-[signals_width] 417
+[sst_width] 360
+[signals_width] 467
 [sst_expanded] 1
-[sst_vpaned_height] 284
+[sst_vpaned_height] 221
 @28
 tb.u_cube2top.core_u_hub75_streamer.main_clk
-tb.u_cube2top.core_u_cpu.io_led_red
-tb.u_cube2top.led
-tb.u_cube2top.core_u_cpu.main_reset_
 @200
 -
 @28
-tb.u_cube2top.core_u_cpu_io_hub75_streamer_apb_PSEL
-tb.u_cube2top.core_u_cpu_io_hub75_streamer_apb_PENABLE
-tb.u_cube2top.core_u_cpu_io_hub75_streamer_apb_PREADY
-tb.u_cube2top.core_u_cpu_io_hub75_streamer_apb_PWRITE
+tb.u_cube2top.core_u_cpu_io_led_red
+@200
+-
+@28
+tb.u_cube2top.core_u_cpu_io_led_mem_apb_PSEL
+tb.u_cube2top.core_u_cpu_io_led_mem_apb_PENABLE
+tb.u_cube2top.core_u_cpu_io_led_mem_apb_PREADY
+tb.u_cube2top.core_u_cpu_io_led_mem_apb_PWRITE
 @22
-tb.u_cube2top.core_u_cpu_io_hub75_streamer_apb_PADDR[11:0]
-tb.u_cube2top.core_u_cpu_io_hub75_streamer_apb_PRDATA[31:0]
-tb.u_cube2top.core_u_cpu_io_hub75_streamer_apb_PWDATA[31:0]
+tb.u_cube2top.core_u_cpu_io_led_mem_apb_PWDATA[31:0]
+tb.u_cube2top.core_u_cpu_io_led_mem_apb_PRDATA[31:0]
+@200
+-
+@800022
+tb.u_cube2top.core_u_led_mem.io_led_mem_a_req[5:0]
+@28
+(0)tb.u_cube2top.core_u_led_mem.io_led_mem_a_req[5:0]
+(1)tb.u_cube2top.core_u_led_mem.io_led_mem_a_req[5:0]
+(2)tb.u_cube2top.core_u_led_mem.io_led_mem_a_req[5:0]
+(3)tb.u_cube2top.core_u_led_mem.io_led_mem_a_req[5:0]
+(4)tb.u_cube2top.core_u_led_mem.io_led_mem_a_req[5:0]
+(5)tb.u_cube2top.core_u_led_mem.io_led_mem_a_req[5:0]
+@1001200
+-group_end
+@28
+tb.u_cube2top.core_u_led_mem.io_led_mem_a_wr
+@22
+tb.u_cube2top.core_u_led_mem.io_led_mem_a_addr[11:0]
+tb.u_cube2top.core_u_led_mem.io_led_mem_a_wr_data[17:0]
+@200
+-
+-
+@28
+tb.u_cube2top.core_u_led_mem.io_led_mem_b_req
+@22
+tb.u_cube2top.core_u_led_mem.io_led_mem_b_addr[11:0]
+@23
+tb.u_cube2top.core_u_led_mem.io_led_mem_b_rd_data_0[17:0]
+tb.u_cube2top.core_u_led_mem.io_led_mem_b_rd_data_1[17:0]
+tb.u_cube2top.core_u_led_mem.io_led_mem_b_rd_data_2[17:0]
+tb.u_cube2top.core_u_led_mem.io_led_mem_b_rd_data_3[17:0]
+tb.u_cube2top.core_u_led_mem.io_led_mem_b_rd_data_4[17:0]
+tb.u_cube2top.core_u_led_mem.io_led_mem_b_rd_data_5[17:0]
 @200
 -
 @28
@@ -171,9 +202,8 @@ tb.u_cube2top.core_u_hub75_streamer.u_output_fifo.io_push_payload_b1[5:0]
 @28
 tb.u_cube2top.core_u_hub75_streamer.u_output_fifo.io_pop_valid
 tb.u_cube2top.core_u_hub75_streamer.u_output_fifo.io_pop_ready
-@201
--
 @200
+-
 -
 @28
 tb.u_cube2top.core_u_hub75phy.io_hub75_clk

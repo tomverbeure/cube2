@@ -159,9 +159,12 @@ int hub75s_get_scratch_buffer(void)
 
 uint32_t hub75s_calc_phys_addr(int buffer, int log_addr)
 {
+    return log_addr; 
+/*
     const uint32_t side_width  = HUB75S_SIDE_WIDTH;
     const uint32_t side_height = HUB75S_SIDE_HEIGHT;
     const uint32_t side_size   = HUB75S_SIDE_SIZE;
+    const uint32_t strip_width = HUB75S_STRIP_WIDTH;
     const uint32_t strip_width = HUB75S_STRIP_WIDTH;
     const uint32_t strip_size  = HUB75S_STRIP_SIZE;
     const uint32_t ring_size   = HUB75S_RING_SIZE;
@@ -211,6 +214,7 @@ uint32_t hub75s_calc_phys_addr(int buffer, int log_addr)
     phys_addr += buffer * 6 * side_size;
 
     return phys_addr;
+*/
 }
 
 

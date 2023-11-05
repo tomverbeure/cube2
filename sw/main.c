@@ -453,8 +453,12 @@ void render_bitmap_1bpp(uint16_t *bitmap, uint32_t color, int size_x, int size_y
                 if (!bit)
                     continue;
 
-                uint32_t log_addr = ring * HUB75S_RING_SIZE 
-                                    + ((pos_y+y) + HUB75S_SIDE_HEIGHT) * HUB75S_STRIP_WIDTH 
+//                uint32_t log_addr = ring * HUB75S_RING_SIZE 
+//                                    + ((pos_y+y) + HUB75S_SIDE_HEIGHT) * HUB75S_STRIP_WIDTH 
+//                                    + (pos_x+x);
+
+                uint32_t log_addr = 0
+                                    + ((pos_y+y) + HUB75S_SIDE_HEIGHT) * HUB75S_SIDE_WIDTH 
                                     + (pos_x+x);
                     
                 uint32_t phys_addr = hub75s_calc_phys_addr(buffer_nr, log_addr);
@@ -473,8 +477,12 @@ void render_bitmap_2bpp(uint32_t *bitmap, uint32_t *colors, int size_x, int size
                 if (bits == 0)
                     continue;
 
-                uint32_t log_addr = ring * HUB75S_RING_SIZE 
-                                    + ((pos_y+y) + HUB75S_SIDE_HEIGHT) * HUB75S_STRIP_WIDTH 
+//                uint32_t log_addr = ring * HUB75S_RING_SIZE 
+//                                    + ((pos_y+y) + HUB75S_SIDE_HEIGHT) * HUB75S_STRIP_WIDTH 
+//                                    + (pos_x+x);
+
+                uint32_t log_addr = 0
+                                    + ((pos_y+y) + HUB75S_SIDE_HEIGHT) * HUB75S_SIDE_WIDTH 
                                     + (pos_x+x);
                     
                 uint32_t phys_addr = hub75s_calc_phys_addr(buffer_nr, log_addr);
@@ -488,18 +496,29 @@ void render_bitmap_2bpp(uint32_t *bitmap, uint32_t *colors, int size_x, int size
 
 void play_basic(int total_nr_frames)
 {
-    led_mem_fill(0, 31, 31, 0);
-    led_mem_fill(1, 31, 31, 0);
+    //led_mem_fill(0, 31, 31, 0);
+    //led_mem_fill(1, 31, 31, 0);
 
     uint32_t scratch_buf = 0;
     uint32_t start_frame = REG_RD(HUB75S_FRAME_CNTR);
 
-    uint32_t color = 15;
+    for(int p=0; p<6; ++p){
+        uint32_t color = 0;
+        switch(p){
+            case 0: color   = (0  << 16) | (0  << 8) | 15; break;
+            case 1: color   = (0  << 16) | (15 << 8) |  0; break;
+            case 2: color   = (15 << 16) | (0  << 8) |  0; break;
 
-    for(int y=0;y<HUB75S_SIDE_HEIGHT;++y){
-        for(int x=0;x<HUB75S_STRIP_WIDTH;++x){
-            uint32_t phys_addr = y*64 + x;
-            MEM_WR(LED_MEM, phys_addr, color);
+            case 3: color   = (0  << 16) | (15 << 8) | 15; break;
+            case 4: color   = (15 << 16) | (15 << 8) |  0; break;
+            case 5: color   = (15 << 16) | (0  << 8) | 15; break;
+        }
+
+        for(int y=0;y<HUB75S_SIDE_HEIGHT/2;++y){
+            for(int x=0;x<HUB75S_SIDE_WIDTH/2;++x){
+                uint32_t phys_addr = p*64*64 + y*64 + x;
+                MEM_WR(LED_MEM, phys_addr, color);
+            }
         }
     }
 
@@ -668,6 +687,11 @@ int main() {
     */ 
 
     hub75s_dim(0x40, 0x40, 0x40);
+
+    REG_WR(LED_WRITE, 0xff);
+    REG_WR(LED_WRITE, 0x0);
+    REG_WR(LED_WRITE, 0xff);
+    REG_WR(LED_WRITE, 0x0);
 
     while(1)
         play_basic(120 * 3);

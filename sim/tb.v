@@ -12,7 +12,7 @@ module tb;
 
     integer i;
     initial begin
-        for(i=0;i<10000;i=i+1) begin
+        for(i=0;i<200000;i=i+1) begin
             clk25   <= 1'b0;
             #5;
             clk25   <= 1'b1;
@@ -22,8 +22,11 @@ module tb;
     end
 
     initial begin
-    	$dumpfile("tb.vcd");
-    	$dumpvars(0,u_cube2top);
+    	$dumpfile("tb.fst");
+    	$dumpvars(1,u_cube2top);
+    	$dumpvars(0,u_cube2top.core_u_led_mem);
+    	$dumpvars(0,u_cube2top.core_u_hub75phy);
+    	$dumpvars(0,u_cube2top.core_u_hub75_streamer);
     end
 
 endmodule
