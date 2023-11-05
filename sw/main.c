@@ -486,6 +486,30 @@ void render_bitmap_2bpp(uint32_t *bitmap, uint32_t *colors, int size_x, int size
     }
 }
 
+void play_basic(int total_nr_frames)
+{
+    uint32_t scratch_buf = 1;
+
+    uint32_t start_frame = REG_RD(HUB75S_FRAME_CNTR);
+
+    while(REG_RD(HUB75S_FRAME_CNTR) < start_frame + total_nr_frames){
+        //led_mem_clear(scratch_buf);
+        //led_mem_rick(scratch_buf, movie_frame);
+        //movie_frame = (movie_frame + 1) % 16;
+
+        //pos_x = (pos_x + 1) % (4 * HUB75S_SIDE_WIDTH);
+
+        uint32_t prev_frame_cntr = REG_RD(HUB75S_FRAME_CNTR);
+        while(REG_RD(HUB75S_FRAME_CNTR) < prev_frame_cntr + 1) ;
+
+        REG_WR_FIELD(HUB75S_CONFIG, BUFFER_NR, scratch_buf);
+        while(REG_RD_FIELD(HUB75S_STATUS, CUR_BUFFER_NR) != scratch_buf) 
+            ;
+
+        scratch_buf ^= 1;
+    }
+}
+
 void play_rick(int total_nr_frames)
 {
     uint32_t movie_frame = 0;
@@ -621,7 +645,18 @@ int main() {
 
     REG_WR(LED_DIR, 0xff);
 
+    for(volatile int i=0;i<10;++i){
+        //for(volatile int j=0;j<1000000;++j);
+        for(volatile int j=0;j<10;++j);
+        REG_WR(LED_WRITE, 0xffffffff);
+        //for(volatile int j=0;j<1000000;++j);
+        for(volatile int j=0;j<10;++j);
+        REG_WR(LED_WRITE, 0x0);
+    }
+
     hub75s_dim(0x40, 0x40, 0x40);
+
+    play_basic(120 * 3);
 
     while(1){
         play_rick(120 * 3);

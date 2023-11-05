@@ -1,0 +1,187 @@
+[*]
+[*] GTKWave Analyzer v3.3.107 (w)1999-2020 BSI
+[*] Sun Nov  5 15:18:37 2023
+[*]
+[dumpfile] "/Users/tomverbeure/projects/cube2/sim/tb.vcd"
+[dumpfile_mtime] "Sun Nov  5 15:15:51 2023"
+[dumpfile_size] 32452750
+[savefile] "/Users/tomverbeure/projects/cube2/sim/waves.gtkw"
+[timestart] 0
+[size] 1648 933
+[pos] -1 -1
+*-24.000000 3365000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb.
+[treeopen] tb.u_cube2top.
+[treeopen] tb.u_cube2top.core_u_cpu.
+[treeopen] tb.u_cube2top.core_u_hub75_streamer.
+[sst_width] 465
+[signals_width] 417
+[sst_expanded] 1
+[sst_vpaned_height] 284
+@28
+tb.u_cube2top.core_u_hub75_streamer.main_clk
+tb.u_cube2top.core_u_cpu.io_led_red
+tb.u_cube2top.led
+tb.u_cube2top.core_u_cpu.main_reset_
+@200
+-
+@28
+tb.u_cube2top.core_u_cpu_io_hub75_streamer_apb_PSEL
+tb.u_cube2top.core_u_cpu_io_hub75_streamer_apb_PENABLE
+tb.u_cube2top.core_u_cpu_io_hub75_streamer_apb_PREADY
+tb.u_cube2top.core_u_cpu_io_hub75_streamer_apb_PWRITE
+@22
+tb.u_cube2top.core_u_cpu_io_hub75_streamer_apb_PADDR[11:0]
+tb.u_cube2top.core_u_cpu_io_hub75_streamer_apb_PRDATA[31:0]
+tb.u_cube2top.core_u_cpu_io_hub75_streamer_apb_PWDATA[31:0]
+@200
+-
+@28
+tb.u_cube2top.core_u_hub75_streamer.active
+tb.u_cube2top.core_u_hub75_streamer.io_start
+tb.u_cube2top.core_u_hub75_streamer.io_eof
+tb.u_cube2top.core_u_hub75_streamer.io_enable
+@200
+-
+@c00820
+tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+@28
+(0)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(1)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(2)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(3)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(4)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(5)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(6)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(7)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(8)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(9)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(10)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(11)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(12)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(13)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(14)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(15)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(16)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(17)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(18)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(19)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(20)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(21)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(22)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(23)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(24)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(25)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(26)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(27)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(28)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(29)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(30)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(31)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(32)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(33)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(34)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(35)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(36)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(37)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(38)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(39)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(40)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(41)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(42)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(43)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(44)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(45)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(46)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(47)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(48)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(49)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(50)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(51)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(52)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(53)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(54)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(55)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(56)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(57)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(58)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(59)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(60)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(61)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(62)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(63)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(64)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(65)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(66)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(67)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(68)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(69)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(70)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(71)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(72)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(73)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(74)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(75)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(76)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(77)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(78)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(79)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(80)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(81)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(82)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(83)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(84)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(85)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(86)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+(87)tb.u_cube2top.core_u_hub75_streamer.cur_state_string[87:0]
+@1401200
+-group_end
+@200
+-
+@24
+tb.u_cube2top.core_u_hub75_streamer.col_cntr_value[5:0]
+tb.u_cube2top.core_u_hub75_streamer.row_cntr_value[4:0]
+tb.u_cube2top.core_u_hub75_streamer.bit_cntr_value[2:0]
+tb.u_cube2top.core_u_hub75_streamer.io_frame_cntr[23:0]
+@200
+-
+@28
+tb.u_cube2top.core_u_hub75_streamer.u_output_fifo.io_push_valid
+tb.u_cube2top.core_u_hub75_streamer.u_output_fifo.io_push_ready
+tb.u_cube2top.core_u_hub75_streamer.u_output_fifo.io_push_payload_sof
+@c00022
+tb.u_cube2top.core_u_hub75_streamer.u_output_fifo.io_push_payload_r0[5:0]
+@28
+(0)tb.u_cube2top.core_u_hub75_streamer.u_output_fifo.io_push_payload_r0[5:0]
+(1)tb.u_cube2top.core_u_hub75_streamer.u_output_fifo.io_push_payload_r0[5:0]
+(2)tb.u_cube2top.core_u_hub75_streamer.u_output_fifo.io_push_payload_r0[5:0]
+(3)tb.u_cube2top.core_u_hub75_streamer.u_output_fifo.io_push_payload_r0[5:0]
+(4)tb.u_cube2top.core_u_hub75_streamer.u_output_fifo.io_push_payload_r0[5:0]
+(5)tb.u_cube2top.core_u_hub75_streamer.u_output_fifo.io_push_payload_r0[5:0]
+@1401200
+-group_end
+@22
+tb.u_cube2top.core_u_hub75_streamer.u_output_fifo.io_push_payload_g0[5:0]
+tb.u_cube2top.core_u_hub75_streamer.u_output_fifo.io_push_payload_b0[5:0]
+tb.u_cube2top.core_u_hub75_streamer.u_output_fifo.io_push_payload_r1[5:0]
+tb.u_cube2top.core_u_hub75_streamer.u_output_fifo.io_push_payload_g1[5:0]
+tb.u_cube2top.core_u_hub75_streamer.u_output_fifo.io_push_payload_b1[5:0]
+@200
+-
+@28
+tb.u_cube2top.core_u_hub75_streamer.u_output_fifo.io_pop_valid
+tb.u_cube2top.core_u_hub75_streamer.u_output_fifo.io_pop_ready
+@201
+-
+@200
+-
+@28
+tb.u_cube2top.core_u_hub75phy.io_hub75_clk
+tb.u_cube2top.core_u_hub75phy.io_hub75_lat
+tb.u_cube2top.core_u_hub75phy.io_hub75_oe_
+@22
+tb.u_cube2top.core_u_hub75phy.io_hub75_r0[5:0]
+tb.u_cube2top.core_u_hub75phy.io_hub75_g0[5:0]
+tb.u_cube2top.core_u_hub75phy.io_hub75_b0[5:0]
+[pattern_trace] 1
+[pattern_trace] 0

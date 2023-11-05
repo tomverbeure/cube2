@@ -50,27 +50,21 @@ typedef enum {
 t_panel_info panels[] = {
     // L2 - Left
     { 1, 1,-1,       0, 1, 270,       -1,-1, 0 },
-    { 1, 0,-1,       0, 1, 90,       -1,-1, 0 },
 
     // L1 - Back
     { 1, 1, 1,       3, 1, 180,         0,-1,-1 },
-    { 1, 0, 1,       3, 1, 0,       0,-1,-1 },
 
     // L0 - Bottom
     {-1, 1, 1,       5, 1, 270,      1,-1, 0 },
-    { 1, 0, 1,       5, 1, 90,       1,-1, 0 },
 
     // R2 - Top
     { 1, 1,-1,       4, 1, 270,       -1,-1, 0 },
-    { 1, 0,-1,       4, 1, 90,       -1,-1, 0 },
 
     // R1 - Front
     { 1, 1, 1,       1, 1, 0,         0,-1,-1 },
-    { 1, 0, 1,       1, 1, 180,       0,-1,-1 },
 
     // R0 - Right
     {-1, 1, 1,       2, 1, 270,      1,-1, 0 },
-    { 1, 0, 1,       2, 1, 90,       1,-1, 0 }
 
 };
 
@@ -78,7 +72,7 @@ void hub75s_config(void)
 {
     pixels_per_panel  = panel_rows * panel_cols;
 
-    for(int i=0; i<12;++i){
+    for(int i=0; i<(int)(sizeof(panels)/sizeof(t_panel_info));++i){
         t_panel_info *pi = &panels[i];
 
         int memAddrStartPh0     = pi->side * 2 * pixels_per_panel;

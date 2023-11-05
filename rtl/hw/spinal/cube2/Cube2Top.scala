@@ -41,7 +41,7 @@ class Cube2Top(isSim : Boolean = true) extends Component {
                         nr_channels   = 6,
                         panel_rows    = 64,
                         panel_cols    = 64,
-                        bpc           = if (isSim) 4 else 6,
+                        bpc           = if (isSim) 6 else 6,
                         panels        = panels.toArray
                       )
 
@@ -122,7 +122,7 @@ class Cube2Top(isSim : Boolean = true) extends Component {
     io.phy_reset_n  := True
 
     val main_clk = Bool
-    val main_clk_speed = if (isSim) 2 MHz else 50 MHz
+    val main_clk_speed = if (isSim) 50 MHz else 50 MHz
 
     val osc_src = if (isSim) new Area {
         main_clk    := io.osc_clk25
@@ -149,7 +149,7 @@ class Cube2Top(isSim : Boolean = true) extends Component {
     val main_reset_gen = new ClockingArea(mainClkRawDomain) {
         val reset_unbuffered_ = True
 
-        val reset_cntr = Reg(UInt(16 bits)) init(0)
+        val reset_cntr = Reg(UInt(if (isSim) 5 bits else 16 bits)) init(0)
         when(reset_cntr =/= U(reset_cntr.range -> true)){
             reset_cntr := reset_cntr + 1
             // Keep reset low when counter is still running
@@ -177,13 +177,14 @@ class Cube2Top(isSim : Boolean = true) extends Component {
         val led_counter = Reg(UInt(24 bits))
         led_counter := led_counter + 1
 
-        io.led  := led_counter.msb ^ io.button
+        //io.led  := led_counter.msb ^ io.button
         //io.led  := io.button
     }
 
     val core = new ClockingArea(mainClkDomain) {
 
-            val u_cpu = new CpuTop()
+        val u_cpu = new CpuTop()
+        io.led  <> u_cpu.io.led_red
     
         //============================================================
         // LED memory
