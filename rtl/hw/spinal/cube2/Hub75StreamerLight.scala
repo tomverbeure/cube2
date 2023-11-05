@@ -19,6 +19,8 @@ class Hub75StreamerLight(conf: Hub75Config) extends Component {
 
         val panel_infos       = in(Vec(PanelInfoHW(conf), conf.panels.size))
 
+        //val led_mem_rd_data   = in(Vec(Bits(ledMemConf.dataBits bits), conf.nr_channels))
+
 /*
         val enable            = in(Bool)
         val start             = in(Bool)
