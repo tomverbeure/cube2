@@ -12,6 +12,7 @@ object LedMem {
 }
 
 case class LedMemConfig(
+      nrInstances   : Int, 
       memWords      : Int,
       bpc           : Int
   )
@@ -20,6 +21,9 @@ case class LedMemConfig(
     def dataBits  = 3 * bpc
 }
 
+// Contains one RAM per channel.
+// Channel A behaves like a single regular RAM that is accessible by a CPU bus.
+// Channel B receives 1 read address but returns the data for all RAMs in parallel.
 class LedMem(conf: LedMemConfig, isSim: Boolean = true) extends Component {
 
     import conf._
@@ -35,47 +39,52 @@ class LedMem(conf: LedMemConfig, isSim: Boolean = true) extends Component {
         val led_mem_b_addr    = in(UInt(conf.addrBits bits))
         val led_mem_b_wr      = in(Bool)
         val led_mem_b_wr_data = in(Bits(conf.dataBits bits))
-        val led_mem_b_rd_data = out(Bits(conf.dataBits bits))
+        val led_mem_b_rd_data = out(Vec(Bits(conf.dataBits bits), conf.nrInstances))
     }
 
     println(s"LedMem: memWords: ${conf.memWords}")
 
-    //if (isSim){
-    if (true){
-        val u_led_ram = Mem(UInt(conf.dataBits bits), conf.memWords).addAttribute("ramstyle", "no_rw_check")
+    val led_mem_a_rd_data_raw = Vec(Bits(conf.dataBits bits), conf.nrInstances) 
 
-        io.led_mem_a_rd_data := u_led_ram.readWriteSync(
-            enable    = io.led_mem_a_req,
-            address   = io.led_mem_a_addr,
-            write     = io.led_mem_a_wr, 
-            data      = io.led_mem_a_wr_data.asUInt
-            ).asBits
+    io.led_mem_a_rd_data    := led_mem_a_rd_data_raw(0)
+
+    for(i <- 0 until conf.nrInstances){
+        //if (isSim){
+        if (true){
+            val u_led_ram = Mem(UInt(conf.dataBits bits), conf.memWords).addAttribute("ramstyle", "no_rw_check")
     
-        io.led_mem_b_rd_data := u_led_ram.readWriteSync(
-            enable    = io.led_mem_b_req,
-            address   = io.led_mem_b_addr,
-            write     = io.led_mem_b_wr, 
-            data      = io.led_mem_b_wr_data.asUInt
-            ).asBits
+            led_mem_a_rd_data_raw(i) := u_led_ram.readWriteSync(
+                enable    = io.led_mem_a_req,
+                address   = io.led_mem_a_addr,
+                write     = io.led_mem_a_wr, 
+                data      = io.led_mem_a_wr_data.asUInt
+                ).asBits
+        
+            io.led_mem_b_rd_data(i) := u_led_ram.readWriteSync(
+                enable    = io.led_mem_b_req,
+                address   = io.led_mem_b_addr,
+                write     = io.led_mem_b_wr, 
+                data      = io.led_mem_b_wr_data.asUInt
+                ).asBits
+        }
+        else {
+            /*
+            val u_led_ram = new led_ram()
+    
+            u_led_ram.io.clock_a          := ClockDomain.current.readClockWire
+            u_led_ram.io.address_a        := io.led_mem_a_addr
+            u_led_ram.io.wren_a           := io.led_mem_a_req && io.led_mem_a_wr
+            u_led_ram.io.data_a           := io.led_mem_a_wr_data
+            io.led_mem_a_rd_data          := u_led_ram.io.q_a
+    
+            u_led_ram.io.clock_b          := ClockDomain.current.readClockWire
+            u_led_ram.io.address_b        := io.led_mem_b_addr
+            u_led_ram.io.wren_b           := io.led_mem_b_req && io.led_mem_b_wr
+            u_led_ram.io.data_b           := io.led_mem_b_wr_data
+            io.led_mem_b_rd_data          := u_led_ram.io.q_b
+            */
+        }
     }
-    else {
-        /*
-        val u_led_ram = new led_ram()
-
-        u_led_ram.io.clock_a          := ClockDomain.current.readClockWire
-        u_led_ram.io.address_a        := io.led_mem_a_addr
-        u_led_ram.io.wren_a           := io.led_mem_a_req && io.led_mem_a_wr
-        u_led_ram.io.data_a           := io.led_mem_a_wr_data
-        io.led_mem_a_rd_data          := u_led_ram.io.q_a
-
-        u_led_ram.io.clock_b          := ClockDomain.current.readClockWire
-        u_led_ram.io.address_b        := io.led_mem_b_addr
-        u_led_ram.io.wren_b           := io.led_mem_b_req && io.led_mem_b_wr
-        u_led_ram.io.data_b           := io.led_mem_b_wr_data
-        io.led_mem_b_rd_data          := u_led_ram.io.q_b
-        */
-    }
-
 
     def driveFrom(busCtrl: BusSlaveFactory, baseAddress: BigInt) = new Area {
         val mapping = SizeMapping(0x0, conf.memWords * 4)

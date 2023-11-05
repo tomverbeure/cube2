@@ -3,6 +3,10 @@ package cube2
 import scala.collection.mutable.ArrayBuffer
 
 import spinal.core._
+import spinal.lib._
+import spinal.lib.bus.misc._
+import spinal.lib.bus.amba3.apb._
+
 import ecp5._
 
 class Cube2Top(isSim : Boolean = true) extends Component {
@@ -34,14 +38,14 @@ class Cube2Top(isSim : Boolean = true) extends Component {
     panels += PanelInfo(-1, 1, 1,     0,   true,    180,    1,-1, 0)
 
     val hub75Config = Hub75Config(
-                        nr_channels   = 8,
+                        nr_channels   = 6,
                         panel_rows    = 64,
                         panel_cols    = 64,
                         bpc           = if (isSim) 4 else 6,
                         panels        = panels.toArray
                       )
 
-//    val ledMemConfig = LedMemConfig(memWords = 2 * 6 * 32 * 32, bpc = 6)
+    val ledMemConfig = LedMemConfig(hub75Config.nr_channels, memWords = 64 * 64, bpc = 6)
 
     val io = new Bundle {
         val osc_clk25       = in(Bool)
@@ -179,9 +183,8 @@ class Cube2Top(isSim : Boolean = true) extends Component {
 
     val core = new ClockingArea(mainClkDomain) {
 
-/*
-        val u_cpu = new CpuTop()
-
+            val u_cpu = new CpuTop()
+    
         //============================================================
         // LED memory
         //============================================================
@@ -202,13 +205,11 @@ class Cube2Top(isSim : Boolean = true) extends Component {
         u_hub75_streamer.io.led_mem_rd_data   <> u_led_mem.io.led_mem_b_rd_data
 
         val hub75_streamer_regs = u_hub75_streamer.driveFrom(Apb3SlaveFactory(u_cpu.io.hub75_streamer_apb), 0x0)
-*/
 
-        //============================================================
-        // HUB75 Streamer Light
-        //============================================================
-
-        val u_hub75_streamer_light = new Hub75StreamerLight(hub75Config)
+//        //============================================================
+//        // HUB75 Streamer Light
+//        //============================================================
+//        val u_hub75_streamer_light = new Hub75StreamerLight(hub75Config)
 
         //============================================================
         // HUB75 Phy
@@ -217,70 +218,72 @@ class Cube2Top(isSim : Boolean = true) extends Component {
         val hub75 = Hub75Intfc(hub75Config)
 
         val u_hub75phy = new Hub75Phy(main_clk_speed, hub75Config)
-        u_hub75phy.io.rgb   <> u_hub75_streamer_light.io.rgb
+        u_hub75phy.io.rgb   <> u_hub75_streamer.io.rgb
+//        u_hub75phy.io.rgb   <> u_hub75_streamer_light.io.rgb
+
         u_hub75phy.io.hub75 <> hub75
 
-        io.hub75_clk       := hub75.clk
-        io.hub75_lat       := hub75.lat
-        io.hub75_oe_       := hub75.oe_
+        io.hub75_clk       := RegNext(hub75.clk)
+        io.hub75_lat       := RegNext(hub75.lat)
+        io.hub75_oe_       := RegNext(hub75.oe_)
 
-        io.hub75_row       := hub75.row
+        io.hub75_row       := RegNext(hub75.row)
 
-        io.hub75_j1_r0     := hub75.r0(0)
-        io.hub75_j1_g0     := hub75.g0(0)
-        io.hub75_j1_b0     := hub75.b0(0)
-        io.hub75_j1_r1     := hub75.r1(0)
-        io.hub75_j1_g1     := hub75.g1(0)
-        io.hub75_j1_b1     := hub75.b1(0)
+        io.hub75_j1_r0     := RegNext(hub75.r0(0))
+        io.hub75_j1_g0     := RegNext(hub75.g0(0))
+        io.hub75_j1_b0     := RegNext(hub75.b0(0))
+        io.hub75_j1_r1     := RegNext(hub75.r1(0))
+        io.hub75_j1_g1     := RegNext(hub75.g1(0))
+        io.hub75_j1_b1     := RegNext(hub75.b1(0))
 
-        io.hub75_j2_r0     := hub75.r0(1)
-        io.hub75_j2_g0     := hub75.g0(1)
-        io.hub75_j2_b0     := hub75.b0(1)
-        io.hub75_j2_r1     := hub75.r1(1)
-        io.hub75_j2_g1     := hub75.g1(1)
-        io.hub75_j2_b1     := hub75.b1(1)
+        io.hub75_j2_r0     := RegNext(hub75.r0(1))
+        io.hub75_j2_g0     := RegNext(hub75.g0(1))
+        io.hub75_j2_b0     := RegNext(hub75.b0(1))
+        io.hub75_j2_r1     := RegNext(hub75.r1(1))
+        io.hub75_j2_g1     := RegNext(hub75.g1(1))
+        io.hub75_j2_b1     := RegNext(hub75.b1(1))
 
-        io.hub75_j3_r0     := hub75.r0(2)
-        io.hub75_j3_g0     := hub75.g0(2)
-        io.hub75_j3_b0     := hub75.b0(2)
-        io.hub75_j3_r1     := hub75.r1(2)
-        io.hub75_j3_g1     := hub75.g1(2)
-        io.hub75_j3_b1     := hub75.b1(2)
+        io.hub75_j3_r0     := RegNext(hub75.r0(2))
+        io.hub75_j3_g0     := RegNext(hub75.g0(2))
+        io.hub75_j3_b0     := RegNext(hub75.b0(2))
+        io.hub75_j3_r1     := RegNext(hub75.r1(2))
+        io.hub75_j3_g1     := RegNext(hub75.g1(2))
+        io.hub75_j3_b1     := RegNext(hub75.b1(2))
 
-        io.hub75_j4_r0     := hub75.r0(3)
-        io.hub75_j4_g0     := hub75.g0(3)
-        io.hub75_j4_b0     := hub75.b0(3)
-        io.hub75_j4_r1     := hub75.r1(3)
-        io.hub75_j4_g1     := hub75.g1(3)
-        io.hub75_j4_b1     := hub75.b1(3)
+        io.hub75_j4_r0     := RegNext(hub75.r0(3))
+        io.hub75_j4_g0     := RegNext(hub75.g0(3))
+        io.hub75_j4_b0     := RegNext(hub75.b0(3))
+        io.hub75_j4_r1     := RegNext(hub75.r1(3))
+        io.hub75_j4_g1     := RegNext(hub75.g1(3))
+        io.hub75_j4_b1     := RegNext(hub75.b1(3))
 
-        io.hub75_j5_r0     := hub75.r0(4)
-        io.hub75_j5_g0     := hub75.g0(4)
-        io.hub75_j5_b0     := hub75.b0(4)
-        io.hub75_j5_r1     := hub75.r1(4)
-        io.hub75_j5_g1     := hub75.g1(4)
-        io.hub75_j5_b1     := hub75.b1(4)
+        io.hub75_j5_r0     := RegNext(hub75.r0(4))
+        io.hub75_j5_g0     := RegNext(hub75.g0(4))
+        io.hub75_j5_b0     := RegNext(hub75.b0(4))
+        io.hub75_j5_r1     := RegNext(hub75.r1(4))
+        io.hub75_j5_g1     := RegNext(hub75.g1(4))
+        io.hub75_j5_b1     := RegNext(hub75.b1(4))
 
-        io.hub75_j6_r0     := hub75.r0(5)
-        io.hub75_j6_g0     := hub75.g0(5)
-        io.hub75_j6_b0     := hub75.b0(5)
-        io.hub75_j6_r1     := hub75.r1(5)
-        io.hub75_j6_g1     := hub75.g1(5)
-        io.hub75_j6_b1     := hub75.b1(5)
+        io.hub75_j6_r0     := RegNext(hub75.r0(5))
+        io.hub75_j6_g0     := RegNext(hub75.g0(5))
+        io.hub75_j6_b0     := RegNext(hub75.b0(5))
+        io.hub75_j6_r1     := RegNext(hub75.r1(5))
+        io.hub75_j6_g1     := RegNext(hub75.g1(5))
+        io.hub75_j6_b1     := RegNext(hub75.b1(5))
 
-        io.hub75_j7_r0     := hub75.r0(6)
-        io.hub75_j7_g0     := hub75.g0(6)
-        io.hub75_j7_b0     := hub75.b0(6)
-        io.hub75_j7_r1     := hub75.r1(6)
-        io.hub75_j7_g1     := hub75.g1(6)
-        io.hub75_j7_b1     := hub75.b1(6)
+        io.hub75_j7_r0     := RegNext(hub75.r0(0))
+        io.hub75_j7_g0     := RegNext(hub75.g0(0))
+        io.hub75_j7_b0     := RegNext(hub75.b0(0))
+        io.hub75_j7_r1     := RegNext(hub75.r1(0))
+        io.hub75_j7_g1     := RegNext(hub75.g1(0))
+        io.hub75_j7_b1     := RegNext(hub75.b1(0))
 
-        io.hub75_j8_r0     := hub75.r0(7)
-        io.hub75_j8_g0     := hub75.g0(7)
-        io.hub75_j8_b0     := hub75.b0(7)
-        io.hub75_j8_r1     := hub75.r1(7)
-        io.hub75_j8_g1     := hub75.g1(7)
-        io.hub75_j8_b1     := hub75.b1(7)
+        io.hub75_j8_r0     := RegNext(hub75.r0(1))
+        io.hub75_j8_g0     := RegNext(hub75.g0(1))
+        io.hub75_j8_b0     := RegNext(hub75.b0(1))
+        io.hub75_j8_r1     := RegNext(hub75.r1(1))
+        io.hub75_j8_g1     := RegNext(hub75.g1(1))
+        io.hub75_j8_b1     := RegNext(hub75.b1(1))
     }
 
 
