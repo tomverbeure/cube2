@@ -89,7 +89,7 @@ class Hub75Streamer(conf: Hub75Config, ledMemConf: LedMemConfig) extends Compone
 */
 
     val led_mem_phase_p0    = UInt(1 bits)
-    val led_mem_rd_addr_p0  = ((False ## (io.cur_buffer_nr * conf.total_nr_pixels)).resize(ramAddrBits+1).asSInt
+    val led_mem_rd_addr_p0  = ((False ## (io.cur_buffer_nr * conf.pixels_per_panel)).resize(ramAddrBits+1).asSInt
                                   + (led_mem_phase_p0 * 32 * 64).resize(ramAddrBits+1).asSInt
                                   + (row_cntr.value * 64).resize(ramAddrBits+1).asSInt
                                   + col_cntr.value.resize(ramAddrBits+1).asSInt)

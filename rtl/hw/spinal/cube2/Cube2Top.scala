@@ -39,10 +39,9 @@ class Cube2Top(isSim : Boolean = true) extends Component {
     panels += PanelInfo(-1, 1, 1,     2,   true,    180,    1,-1, 0)
     panels += PanelInfo(-1, 1, 1,     3,   true,    180,    1,-1, 0)
     panels += PanelInfo(-1, 1, 1,     4,   true,    180,    1,-1, 0)
-    panels += PanelInfo(-1, 1, 1,     5,   true,    180,    1,-1, 0)
 
     val hub75Config = Hub75Config(
-                        nr_channels   = 6,
+                        nr_channels   = 5,
                         panel_rows    = 64,
                         panel_cols    = 64,
                         bpc           = if (isSim) 3 else 4,
@@ -269,26 +268,26 @@ class Cube2Top(isSim : Boolean = true) extends Component {
         io.hub75_j5_g1     := RegNext(hub75.g1(4))
         io.hub75_j5_b1     := RegNext(hub75.b1(4))
 
-        io.hub75_j6_r0     := RegNext(hub75.r0(5))
-        io.hub75_j6_g0     := RegNext(hub75.g0(5))
-        io.hub75_j6_b0     := RegNext(hub75.b0(5))
-        io.hub75_j6_r1     := RegNext(hub75.r1(5))
-        io.hub75_j6_g1     := RegNext(hub75.g1(5))
-        io.hub75_j6_b1     := RegNext(hub75.b1(5))
+        io.hub75_j6_r0     := RegNext(hub75.r0(0))
+        io.hub75_j6_g0     := RegNext(hub75.g0(0))
+        io.hub75_j6_b0     := RegNext(hub75.b0(0))
+        io.hub75_j6_r1     := RegNext(hub75.r1(0))
+        io.hub75_j6_g1     := RegNext(hub75.g1(0))
+        io.hub75_j6_b1     := RegNext(hub75.b1(0))
 
-        io.hub75_j7_r0     := RegNext(hub75.r0(0))
-        io.hub75_j7_g0     := RegNext(hub75.g0(0))
-        io.hub75_j7_b0     := RegNext(hub75.b0(0))
-        io.hub75_j7_r1     := RegNext(hub75.r1(0))
-        io.hub75_j7_g1     := RegNext(hub75.g1(0))
-        io.hub75_j7_b1     := RegNext(hub75.b1(0))
+        io.hub75_j7_r0     := RegNext(hub75.r0(1))
+        io.hub75_j7_g0     := RegNext(hub75.g0(1))
+        io.hub75_j7_b0     := RegNext(hub75.b0(1))
+        io.hub75_j7_r1     := RegNext(hub75.r1(1))
+        io.hub75_j7_g1     := RegNext(hub75.g1(1))
+        io.hub75_j7_b1     := RegNext(hub75.b1(1))
 
-        io.hub75_j8_r0     := RegNext(hub75.r0(1))
-        io.hub75_j8_g0     := RegNext(hub75.g0(1))
-        io.hub75_j8_b0     := RegNext(hub75.b0(1))
-        io.hub75_j8_r1     := RegNext(hub75.r1(1))
-        io.hub75_j8_g1     := RegNext(hub75.g1(1))
-        io.hub75_j8_b1     := RegNext(hub75.b1(1))
+        io.hub75_j8_r0     := RegNext(hub75.r0(2))
+        io.hub75_j8_g0     := RegNext(hub75.g0(2))
+        io.hub75_j8_b0     := RegNext(hub75.b0(2))
+        io.hub75_j8_r1     := RegNext(hub75.r1(2))
+        io.hub75_j8_g1     := RegNext(hub75.g1(2))
+        io.hub75_j8_b1     := RegNext(hub75.b1(2))
     }
 
 

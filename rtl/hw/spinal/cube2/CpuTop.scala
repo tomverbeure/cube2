@@ -61,9 +61,9 @@ case class CpuTop() extends Component {
     // External APBs
     //============================================================
     
-    // 64x64 LEDs -> 4094 * 4 bytes per pixel * 6 panels = 96kB
-    apbMapping += io.led_mem_apb              -> (0x20000, 128 kB)
-    apbMapping += io.hub75_streamer_apb       -> (0x40000, 4 kB)
+    // 64x64 LEDs -> 2 * 4096 * 4 bytes per pixel * 6 panels = 192
+    apbMapping += io.led_mem_apb              -> (0x40000, 256 kB)
+    apbMapping += io.hub75_streamer_apb       -> (0x20000, 4 kB)
 
     //============================================================
     // Local APB decoder

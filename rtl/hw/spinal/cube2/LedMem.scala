@@ -17,7 +17,7 @@ case class LedMemConfig(
       bpc           : Int
   )
 {
-    def ramInstanceAddrBits     = log2Up(memWords)
+    def ramInstanceAddrBits     = log2Up(2*memWords)
     def ramInstanceDataBits     = 3 * bpc
 }
 
@@ -65,7 +65,7 @@ class LedMem(conf: LedMemConfig, isSim: Boolean = true) extends Component {
     for(i <- 0 until conf.nrInstances){
         //if (isSim){
         if (true){
-            val u_led_ram = Mem(UInt(conf.ramInstanceDataBits bits), conf.memWords).addAttribute("ramstyle", "no_rw_check")
+            val u_led_ram = Mem(UInt(conf.ramInstanceDataBits bits), 2*conf.memWords).addAttribute("ramstyle", "no_rw_check")
     
             led_mem_a_rd_data_raw(i) := u_led_ram.readWriteSync(
                 enable    = io.led_mem_a_req(i),
@@ -103,7 +103,7 @@ class LedMem(conf: LedMemConfig, isSim: Boolean = true) extends Component {
     }
 
     def driveFrom(busCtrl: BusSlaveFactory, baseAddress: BigInt) = new Area {
-        val mapping = SizeMapping(0x0, conf.memWords * conf.nrInstances * 4)
+        val mapping = SizeMapping(0x0, 2 * conf.memWords * conf.nrInstances * 4)
 
         val cpu_wr_addr = busCtrl.writeAddress(mapping) >> 2
         val cpu_rd_addr = busCtrl.readAddress(mapping)  >> 2
