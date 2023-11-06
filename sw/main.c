@@ -511,7 +511,6 @@ void play_basic(int total_nr_frames)
     //led_mem_fill(1, 0, 0, 0);
 
     uint32_t scratch_buf = 0;
-    uint32_t start_frame = REG_RD(HUB75S_FRAME_CNTR);
 
     //hub75s_config();
 
@@ -532,42 +531,27 @@ void play_basic(int total_nr_frames)
                 case 5: color   = (intensity << 16) | (0  << 8) | intensity; break;
             }
     
-            for(int y=0;y<HUB75S_SIDE_HEIGHT/2;++y){
+            //for(int y=0;y<HUB75S_SIDE_HEIGHT/2;++y){
+            {
                 //for(int x=0;x<HUB75S_SIDE_WIDTH/2;++x){
                 {
                     //uint32_t phys_addr = p * HUB75S_SIDE_HEIGHT * HUB75S_SIDE_WIDTH + y * HUB75S_SIDE_WIDTH + x;
                     //MEM_WR(LED_MEM, phys_addr, color);
-                    led_mem_wr(0, p, x, y, color&255, (color>>8)&255, (color>>16)&255);
+                    led_mem_wr(scratch_buf, p, x, x, color&255, (color>>8)&255, (color>>16)&255);
                 }
             }
 
-    
-            //for(volatile int i=0;i<10000;++i)
-            //    ;
+            
+            // Wait for a certain number of frames..
+            uint32_t prev_frame_cntr = REG_RD(HUB75S_FRAME_CNTR);
+            while(REG_RD(HUB75S_FRAME_CNTR) < prev_frame_cntr + 2) 
+                ;
+
+            // Swap buffer
+            REG_WR_FIELD(HUB75S_CONFIG, BUFFER_NR, scratch_buf);
+            while(REG_RD_FIELD(HUB75S_STATUS, CUR_BUFFER_NR) != scratch_buf) 
+                ;
         }
-    }
-
-    return;
-
-
-    REG_WR_FIELD(HUB75S_CONFIG, BUFFER_NR, 0);
-    while(1);
-
-    while(REG_RD(HUB75S_FRAME_CNTR) < start_frame + total_nr_frames){
-        //led_mem_clear(scratch_buf);
-        //led_mem_rick(scratch_buf, movie_frame);
-        //movie_frame = (movie_frame + 1) % 16;
-
-        //pos_x = (pos_x + 1) % (4 * HUB75S_SIDE_WIDTH);
-
-        uint32_t prev_frame_cntr = REG_RD(HUB75S_FRAME_CNTR);
-        while(REG_RD(HUB75S_FRAME_CNTR) < prev_frame_cntr + 1) ;
-
-        REG_WR_FIELD(HUB75S_CONFIG, BUFFER_NR, scratch_buf);
-        while(REG_RD_FIELD(HUB75S_STATUS, CUR_BUFFER_NR) != scratch_buf) 
-            ;
-
-        scratch_buf ^= 1;
     }
 }
 
@@ -720,9 +704,9 @@ int main() {
     REG_WR(LED_WRITE, 0xff);
     REG_WR(LED_WRITE, 0x0);
 
-    hub75s_start();
-    while(1)
-        play_basic(120 * 3);
+//    hub75s_start();
+//    while(1)
+//        play_basic(120 * 3);
 
     hub75s_start();
     while(1){
