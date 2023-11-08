@@ -433,17 +433,41 @@ void led_mem_rick(int buffer_nr, int frame_nr)
 	    for(int row=0; row<32; ++row){
 	        for(int col=0;col<32;col+=2){
 	            if (row < 4 || row >= 27){
-	                led_mem_wr(buffer_nr, side, col, row, side == 0 || side == 3 ? 32 : 0, side == 1 || side == 4 ? 32 : 0 , side == 2 || side == 5 ? 32 : 0);
+	                //led_mem_wr(buffer_nr, side, col, row, side == 0 || side == 3 ? 32 : 0, side == 1 || side == 4 ? 32 : 0 , side == 2 || side == 5 ? 32 : 0);
 	            }
 	            else{
 	                unsigned char val = *ptr;
 
-	                led_mem_wr(buffer_nr, side, col, row, 
+	                led_mem_wr(buffer_nr, side, 2*col, 2*row, 
+	                                palette_bin[(val & 15) * 3    ] >> 1,
+	                                palette_bin[(val & 15) * 3 + 1] >> 1,
+	                                palette_bin[(val & 15) * 3 + 2] >> 1);
+	                led_mem_wr(buffer_nr, side, 2*col+1, 2*row, 
+	                                palette_bin[(val & 15) * 3    ] >> 1,
+	                                palette_bin[(val & 15) * 3 + 1] >> 1,
+	                                palette_bin[(val & 15) * 3 + 2] >> 1);
+	                led_mem_wr(buffer_nr, side, 2*col, 2*row +1, 
+	                                palette_bin[(val & 15) * 3    ] >> 1,
+	                                palette_bin[(val & 15) * 3 + 1] >> 1,
+	                                palette_bin[(val & 15) * 3 + 2] >> 1);
+	                led_mem_wr(buffer_nr, side, 2*col+1, 2*row +1, 
 	                                palette_bin[(val & 15) * 3    ] >> 1,
 	                                palette_bin[(val & 15) * 3 + 1] >> 1,
 	                                palette_bin[(val & 15) * 3 + 2] >> 1);
 
-	                led_mem_wr(buffer_nr, side, col+1, row, 
+	                led_mem_wr(buffer_nr, side, (col+1)*2, row*2, 
+	                                palette_bin[(val>>4) * 3    ] >> 1,
+	                                palette_bin[(val>>4) * 3 + 1] >> 1,
+	                                palette_bin[(val>>4) * 3 + 2] >> 1);
+	                led_mem_wr(buffer_nr, side, (col+1)*2+1, row*2, 
+	                                palette_bin[(val>>4) * 3    ] >> 1,
+	                                palette_bin[(val>>4) * 3 + 1] >> 1,
+	                                palette_bin[(val>>4) * 3 + 2] >> 1);
+	                led_mem_wr(buffer_nr, side, (col+1)*2, row*2+1, 
+	                                palette_bin[(val>>4) * 3    ] >> 1,
+	                                palette_bin[(val>>4) * 3 + 1] >> 1,
+	                                palette_bin[(val>>4) * 3 + 2] >> 1);
+	                led_mem_wr(buffer_nr, side, (col+1)*2+1, row*2+1, 
 	                                palette_bin[(val>>4) * 3    ] >> 1,
 	                                palette_bin[(val>>4) * 3 + 1] >> 1,
 	                                palette_bin[(val>>4) * 3 + 2] >> 1);
