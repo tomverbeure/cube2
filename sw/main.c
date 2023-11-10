@@ -438,39 +438,41 @@ void led_mem_rick(int buffer_nr, int frame_nr)
 	            else{
 	                unsigned char val = *ptr;
 
+                        int shift_adj   = 2;
+
 	                led_mem_wr(buffer_nr, side, 2*col, 2*row, 
-	                                palette_bin[(val & 15) * 3    ] >> 1,
-	                                palette_bin[(val & 15) * 3 + 1] >> 1,
-	                                palette_bin[(val & 15) * 3 + 2] >> 1);
+	                                palette_bin[(val & 15) * 3    ] >> shift_adj,
+	                                palette_bin[(val & 15) * 3 + 1] >> shift_adj,
+	                                palette_bin[(val & 15) * 3 + 2] >> shift_adj);
 	                led_mem_wr(buffer_nr, side, 2*col+1, 2*row, 
-	                                palette_bin[(val & 15) * 3    ] >> 1,
-	                                palette_bin[(val & 15) * 3 + 1] >> 1,
-	                                palette_bin[(val & 15) * 3 + 2] >> 1);
+	                                palette_bin[(val & 15) * 3    ] >> shift_adj,
+	                                palette_bin[(val & 15) * 3 + 1] >> shift_adj,
+	                                palette_bin[(val & 15) * 3 + 2] >> shift_adj);
 	                led_mem_wr(buffer_nr, side, 2*col, 2*row +1, 
-	                                palette_bin[(val & 15) * 3    ] >> 1,
-	                                palette_bin[(val & 15) * 3 + 1] >> 1,
-	                                palette_bin[(val & 15) * 3 + 2] >> 1);
+	                                palette_bin[(val & 15) * 3    ] >> shift_adj,
+	                                palette_bin[(val & 15) * 3 + 1] >> shift_adj,
+	                                palette_bin[(val & 15) * 3 + 2] >> shift_adj);
 	                led_mem_wr(buffer_nr, side, 2*col+1, 2*row +1, 
-	                                palette_bin[(val & 15) * 3    ] >> 1,
-	                                palette_bin[(val & 15) * 3 + 1] >> 1,
-	                                palette_bin[(val & 15) * 3 + 2] >> 1);
+	                                palette_bin[(val & 15) * 3    ] >> shift_adj,
+	                                palette_bin[(val & 15) * 3 + 1] >> shift_adj,
+	                                palette_bin[(val & 15) * 3 + 2] >> shift_adj);
 
 	                led_mem_wr(buffer_nr, side, (col+1)*2, row*2, 
-	                                palette_bin[(val>>4) * 3    ] >> 1,
-	                                palette_bin[(val>>4) * 3 + 1] >> 1,
-	                                palette_bin[(val>>4) * 3 + 2] >> 1);
+	                                palette_bin[(val>>4) * 3    ] >> shift_adj,
+	                                palette_bin[(val>>4) * 3 + 1] >> shift_adj,
+	                                palette_bin[(val>>4) * 3 + 2] >> shift_adj);
 	                led_mem_wr(buffer_nr, side, (col+1)*2+1, row*2, 
-	                                palette_bin[(val>>4) * 3    ] >> 1,
-	                                palette_bin[(val>>4) * 3 + 1] >> 1,
-	                                palette_bin[(val>>4) * 3 + 2] >> 1);
+	                                palette_bin[(val>>4) * 3    ] >> shift_adj,
+	                                palette_bin[(val>>4) * 3 + 1] >> shift_adj,
+	                                palette_bin[(val>>4) * 3 + 2] >> shift_adj);
 	                led_mem_wr(buffer_nr, side, (col+1)*2, row*2+1, 
-	                                palette_bin[(val>>4) * 3    ] >> 1,
-	                                palette_bin[(val>>4) * 3 + 1] >> 1,
-	                                palette_bin[(val>>4) * 3 + 2] >> 1);
+	                                palette_bin[(val>>4) * 3    ] >> shift_adj,
+	                                palette_bin[(val>>4) * 3 + 1] >> shift_adj,
+	                                palette_bin[(val>>4) * 3 + 2] >> shift_adj);
 	                led_mem_wr(buffer_nr, side, (col+1)*2+1, row*2+1, 
-	                                palette_bin[(val>>4) * 3    ] >> 1,
-	                                palette_bin[(val>>4) * 3 + 1] >> 1,
-	                                palette_bin[(val>>4) * 3 + 2] >> 1);
+	                                palette_bin[(val>>4) * 3    ] >> shift_adj,
+	                                palette_bin[(val>>4) * 3 + 1] >> shift_adj,
+	                                palette_bin[(val>>4) * 3 + 2] >> shift_adj);
 	                ++ptr;
 	            }
 	

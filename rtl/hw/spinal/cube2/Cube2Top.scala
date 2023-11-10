@@ -44,7 +44,7 @@ class Cube2Top(isSim : Boolean = true) extends Component {
                         nr_channels   = 5,
                         panel_rows    = 64,
                         panel_cols    = 64,
-                        bpc           = if (isSim) 3 else 4,
+                        bpc           = if (isSim) 3 else 5,
                         panels        = panels.toArray
                       )
 

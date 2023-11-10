@@ -1,15 +1,16 @@
 all: top.bit top.svf
 
 SYNTH_SRCS=../rtl/hw/gen/Cube2Top.v ../rtl/hw/verilog/main_pll.v
+#YOSYS_DEBUG = -p 'logger -debug'
 
 PACKAGE=CABGA381
 
 
 top.json: $(SYNTH_SRCS)
-	yosys -p 'read_verilog $(SYNTH_SRCS); synth_ecp5 -top Cube2Top -abc9 -json $@'
+	yosys  -l top.yosys.log $(YOSYS_DEBUG) -p 'read_verilog $(SYNTH_SRCS); synth_ecp5 -top Cube2Top -abc9 -json $@'
 
 top.config: top.json top.lpf
-	nextpnr-ecp5 --25k --package $(PACKAGE) --speed 6 --lpf top.lpf --json top.json --textcfg top.config --freq 48
+	nextpnr-ecp5 -l top.nextpnr.log --25k --package $(PACKAGE) --speed 6 --lpf top.lpf --json top.json --textcfg top.config --freq 48
 
 top.svf: top.config
 	ecppack --compress --input $< --svf $@

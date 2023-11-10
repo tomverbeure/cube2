@@ -37,7 +37,8 @@ class Hub75Streamer(conf: Hub75Config, ledMemConf: LedMemConfig) extends Compone
         val frame_cntr        = out(UInt(24 bits))
     }
 
-    val output_fifo_depth = 2 * conf.panel_cols * conf.panels.size/2
+    //val output_fifo_depth = 1 * conf.panel_cols * conf.panels.size/2
+    val output_fifo_depth = 10
     val output_fifo_wr    = Stream(io.rgb.payload)
     val output_fifo_rd    = Stream(io.rgb.payload)
     val output_fifo_availability = UInt(log2Up(output_fifo_depth+1) bits)

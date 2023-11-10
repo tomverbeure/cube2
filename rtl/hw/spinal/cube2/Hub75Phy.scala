@@ -28,7 +28,7 @@ case class Hub75PhyFeed(conf: Hub75Config) extends Bundle {
 class Hub75Phy(oscSpeed: HertzNumber, conf: Hub75Config) extends Component {
 
     def osc_clk_speed = oscSpeed
-    def refresh_rate  = 120        // frame per second
+    def refresh_rate  = 180        // frame per second
 
     val sclk_desired  = (conf.panels.size/2 * conf.panel_rows * conf.panel_cols / conf.pixels_per_clk)  * (1 << conf.bpc) * refresh_rate
     val sclk_ratio    = (osc_clk_speed.toLong / sclk_desired).toInt
@@ -37,6 +37,8 @@ class Hub75Phy(oscSpeed: HertzNumber, conf: Hub75Config) extends Component {
     println(s"Desired sclk: $sclk_desired")
     println(s"Clock ratio:  $sclk_ratio")
     println(s"Actual sclk:  $sclk_actual")
+
+    assert(sclk_ratio >= 2)
 
     val io = new Bundle {
         val rgb             = slave(Stream(Hub75PhyFeed(conf)))
