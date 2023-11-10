@@ -2,6 +2,9 @@
 MEM_BYTES		= 16384
 MEM_WORDS       = 4096
 
+GAMMA           = 1.3
+DIM             = 0.35
+
 OBJ_FILES       = start.o main.o led_render.o hub75_streamer.o
 
 #TOOLS_PREFIX    = /opt/homebrew/bin
@@ -21,6 +24,8 @@ OBJDUMP         = $(TARGET)-objdump
 
 #all: progmem.dis progmem.bin progmem0.coe progmem0.mif progmem0.hex progmem.mem
 all: progmem.dis progmem.bin progmem4k.bin progmem.mem progmem.hex progmem0.mif
+
+main.o: gamma_dim_table.h
 
 progmem.dis: progmem_dis.elf
 	$(OBJDUMP) -s -D $< > $@
@@ -64,5 +69,8 @@ progmem.elf: $(OBJ_FILES) global.h hub75_streamer.h reg.h top_defines.h sections
 progmem_dis.elf: $(OBJ_FILES) top_defines.h sections.lds Makefile
 	$(LD) $(LDFLAGS) -o $@ $(OBJ_FILES) > progmem.map
 
+gamma_dim_table.h: gen_gamma_dim_table.py Makefile
+	./gen_gamma_dim_table.py $(GAMMA) $(DIM) > $@
+
 clean:
-	\rm -fr *.o *.hex *.elf *.dis *.bin *.coe *.map *.mif *.mem
+	\rm -fr *.o *.hex *.elf *.dis *.bin *.coe *.map *.mif *.mem gamma_dim_table.h

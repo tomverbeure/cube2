@@ -321,6 +321,17 @@ uint32_t dot_color = 0x92b1f8;
 
 #define WAIT_CYCLES 4000000
 
+#include "gamma_dim_table.h"
+
+void led_mem_wr_gamma_dim(int buffer_nr, int side, int x, int y, unsigned char r, unsigned char g, unsigned char b)
+{
+        MEM_WR(LED_MEM, 
+                buffer_nr * HUB75S_SIDE_HEIGHT * HUB75S_SIDE_WIDTH + side * 2 * HUB75S_SIDE_HEIGHT * HUB75S_SIDE_WIDTH + y * HUB75S_SIDE_WIDTH + x, 
+                gamma_dim_table[r] | 
+                (gamma_dim_table[g]<<8) | 
+                (gamma_dim_table[b]<<16));
+}
+
 void led_mem_wr(int buffer_nr, int side, int x, int y, unsigned char r, unsigned char g, unsigned char b)
 {
         MEM_WR(LED_MEM, buffer_nr * HUB75S_SIDE_HEIGHT * HUB75S_SIDE_WIDTH + side * 2 * HUB75S_SIDE_HEIGHT * HUB75S_SIDE_WIDTH + y * HUB75S_SIDE_WIDTH + x, r | (g<<8) | (b<<16));
@@ -438,38 +449,38 @@ void led_mem_rick(int buffer_nr, int frame_nr)
 	            else{
 	                unsigned char val = *ptr;
 
-                        int shift_adj   = 2;
+                        int shift_adj   = 0;
 
-	                led_mem_wr(buffer_nr, side, 2*col, 2*row, 
+	                led_mem_wr_gamma_dim(buffer_nr, side, 2*col, 2*row, 
 	                                palette_bin[(val & 15) * 3    ] >> shift_adj,
 	                                palette_bin[(val & 15) * 3 + 1] >> shift_adj,
 	                                palette_bin[(val & 15) * 3 + 2] >> shift_adj);
-	                led_mem_wr(buffer_nr, side, 2*col+1, 2*row, 
+	                led_mem_wr_gamma_dim(buffer_nr, side, 2*col+1, 2*row, 
 	                                palette_bin[(val & 15) * 3    ] >> shift_adj,
 	                                palette_bin[(val & 15) * 3 + 1] >> shift_adj,
 	                                palette_bin[(val & 15) * 3 + 2] >> shift_adj);
-	                led_mem_wr(buffer_nr, side, 2*col, 2*row +1, 
+	                led_mem_wr_gamma_dim(buffer_nr, side, 2*col, 2*row +1, 
 	                                palette_bin[(val & 15) * 3    ] >> shift_adj,
 	                                palette_bin[(val & 15) * 3 + 1] >> shift_adj,
 	                                palette_bin[(val & 15) * 3 + 2] >> shift_adj);
-	                led_mem_wr(buffer_nr, side, 2*col+1, 2*row +1, 
+	                led_mem_wr_gamma_dim(buffer_nr, side, 2*col+1, 2*row +1, 
 	                                palette_bin[(val & 15) * 3    ] >> shift_adj,
 	                                palette_bin[(val & 15) * 3 + 1] >> shift_adj,
 	                                palette_bin[(val & 15) * 3 + 2] >> shift_adj);
 
-	                led_mem_wr(buffer_nr, side, (col+1)*2, row*2, 
+	                led_mem_wr_gamma_dim(buffer_nr, side, (col+1)*2, row*2, 
 	                                palette_bin[(val>>4) * 3    ] >> shift_adj,
 	                                palette_bin[(val>>4) * 3 + 1] >> shift_adj,
 	                                palette_bin[(val>>4) * 3 + 2] >> shift_adj);
-	                led_mem_wr(buffer_nr, side, (col+1)*2+1, row*2, 
+	                led_mem_wr_gamma_dim(buffer_nr, side, (col+1)*2+1, row*2, 
 	                                palette_bin[(val>>4) * 3    ] >> shift_adj,
 	                                palette_bin[(val>>4) * 3 + 1] >> shift_adj,
 	                                palette_bin[(val>>4) * 3 + 2] >> shift_adj);
-	                led_mem_wr(buffer_nr, side, (col+1)*2, row*2+1, 
+	                led_mem_wr_gamma_dim(buffer_nr, side, (col+1)*2, row*2+1, 
 	                                palette_bin[(val>>4) * 3    ] >> shift_adj,
 	                                palette_bin[(val>>4) * 3 + 1] >> shift_adj,
 	                                palette_bin[(val>>4) * 3 + 2] >> shift_adj);
-	                led_mem_wr(buffer_nr, side, (col+1)*2+1, row*2+1, 
+	                led_mem_wr_gamma_dim(buffer_nr, side, (col+1)*2+1, row*2+1, 
 	                                palette_bin[(val>>4) * 3    ] >> shift_adj,
 	                                palette_bin[(val>>4) * 3 + 1] >> shift_adj,
 	                                palette_bin[(val>>4) * 3 + 2] >> shift_adj);
@@ -583,7 +594,8 @@ void play_basic(int total_nr_frames)
 
 void play_rick(int total_nr_frames)
 {
-    uint32_t movie_frame = 0;
+    int movie_cntr = 0;
+    int movie_frame = 0;
     uint32_t scratch_buf = 1;
 
     uint32_t start_frame = REG_RD(HUB75S_FRAME_CNTR);
@@ -591,10 +603,13 @@ void play_rick(int total_nr_frames)
     while(REG_RD(HUB75S_FRAME_CNTR) < start_frame + total_nr_frames){
         led_mem_clear(scratch_buf);
         led_mem_rick(scratch_buf, movie_frame);
-        movie_frame = (movie_frame + 1) % 16;
+
+        movie_cntr  = (movie_cntr + 1) % 16;
+        //movie_frame = movie_cntr<16 ? movie_cntr : 31-movie_cntr;
+        movie_frame = movie_cntr;
 
         uint32_t prev_frame_cntr = REG_RD(HUB75S_FRAME_CNTR);
-        while(REG_RD(HUB75S_FRAME_CNTR) < prev_frame_cntr + 20) 
+        while(REG_RD(HUB75S_FRAME_CNTR) < prev_frame_cntr + 25) 
             ;
 
         REG_WR_FIELD(HUB75S_CONFIG, BUFFER_NR, scratch_buf);
