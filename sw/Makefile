@@ -25,7 +25,7 @@ OBJDUMP         = $(TARGET)-objdump
 #all: progmem.dis progmem.bin progmem0.coe progmem0.mif progmem0.hex progmem.mem
 all: progmem.dis progmem.bin progmem4k.bin progmem.mem progmem.hex progmem0.mif
 
-main.o: gamma_dim_table.h
+main.o: gamma_dim_table.h pacman.h hub75_streamer.h
 
 progmem.dis: progmem_dis.elf
 	$(OBJDUMP) -s -D $< > $@

@@ -13,32 +13,12 @@ class Cube2Top(isSim : Boolean = true) extends Component {
 
     val panels = ArrayBuffer[PanelInfo]()
 
-//    if (!isSim){
-//        panels += PanelInfo(-1, 1,-1,       5, true,    0,     0,-1, 1)
-//        panels += PanelInfo(-1, 0,-1,       5, false,   0,     0,-1, 1)
-//
-//        // top face
-//        panels += PanelInfo(-1, 1,-1,       4, true,    0,     1, 0, 1)
-//        panels += PanelInfo(-1, 1, 0,       4, false,   0,     1, 0, 1)
-//
-//        // bottom face
-//        panels += PanelInfo(-1,-1, 1,       3, true,    0,     1, 0,-1)
-//        panels += PanelInfo(-1,-1, 0,       3, false,   0,     1, 0,-1)
-//
-//        panels += PanelInfo( 1, 1,-1,       2, true,    0,    -1,-1, 0)
-//        panels += PanelInfo( 1, 0,-1,       2, false,   0,    -1,-1, 0)
-//
-//        panels += PanelInfo( 1, 1, 1,       1, true,    90,   0,-1,-1)
-//        panels += PanelInfo( 1, 0, 1,       1, false,   90,   0,-1,-1)
-//    }
-
-
-    //                              Side   Top      Rot 
-    panels += PanelInfo(-1, 1, 1,     0,   true,    180,    1,-1, 0)
-    panels += PanelInfo(-1, 1, 1,     1,   true,    180,    1,-1, 0)
-    panels += PanelInfo(-1, 1, 1,     2,   true,    180,    1,-1, 0)
-    panels += PanelInfo(-1, 1, 1,     3,   true,    180,    1,-1, 0)
-    panels += PanelInfo(-1, 1, 1,     4,   true,    180,    1,-1, 0)
+    //                             Side             Rot     Incr
+    panels += PanelInfo(-1, 1, 1,  0 /* left   */,  270,    1,-1, 0)   // Buffer 0 
+    panels += PanelInfo(-1, 1, 1,  1 /* front  */,   90,    1,-1, 0)   // Buffer 1
+    panels += PanelInfo(-1, 1, 1,  2 /* right  */,  270,    1,-1, 0)   // Buffer 2
+    panels += PanelInfo(-1, 1, 1,  3 /* back   */,  270,    1,-1, 0)   // Buffer 3
+    panels += PanelInfo(-1, 1, 1,  4 /* bottom */,  180,    1,-1, 0)   // Buffer 4
 
     val hub75Config = Hub75Config(
                         nr_channels   = 5,

@@ -6,23 +6,9 @@
 #include "reg.h"
 #include "hub75_streamer.h"
 
-typedef struct {
-    int topLeftCoordX;
-    int topLeftCoordY;
-    int topLeftCoordZ;
 
-    int side;
-    int sideTop;
-    int sideRotation;
-
-    int xIncr;
-    int yIncr;
-    int zIncr;
-
-} t_panel_info;
-
-const int panel_rows        = 16;
-const int panel_cols        = 32;
+const int panel_rows        = 64;
+const int panel_cols        = 64;
 int pixels_per_panel;
 
 typedef enum {
@@ -30,8 +16,8 @@ typedef enum {
     SIDE_FRONT      = 1,
     SIDE_RIGHT      = 2,
     SIDE_BACK       = 3,
-    SIDE_TOP        = 4,
-    SIDE_BOTTOM     = 5
+    SIDE_BOTTOM     = 4,
+    SIDE_TOP        = 5
 } e_side_nr;
 
 typedef enum {
@@ -48,24 +34,19 @@ typedef enum {
 
 
 t_panel_info panels[] = {
-    // L2 - Left
-    { 1, 1,-1,       0, 1, 270,       -1,-1, 0 },
-
-    // L1 - Back
-    { 1, 1, 1,       3, 1, 180,         0,-1,-1 },
-
-    // L0 - Bottom
-    {-1, 1, 1,       5, 1, 270,      1,-1, 0 },
-
-    // R2 - Top
-    { 1, 1,-1,       4, 1, 270,       -1,-1, 0 },
-
-    // R1 - Front
-    { 1, 1, 1,       1, 1, 0,         0,-1,-1 },
-
-    // R0 - Right
-    {-1, 1, 1,       2, 1, 270,      1,-1, 0 },
-
+#if 1
+    { -1, 1, 1,  0 /* left   */,   90,    1,-1, 0,  0,0,0,0 },   // Buffer 0 
+    { -1, 1, 1,  1 /* front  */,  270,    1,-1, 0,  0,0,0,0 },   // Buffer 1
+    { -1, 1, 1,  2 /* right  */,   90,    1,-1, 0,  0,0,0,0 },   // Buffer 2
+    { -1, 1, 1,  3 /* back   */,   90,    1,-1, 0,  0,0,0,0 },   // Buffer 3
+    { -1, 1, 1,  4 /* bottom */,  180,    1,-1, 0,  0,0,0,0 }    // Buffer 4
+#else
+    { -1, 1, 1,  0 /* left   */,  0,    1,-1, 0,  0,0,0,0 },   // Buffer 0 
+    { -1, 1, 1,  1 /* front  */,  0,    1,-1, 0,  0,0,0,0 },   // Buffer 1
+    { -1, 1, 1,  2 /* right  */,  0,    1,-1, 0,  0,0,0,0 },   // Buffer 2
+    { -1, 1, 1,  3 /* back   */,  0,    1,-1, 0,  0,0,0,0 },   // Buffer 3
+    { -1, 1, 1,  4 /* bottom */,  0,    1,-1, 0,  0,0,0,0 }    // Buffer 4
+#endif
 };
 
 void hub75s_config(void)
@@ -75,60 +56,50 @@ void hub75s_config(void)
     for(int i=0; i<(int)(sizeof(panels)/sizeof(t_panel_info));++i){
         t_panel_info *pi = &panels[i];
 
-        int memAddrStartPh0     = pi->side * 2 * pixels_per_panel;
-        int memAddrStartPh1     = pi->side * 2 * pixels_per_panel;
+        int memAddrStartPh0     = 2 * pi->side * pixels_per_panel;
+        int memAddrStartPh1     = 2 * pi->side * pixels_per_panel;
         int memAddrColMul       = 1;
         int memAddrRowMul       = 1;
 
         if (pi->sideRotation == 0){
-            memAddrStartPh1     += panel_rows/2 * panel_cols;
+            memAddrStartPh1     = memAddrStartPh0 + panel_rows/2 * panel_cols;
 
-            if (!pi->sideTop){
-                memAddrStartPh0 += panel_rows * panel_cols;
-                memAddrStartPh1 += panel_rows * panel_cols;
-            }
             memAddrColMul       = 1;
             memAddrRowMul       = panel_cols;
         }
         else if (pi->sideRotation == 90) {
             memAddrStartPh0     += panel_cols -1;
-            memAddrStartPh1     += panel_cols -1 - panel_rows/2;
+            memAddrStartPh1     = memAddrStartPh0 - panel_rows/2;
 
-            if (!pi->sideTop){
-                memAddrStartPh0 -= panel_cols/2;
-                memAddrStartPh1 -= panel_cols/2;
-            }
             memAddrColMul       = panel_cols;
             memAddrRowMul       = -1;
         }
         else if (pi->sideRotation == 180){
-            memAddrStartPh0     += panel_cols -1 + (panel_rows*2 -1) * panel_cols;
-            memAddrStartPh1     += panel_cols -1 + (panel_rows*3/2 -1) * panel_cols;
+            memAddrStartPh0     += panel_rows * panel_cols - 1;
+            memAddrStartPh1     = memAddrStartPh0 - (panel_rows/2 * panel_cols);
 
-            if (!pi->sideTop){
-                memAddrStartPh0 -= panel_rows * panel_cols;
-                memAddrStartPh1 -= panel_rows * panel_cols;
-            }
             memAddrColMul       = -1;
             memAddrRowMul       = -panel_cols;
         }
         else{
-            memAddrStartPh0     += (panel_rows*2 -1) * panel_cols;
-            memAddrStartPh1     += (panel_rows*2 -1) * panel_cols + (panel_rows/2);
+            memAddrStartPh0     += (panel_rows-1) * panel_cols;
+            memAddrStartPh1     = memAddrStartPh0 - (panel_rows/2 * panel_cols);
 
-            if (!pi->sideTop){
-                memAddrStartPh0 += panel_cols/2;
-                memAddrStartPh1 += panel_cols/2;
-            }
             memAddrColMul       = -panel_cols;
             memAddrRowMul       = 1;
         }
 
+        pi->memAddrStartPh0 = memAddrStartPh0;
+        //pi->memAddrStartPh1 = memAddrStartPh1;
+        pi->memAddrColMul   = memAddrColMul;
+        pi->memAddrRowMul   = memAddrRowMul;
+
+#if 0
         HUB75S_PI_REG_WR(i, MEM_ADDR_START_PH0, memAddrStartPh0);
         HUB75S_PI_REG_WR(i, MEM_ADDR_START_PH1, memAddrStartPh1);
         HUB75S_PI_REG_WR(i, MEM_ADDR_COL_MUL, memAddrColMul);
         HUB75S_PI_REG_WR(i, MEM_ADDR_ROW_MUL, memAddrRowMul);
-
+#endif
     }
 }
 
@@ -157,9 +128,11 @@ int hub75s_get_scratch_buffer(void)
     return !REG_RD_FIELD(HUB75S_STATUS, CUR_BUFFER_NR);
 }
 
+
 uint32_t hub75s_calc_phys_addr(int buffer, int log_addr)
 {
     return log_addr; 
+
 /*
     const uint32_t side_width  = HUB75S_SIDE_WIDTH;
     const uint32_t side_height = HUB75S_SIDE_HEIGHT;

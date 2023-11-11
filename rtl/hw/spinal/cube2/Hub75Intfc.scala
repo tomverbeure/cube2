@@ -14,12 +14,13 @@ case class PanelInfoHW(conf: Hub75Config) extends Bundle {
     val topLeftYCoord           = SInt(2 bits)
     val topLeftZCoord           = SInt(2 bits)
 
-    /*
-    val memAddrStartPh0         = UInt(log2Up(conf.total_nr_pixels+1) bits)
-    val memAddrStartPh1         = UInt(log2Up(conf.total_nr_pixels+1) bits)
+    // Memory address of the first phyical pixel of the top half of the panel
+    val memAddrStartPh0         = UInt(log2Up(2*conf.total_nr_pixels) bits)
+    // Memory address of the first phyical pixel of the bottom half of the panel
+    val memAddrStartPh1         = UInt(log2Up(2*conf.total_nr_pixels) bits)
+
     val memAddrColMul           = SInt(log2Up(conf.panel_cols)+2 bits)
     val memAddrRowMul           = SInt(log2Up(conf.panel_cols)+2 bits)
-    */
 
     val xIncr                   = SInt(2 bits)
     val yIncr                   = SInt(2 bits)
@@ -27,17 +28,26 @@ case class PanelInfoHW(conf: Hub75Config) extends Bundle {
 }
 
 case class PanelInfo(
-        topLeftXCoord           : Int,
-        topLeftYCoord           : Int,
-        topLeftZCoord           : Int,
+    // Currently not used...
+    topLeftXCoord           : Int,
+    topLeftYCoord           : Int,
+    topLeftZCoord           : Int,
 
-        side                    : Int,
-        sideTop                 : Boolean,
-        sideRotation            : Int,
+    // Side number:
+    // 0 -> left
+    // 1 -> front
+    // 2 -> right
+    // 3 -> back
+    // 4 -> bottom
+    // 5 -> top
+    side                    : Int,
+    // Angle by which the physical panel (0x0) coordinate is
+    // rotated compared to the desired left/top location
+    sideRotation            : Int,
 
-        xIncr                   : Int,
-        yIncr                   : Int,
-        zIncr                   : Int
+    xIncr                   : Int,
+    yIncr                   : Int,
+    zIncr                   : Int
     )
 {
 
@@ -49,56 +59,55 @@ case class PanelInfo(
         piHW.topLeftYCoord      := topLeftYCoord
         piHW.topLeftZCoord      := topLeftZCoord
 
-        /*
-        var memAddrStartPh0     = side * conf.pixels_per_panel
-        var memAddrStartPh1     = side * conf.pixels_per_panel
+        // Starting with Cube2, there's 1 RAM per side, that is double buffered.
+        // memAddrStartPh0/1 is the location of the first physical pixel of the
+        // first buffer.
+        var memAddrStartPh0     = 2 * side * conf.pixels_per_panel
+        var memAddrStartPh1     = 0
+
         var memAddrColMul       = 1
         var memAddrRowMul       = 1
 
         if (sideRotation == 0){
-            memAddrStartPh1     += conf.panel_rows/2 * conf.panel_cols
+            memAddrStartPh1     = memAddrStartPh0 + conf.panel_rows/2 * conf.panel_cols
 
-            if (!sideTop){
-                memAddrStartPh0 += conf.panel_rows * conf.panel_cols
-                memAddrStartPh1 += conf.panel_rows * conf.panel_cols
-            }
             memAddrColMul       = 1
             memAddrRowMul       = conf.panel_cols
         }
         else if (sideRotation == 90) {
             memAddrStartPh0     += conf.panel_cols -1
-            memAddrStartPh1     += conf.panel_cols -1 - conf.panel_rows/2
+            memAddrStartPh1     = memAddrStartPh0 - conf.panel_rows/2
 
-            if (!sideTop){
-                memAddrStartPh0 -= conf.panel_cols/2
-                memAddrStartPh1 -= conf.panel_cols/2
-            }
             memAddrColMul       = conf.panel_cols
             memAddrRowMul       = -1
         }
-        else{
-            memAddrStartPh0     += conf.panel_cols -1 + (conf.panel_rows*2 -1) * conf.panel_cols
-            memAddrStartPh1     += memAddrStartPh0 - (conf.panel_rows/2 * conf.panel_cols)
+        else if (sideRotation==180){
+            memAddrStartPh0     += conf.panel_rows * conf.panel_cols - 1
+            memAddrStartPh1     = memAddrStartPh0 - (conf.panel_rows/2 * conf.panel_cols)
 
-            if (!sideTop){
-                memAddrStartPh0 -= conf.panel_rows * conf.panel_cols
-                memAddrStartPh1 -= conf.panel_rows * conf.panel_cols
-            }
-            memAddrColMul       = -1
+            memAddrColMul       = -1 
             memAddrRowMul       = -conf.panel_cols
         }
+        else if (sideRotation==270){
+            memAddrStartPh0     += (conf.panel_rows-1) * conf.panel_cols
+            memAddrStartPh1     = memAddrStartPh0 - (conf.panel_rows/2 * conf.panel_cols)
+        }
+        else{
+            assert(true)
+        }
 
-        println(s"Side: $side")
-        println(s"Top: $sideTop")
-        println(s"Rot: $sideRotation")
-        println(s"Ph0: $memAddrStartPh0")
-        println(s"Ph1: $memAddrStartPh1")
+        println(s"========================================")
+        println(s"Side:   $side")
+        println(s"Rot:    $sideRotation")
+        println(s"Ph0:    $memAddrStartPh0")
+        println(s"Ph1:    $memAddrStartPh1")
+        println(s"ColMul: $memAddrColMul")
+        println(s"RowMul: $memAddrRowMul")
 
         piHW.memAddrStartPh0    := memAddrStartPh0
         piHW.memAddrStartPh1    := memAddrStartPh1
         piHW.memAddrColMul      := memAddrColMul
         piHW.memAddrRowMul      := memAddrRowMul
-        */
 
         piHW.xIncr              := xIncr
         piHW.yIncr              := yIncr
@@ -123,6 +132,7 @@ case class Hub75Config(
 
     println(s"nr_row_bits     : $nr_row_bits")
     println(s"pixels_per_panel: $pixels_per_panel")
+    println(s"total_nr_pixels : $total_nr_pixels")
 }
 
 case class Hub75Intfc(conf: Hub75Config) extends Bundle {
