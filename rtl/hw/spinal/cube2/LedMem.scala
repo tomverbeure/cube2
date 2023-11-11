@@ -8,7 +8,7 @@ import spinal.lib.bus.amba3.apb._
 import ecp5._
 
 object LedMem {
-    def getApb3Config() = Apb3Config(addressWidth = 17, dataWidth = 32)
+    def getApb3Config() = Apb3Config(addressWidth = 18, dataWidth = 32)
 }
 
 case class LedMemConfig(

@@ -545,7 +545,7 @@ void render_bitmap_2bpp(uint32_t *bitmap, uint32_t *colors, int size_x, int size
 void play_basic(int total_nr_frames)
 {
     led_mem_fill(0, 0, 0, 0);
-    //led_mem_fill(1, 0, 0, 0);
+    led_mem_fill(1, 0, 0, 0);
 
     uint32_t scratch_buf = 0;
 
@@ -553,18 +553,41 @@ void play_basic(int total_nr_frames)
 
     int intensity = 32;
 
-    hub75s_start();
+
+#if 0
+    //for(int p=0; p<5; ++p){
+    int p=1;
+    {
+        for(int x=0;x<64;++x){
+            led_mem_wr(scratch_buf, p, x, 0, 64,0,0);
+
+            hub75s_start();
+            
+            // Wait for a certain number of frames..
+            uint32_t prev_frame_cntr = REG_RD(HUB75S_FRAME_CNTR);
+            while(REG_RD(HUB75S_FRAME_CNTR) < prev_frame_cntr + 6) 
+                ;
+
+            // Swap buffer
+            REG_WR_FIELD(HUB75S_CONFIG, BUFFER_NR, scratch_buf);
+            while(REG_RD_FIELD(HUB75S_STATUS, CUR_BUFFER_NR) != scratch_buf) 
+                ;
+        }
+    }
+    return;
+#endif
+
 
     for(int x=0;x<64;++x){
         for(int p=0; p<5; ++p){
             uint32_t color = 0;
             switch(p){
-                case 0: color   = (0  << 16) | (0  << 8) | intensity; break;
-                case 1: color   = (0  << 16) | (intensity << 8) |  0; break;
-                case 2: color   = (intensity << 16) | (0  << 8) |  0; break;
+                case 0: color   = (0  << 16) | (0  << 8) | intensity; break;            // RED
+                case 1: color   = (0  << 16) | (intensity << 8) |  0; break;            // GREEN
+                case 2: color   = (intensity << 16) | (0  << 8) |  0; break;            // BLUE
     
-                case 3: color   = (0  << 16) | (intensity << 8) | intensity; break;
-                case 4: color   = (intensity << 16) | (intensity << 8) |  0; break;
+                case 3: color   = (0  << 16) | (intensity << 8) | intensity; break;     // YELLOW
+                case 4: color   = (intensity << 16) | (intensity << 8) |  0; break;     // CYAN
                 case 5: color   = (intensity << 16) | (0  << 8) | intensity; break;
             }
     
@@ -578,6 +601,7 @@ void play_basic(int total_nr_frames)
                 }
             }
 
+            hub75s_start();
             
             // Wait for a certain number of frames..
             uint32_t prev_frame_cntr = REG_RD(HUB75S_FRAME_CNTR);
@@ -745,9 +769,8 @@ int main() {
     REG_WR(LED_WRITE, 0xff);
     REG_WR(LED_WRITE, 0x0);
 
-//    hub75s_start();
-//    while(1)
-//        play_basic(120 * 3);
+    while(1)
+        play_basic(120 * 3);
 
     hub75s_start();
     while(1){
