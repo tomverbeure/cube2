@@ -57,4 +57,6 @@ inline int hub75s_coord2addr(int buffer_nr, int side, int x, int y)
     return addr;
 }
 
+uint32_t hub75s_ring_coord2addr(int buffer, int ring_nr, int x, int y);
+
 #endif
