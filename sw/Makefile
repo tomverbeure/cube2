@@ -5,7 +5,7 @@ MEM_WORDS       = 4096
 GAMMA           = 1.3
 DIM             = 0.35
 
-OBJ_FILES       = start.o main.o led_render.o hub75_streamer.o
+OBJ_FILES       = start.o main.o led_render.o hub75_streamer.o pacman.o led_mem.o pacman_bitmaps.o
 
 #TOOLS_PREFIX    = /opt/homebrew/bin
 TOOLS_PREFIX    = /opt/riscv64-unknown-elf-toolchain/bin
@@ -26,6 +26,10 @@ OBJDUMP         = $(TARGET)-objdump
 all: progmem.dis progmem.bin progmem4k.bin progmem.mem progmem.hex progmem0.mif
 
 main.o: gamma_dim_table.h pacman.h hub75_streamer.h
+
+pacman.o: gamma_dim_table.h pacman.h hub75_streamer.h
+
+led_mem.o: gamma_dim_table.h led_mem.h
 
 progmem.dis: progmem_dis.elf
 	$(OBJDUMP) -s -D $< > $@

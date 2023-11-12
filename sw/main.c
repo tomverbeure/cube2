@@ -2,8 +2,9 @@
 
 #include "reg.h"
 #include "top_defines.h"
-//#include "led_render.h"
 #include "hub75_streamer.h"
+#include "led_mem.h"
+#include "pacman.h"
 
 #include "../movie/palette.h"
 #include "../movie/ricks_compr.h"
@@ -35,78 +36,9 @@ void wait(int cycles)
 #endif
 }
 
-#include "pacman.h"
 #include "mario.h"
 
-
 #define WAIT_CYCLES 4000000
-
-#include "gamma_dim_table.h"
-
-void led_mem_wr_gamma_dim(int buffer_nr, int side, int x, int y, unsigned char r, unsigned char g, unsigned char b)
-{
-    int addr = hub75s_coord2addr(buffer_nr, side, x, y);
-    MEM_WR(LED_MEM, 
-            //buffer_nr * HUB75S_SIDE_HEIGHT * HUB75S_SIDE_WIDTH + side * 2 * HUB75S_SIDE_HEIGHT * HUB75S_SIDE_WIDTH + y * HUB75S_SIDE_WIDTH + x, 
-            addr,
-            gamma_dim_table[r] | 
-            (gamma_dim_table[g]<<8) | 
-            (gamma_dim_table[b]<<16));
-}
-
-void led_mem_wr(int buffer_nr, int side, int x, int y, unsigned char r, unsigned char g, unsigned char b)
-{
-#if 0
-    MEM_WR(LED_MEM, 
-            buffer_nr * HUB75S_SIDE_HEIGHT * HUB75S_SIDE_WIDTH + side * 2 * HUB75S_SIDE_HEIGHT * HUB75S_SIDE_WIDTH + y * HUB75S_SIDE_WIDTH + x, 
-            r | (g<<8) | (b<<16));
-#else
-    int addr = hub75s_coord2addr(buffer_nr, side, x, y);
-    MEM_WR(LED_MEM, 
-            addr,
-            r | (g<<8) | (b<<16));
-#endif
-}
-
-void led_mem_fill(int buffer_nr, unsigned char r, unsigned char g, unsigned char b)
-{
-    for(int row=0;row<64;++row){
-        for(int col=0;col<64;++col){
-        /*
-            MEM_WR(LED_MEM,           row*64 + col, 0);
-            MEM_WR(LED_MEM, 1*64*64 + row*64 + col, 0);
-            MEM_WR(LED_MEM, 2*64*64 + row*64 + col, 0);
-            MEM_WR(LED_MEM, 3*64*64 + row*64 + col, 0);
-            MEM_WR(LED_MEM, 4*64*64 + row*64 + col, 0);
-            MEM_WR(LED_MEM, 5*64*64 + row*64 + col, 0);
-        */
-
-            led_mem_wr(buffer_nr, 0, col, row, r, g, b);
-            led_mem_wr(buffer_nr, 1, col, row, r, g, b);
-            led_mem_wr(buffer_nr, 2, col, row, r, g, b);
-            led_mem_wr(buffer_nr, 3, col, row, r, g, b);
-            led_mem_wr(buffer_nr, 4, col, row, r, g, b);
-        }
-    }
-}
-
-void led_mem_clear(int buffer_nr)
-{
-    led_mem_fill(buffer_nr, 0, 0, 0);
-}
-
-void led_mem_effect(int buffer_nr)
-{
-    unsigned char r,g,b;
-
-    for(r=0;r<255;++r){
-        for(g=0;g<255;++g){
-            for(b=0;b<255;++b){
-                led_mem_fill(buffer_nr, r,g,b);
-            }
-        }
-    }
-}
 
 void led_mem_stripes(int buffer_nr)
 {
@@ -381,58 +313,6 @@ void play_rick(int total_nr_frames)
         scratch_buf ^= 1;
     }
 
-}
-
-void play_pacman(int nr_loops)
-{
-    uint32_t scratch_buf = 1;
-
-    int pos_x = 0;
-    int pos_y = 10;
-
-    //uint32_t start_frame = REG_RD(HUB75S_FRAME_CNTR);
-
-    for(int i=0;i<nr_loops;++i){
-        for(int j=0;j<HUB75S_SIDE_WIDTH*4;++i){
-            led_mem_clear(scratch_buf);
-    
-            uint32_t *current_ghost         = ghost_left_0;
-            uint32_t *current_ghost_scared  = ghost_scared_0;
-            uint16_t *current_pac           = pacman_open;
-            
-            if (REG_RD(HUB75S_FRAME_CNTR) % 30 > 15){
-                current_ghost           = ghost_left_1;
-                current_ghost_scared    = ghost_scared_1;
-                current_pac             = pacman_closed;
-            }
-    
-            //render_bitmap_1bpp(current_pac, pac_color, 11, 11, scratch_buf, RING_LFRBa, (pos_x) % (4*HUB75S_SIDE_WIDTH), pos_y);
-            render_bitmap_1bpp(current_pac, pac_color, 16, 16, scratch_buf, RING_LFRBa, (pos_x) % (4*HUB75S_SIDE_WIDTH), pos_y);
-
-            int chase_dist = 20;
-            int ghost_delta = 12;
-    
-            render_bitmap_2bpp(current_ghost,   ghost_pink_colors,    16, 16, scratch_buf, RING_LFRBa, (pos_x - chase_dist - 0 * ghost_delta) % (4*HUB75S_SIDE_WIDTH), pos_y);
-            render_bitmap_2bpp(current_ghost,   ghost_red_colors,     16, 16, scratch_buf, RING_LFRBa, (pos_x - chase_dist - 1 * ghost_delta) % (4*HUB75S_SIDE_WIDTH), pos_y);
-            render_bitmap_2bpp(current_ghost,   ghost_orange_colors,  16, 16, scratch_buf, RING_LFRBa, (pos_x - chase_dist - 2 * ghost_delta) % (4*HUB75S_SIDE_WIDTH), pos_y);
-            render_bitmap_2bpp(current_ghost,   ghost_cyan_colors,    16, 16, scratch_buf, RING_LFRBa, (pos_x - chase_dist - 3 * ghost_delta) % (4*HUB75S_SIDE_WIDTH), pos_y);
-    
-            render_bitmap_2bpp(current_ghost_scared, ghost_scared_colors,  16, 16, scratch_buf, RING_LFRBa, (pos_x + 30) % (4*HUB75S_SIDE_WIDTH), pos_y);
-    
-            render_bitmap_2bpp(cherry, cherry_colors, 12, 12, scratch_buf, RING_LFRBa, 10 + HUB75S_SIDE_WIDTH, 10-HUB75S_SIDE_WIDTH);
-    
-            pos_x = (pos_x + 1) % (4 * HUB75S_SIDE_WIDTH);
-    
-            uint32_t prev_frame_cntr = REG_RD(HUB75S_FRAME_CNTR);
-            while(REG_RD(HUB75S_FRAME_CNTR) < prev_frame_cntr + 15) ;
-    
-            REG_WR_FIELD(HUB75S_CONFIG, BUFFER_NR, scratch_buf);
-            while(REG_RD_FIELD(HUB75S_STATUS, CUR_BUFFER_NR) != scratch_buf) 
-                ;
-    
-            scratch_buf ^= 1;
-        }
-    }
 }
 
 void play_mario(int total_nr_frames)
