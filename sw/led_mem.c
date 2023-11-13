@@ -61,6 +61,10 @@ void render_bitmap_1bpp(uint16_t *bitmap, uint32_t color, int size_x, int size_y
                 if (!bit)
                     continue;
 
+                // FIXME: currently no support for top and bottom sides
+                if (pos_y+y>=64){
+                    continue;
+                }
                 int phys_addr = hub75s_ring_coord2addr(buffer_nr, 0, pos_x+x, pos_y+y);
                 MEM_WR(LED_MEM, phys_addr, color);
         }
