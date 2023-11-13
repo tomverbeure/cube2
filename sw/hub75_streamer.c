@@ -39,7 +39,8 @@ t_panel_info panels[] = {
     { -1, 1, 1,  1 /* front  */,  270,    1,-1, 0,  0,0,0 },   // Buffer 1
     { -1, 1, 1,  2 /* right  */,   90,    1,-1, 0,  0,0,0 },   // Buffer 2
     { -1, 1, 1,  3 /* back   */,   90,    1,-1, 0,  0,0,0 },   // Buffer 3
-    { -1, 1, 1,  4 /* bottom */,  180,    1,-1, 0,  0,0,0 }    // Buffer 4
+    { -1, 1, 1,  4 /* bottom */,  180,    1,-1, 0,  0,0,0 },   // Buffer 4
+    { -1, 1, 1,  5 /* top */,     180,    1,-1, 0,  0,0,0 },   // Buffer 4
 #else
     { -1, 1, 1,  0 /* left   */,  0,    1,-1, 0,  0,0,0,0 },   // Buffer 0 
     { -1, 1, 1,  1 /* front  */,  0,    1,-1, 0,  0,0,0,0 },   // Buffer 1
@@ -173,11 +174,11 @@ uint32_t hub75s_ring_coord2addr(int buffer_nr, int ring_nr, int x, int y)
     return addr;
 }
 
+/*
 uint32_t hub75s_calc_phys_addr(int buffer, int log_addr)
 {
     return log_addr; 
 
-/*
     const uint32_t side_width  = HUB75S_SIDE_WIDTH;
     const uint32_t side_height = HUB75S_SIDE_HEIGHT;
     const uint32_t side_size   = HUB75S_SIDE_SIZE;
@@ -233,8 +234,8 @@ uint32_t hub75s_calc_phys_addr(int buffer, int log_addr)
     phys_addr += buffer * 6 * side_size;
 
     return phys_addr;
-*/
 }
+*/
 
 
 
