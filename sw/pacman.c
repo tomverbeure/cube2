@@ -125,7 +125,7 @@ void play_pacman(int nr_loops)
     uint32_t scratch_buf = 1;
 
     int pos_x = 0;
-    int pos_y = 10;
+    int pos_y = 24;
 
     //uint32_t start_frame = REG_RD(HUB75S_FRAME_CNTR);
 
@@ -133,12 +133,6 @@ void play_pacman(int nr_loops)
         for(int j=0;j<HUB75S_SIDE_WIDTH*4;++i){
             led_mem_clear(scratch_buf);
 
-#if 0
-            render_bitmap_1bpp(dot_small, dot_color, 2, 2, scratch_buf, RING_LFRBa, -1, 7);
-            render_bitmap_1bpp(dot_small, dot_color, 2, 2, scratch_buf, RING_LFRBa, 7, 7);
-            render_bitmap_1bpp(dot_small, dot_color, 2, 2, scratch_buf, RING_LFRBa, 15, 7);
-            render_bitmap_1bpp(dot_small, dot_color, 2, 2, scratch_buf, RING_LFRBa, 15, -1);
-#endif
             render_field(scratch_buf);
     
             uint32_t *current_ghost         = ghost_left_0;
@@ -151,18 +145,17 @@ void play_pacman(int nr_loops)
                 current_pac             = pacman_closed;
             }
     
-            //render_bitmap_1bpp(current_pac, pac_color, 11, 11, scratch_buf, RING_LFRBa, (pos_x) % (4*HUB75S_SIDE_WIDTH), pos_y);
             render_bitmap_1bpp(current_pac, pac_color, 16, 16, scratch_buf, RING_LFRBa, (pos_x) % (4*HUB75S_SIDE_WIDTH), pos_y);
 
             int chase_dist = 20;
             int ghost_delta = 12;
     
-            render_bitmap_2bpp(current_ghost,   ghost_pink_colors,    16, 16, scratch_buf, RING_LFRBa, (pos_x - chase_dist - 0 * ghost_delta) % (4*HUB75S_SIDE_WIDTH), pos_y);
-            render_bitmap_2bpp(current_ghost,   ghost_red_colors,     16, 16, scratch_buf, RING_LFRBa, (pos_x - chase_dist - 1 * ghost_delta) % (4*HUB75S_SIDE_WIDTH), pos_y);
-            render_bitmap_2bpp(current_ghost,   ghost_orange_colors,  16, 16, scratch_buf, RING_LFRBa, (pos_x - chase_dist - 2 * ghost_delta) % (4*HUB75S_SIDE_WIDTH), pos_y);
-            render_bitmap_2bpp(current_ghost,   ghost_cyan_colors,    16, 16, scratch_buf, RING_LFRBa, (pos_x - chase_dist - 3 * ghost_delta) % (4*HUB75S_SIDE_WIDTH), pos_y);
+            render_bitmap_2bpp(current_ghost,   ghost_pink_colors,    14, 14, scratch_buf, RING_LFRBa, (pos_x - chase_dist - 0 * ghost_delta) % (4*HUB75S_SIDE_WIDTH), pos_y);
+            render_bitmap_2bpp(current_ghost,   ghost_red_colors,     14, 14, scratch_buf, RING_LFRBa, (pos_x - chase_dist - 1 * ghost_delta) % (4*HUB75S_SIDE_WIDTH), pos_y);
+            render_bitmap_2bpp(current_ghost,   ghost_orange_colors,  14, 14, scratch_buf, RING_LFRBa, (pos_x - chase_dist - 2 * ghost_delta) % (4*HUB75S_SIDE_WIDTH), pos_y);
+            render_bitmap_2bpp(current_ghost,   ghost_cyan_colors,    14, 14, scratch_buf, RING_LFRBa, (pos_x - chase_dist - 3 * ghost_delta) % (4*HUB75S_SIDE_WIDTH), pos_y);
     
-            render_bitmap_2bpp(current_ghost_scared, ghost_scared_colors,  16, 16, scratch_buf, RING_LFRBa, (pos_x + 30) % (4*HUB75S_SIDE_WIDTH), pos_y);
+            render_bitmap_2bpp(current_ghost_scared, ghost_scared_colors,  14, 14, scratch_buf, RING_LFRBa, (pos_x + 30) % (4*HUB75S_SIDE_WIDTH), pos_y);
     
             render_bitmap_2bpp(cherry, cherry_colors, 12, 12, scratch_buf, RING_LFRBa, 10 + HUB75S_SIDE_WIDTH, 10-HUB75S_SIDE_WIDTH);
     
