@@ -30,6 +30,8 @@ top.unpatched.config: top.json top.lpf
 	#nextpnr-ecp5 -l top.nextpnr.log --25k --package $(PACKAGE) --speed 6 --lpf top.lpf --json top.json --textcfg $@ --freq 48
 	nextpnr-ecp5 -l top.nextpnr.log --25k --package $(PACKAGE) --speed 6 --lpf top.lpf --json top.json --textcfg $@
 
+# Take the unpatched bitstream that has random RAM contents and patch the
+# RAM content with the 'real' contents from the ./sw directory
 top.config: top.unpatched.config $(SW_RAM_CONTENTS_HEX)
 	ecpbram --width 8 --depth 4096 -i top.unpatched.config -o top.patched0.config --from ./build/Cube2Top.v_toplevel_core_u_cpu_u_cpu_ram_ram_symbol0.hex --to ../sw/progmem0.hex -v
 	ecpbram --width 8 --depth 4096 -i top.patched0.config -o top.patched1.config  --from ./build/Cube2Top.v_toplevel_core_u_cpu_u_cpu_ram_ram_symbol1.hex --to ../sw/progmem1.hex -v

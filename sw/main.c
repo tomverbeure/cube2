@@ -340,6 +340,9 @@ int main()
 //        play_basic(120 * 3);
 
     hub75s_start();
+
+    init_pacman();
+
     while(1){
         //play_rick(120 * 3);
         play_pacman(1);

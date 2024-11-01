@@ -8,10 +8,18 @@
 #include "hub75_streamer.h"
 #include "led_mem.h"
 
+// 4 panels (left, front, right, back), 8x8 for each panel
+#define GRID_WIDTH  32
+#define GRID_HEIGHT 8
+
+#define GRID_WALL   0x00
+#define GRID_DOT    0x01
+#define GRID_EMPTY  0x02
+
 // Each cell is 8x8 pixels -> 8x8 cells per LED Panel
-uint8_t grid[8][32] = {
-    // 0x01     -> channel with regular dot
-    //          the dot is rendered in the middle of the 8x8 cell
+const uint8_t grid1[GRID_HEIGHT][GRID_WIDTH] = {
+    // 0x00     -> location has nothing but characters can still walk there
+    // 0x01     -> location with regular dot. The dot is rendered in the middle of the 8x8 cell.
 
     // Left                                             Front                                             Right                                             Back
     { 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,   0x00, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,   0x01, 0x01, 0x01, 0x01, 0x00, 0x00, 0x01, 0x01,   0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x00 },
@@ -24,8 +32,27 @@ uint8_t grid[8][32] = {
     { 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01, 0x00,   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01,   0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,   0x00, 0x00, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00 }
 };
 
+uint8_t active_grid[GRID_HEIGHT][GRID_WIDTH];
 
-void render_field(int buffer)
+typedef enum e_direction {
+    UP      = 0,
+    DOWN    = 1,
+    LEFT    = 2,
+    RIGHT   = 3
+} t_direction;
+
+typedef struct s_pacman {
+    t_direction     dir;
+    int             pos_x;
+    int             pos_y;
+} t_pacman;
+
+typedef struct s_pacman_state {
+    t_pacman        pacman;
+} t_pacman_state;
+
+
+void render_field(int buffer, uint8_t grid[8][32])
 {
     // FIXME: add support for top and bottom
     for(int grid_y=0; grid_y<8;++grid_y){
@@ -35,8 +62,11 @@ void render_field(int buffer)
             int pos_x = grid_x * 8 + 8;     // middle coordinate of 8x8 cell
             int pos_y = grid_y * 8 + 8;
 
-            if (cell==0x01){
-                // FIXME: look better this way when not supporting top and bottom
+            //============================================================
+            // Render edible dot
+            //============================================================
+            if (cell==GRID_DOT){
+                // FIXME: currently looks better this way when not supporting top and bottom
                 if (grid_y==7){
                     continue;
                 }
@@ -51,74 +81,87 @@ void render_field(int buffer)
             // -height/2
             pos_y -= 4;
 
-            // Current cell doesn't have a dot...
+            //============================================================
+            // Render wall
+            //============================================================
+            if (cell==GRID_WALL){
 
-            uint8_t neighbor_has_dot[3][3];
-            for(int hd_y=-1; hd_y<=1;++hd_y){
-                int ry = grid_y+hd_y;
-                for(int hd_x=-1; hd_x<=1;++hd_x){
-                    int rx=grid_x+hd_x;
-                    int has_dot;
-                    if (ry<0){
-                        has_dot = 0;
+                uint8_t neighbor_has_dot[3][3];
+                for(int hd_y=-1; hd_y<=1;++hd_y){
+                    int ry = grid_y+hd_y;
+                    for(int hd_x=-1; hd_x<=1;++hd_x){
+                        int rx=grid_x+hd_x;
+    
+                        int has_dot;
+                        if (ry<0){
+                            has_dot = 0;
+                        }
+                        else if (ry>=64){
+                            has_dot = 0;
+                        }
+                        else{
+                            has_dot = rx==64 ? grid[ry][ 0] != GRID_WALL : grid[ry][rx] != GRID_WALL;
+                        }
+    
+                        neighbor_has_dot[hd_y+1][hd_x+1] = has_dot;
                     }
-                    else if (ry>=64){
-                        has_dot = 0;
+                }
+    
+                if (neighbor_has_dot[-1+1][0+1]){            // above
+                    if (neighbor_has_dot[0+1][-1+1]){        // left
+                        render_bitmap_1bpp(corner_left_top, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
+                    }
+                    else if (neighbor_has_dot[0+1][1+1]){    // right
+                        render_bitmap_1bpp(corner_right_top, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
                     }
                     else{
-                        has_dot = rx==64 ? grid[ry][ 0] == 0x01 : grid[ry][rx] == 0x01;
+                        render_bitmap_1bpp(border_top, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
                     }
-
-                    neighbor_has_dot[hd_y+1][hd_x+1] = has_dot;
                 }
-            }
-
-            if (neighbor_has_dot[-1+1][0+1]){            // above
-                if (neighbor_has_dot[0+1][-1+1]){        // left
-                    render_bitmap_1bpp(corner_left_top, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
+                else if (neighbor_has_dot[1+1][0+1]){        // below
+                    if (neighbor_has_dot[0+1][-1+1]){        // left
+                        render_bitmap_1bpp(corner_left_bottom, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
+                    }
+                    else if (neighbor_has_dot[0+1][1+1]){    // right
+                        render_bitmap_1bpp(corner_right_bottom, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
+                    }
+                    else{
+                        render_bitmap_1bpp(border_bottom, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
+                    }
                 }
-                else if (neighbor_has_dot[0+1][1+1]){    // right
-                    render_bitmap_1bpp(corner_right_top, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
+                else if (neighbor_has_dot[0+1][-1+1]){       // left
+                    render_bitmap_1bpp(border_left, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
                 }
-                else{
-                    render_bitmap_1bpp(border_top, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
+                else if (neighbor_has_dot[0+1][1+1]){       // right
+                    render_bitmap_1bpp(border_right, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
                 }
-            }
-            else if (neighbor_has_dot[1+1][0+1]){        // below
-                if (neighbor_has_dot[0+1][-1+1]){        // left
+    
+                else if (neighbor_has_dot[-1+1][1+1]){        // above-right
                     render_bitmap_1bpp(corner_left_bottom, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
                 }
-                else if (neighbor_has_dot[0+1][1+1]){    // right
+                else if (neighbor_has_dot[-1+1][-1+1]){        // above-left
                     render_bitmap_1bpp(corner_right_bottom, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
                 }
-                else{
-                    render_bitmap_1bpp(border_bottom, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
+                else if (neighbor_has_dot[1+1][1+1]){        // below-right
+                    render_bitmap_1bpp(corner_left_top, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
                 }
-            }
-            else if (neighbor_has_dot[0+1][-1+1]){       // left
-                render_bitmap_1bpp(border_left, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
-            }
-            else if (neighbor_has_dot[0+1][1+1]){       // right
-                render_bitmap_1bpp(border_right, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
-            }
-
-            else if (neighbor_has_dot[-1+1][1+1]){        // above-right
-                render_bitmap_1bpp(corner_left_bottom, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
-            }
-            else if (neighbor_has_dot[-1+1][-1+1]){        // above-left
-                render_bitmap_1bpp(corner_right_bottom, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
-            }
-            else if (neighbor_has_dot[1+1][1+1]){        // below-right
-                render_bitmap_1bpp(corner_left_top, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
-            }
-            else if (neighbor_has_dot[1+1][-1+1]){        // below-left
-                render_bitmap_1bpp(corner_right_top, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
+                else if (neighbor_has_dot[1+1][-1+1]){        // below-left
+                    render_bitmap_1bpp(corner_right_top, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
+                }
             }
 
         }
     }
 }
 
+void init_pacman()
+{
+    for(int h=0; h<GRID_HEIGHT; ++h){
+        for(int w=0; w<GRID_WIDTH; ++w){
+            active_grid[h][w]   = grid1[h][w];
+        }
+    }
+}
 
 void play_pacman(int nr_loops)
 {
@@ -133,7 +176,7 @@ void play_pacman(int nr_loops)
         for(int j=0;j<HUB75S_SIDE_WIDTH*4;++i){
             led_mem_clear(scratch_buf);
 
-            render_field(scratch_buf);
+            render_field(scratch_buf,active_grid);
     
             uint32_t *current_ghost         = ghost_left_0;
             uint32_t *current_ghost_scared  = ghost_scared_0;
