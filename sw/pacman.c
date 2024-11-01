@@ -79,7 +79,7 @@ void render_field(int buffer, uint8_t grid[8][32])
                 }
                 pos_x -= 1;     // dot width (2) /2
                 pos_y -= 1;
-                render_bitmap_1bpp(dot_small, dot_color, 2, 2, buffer, RING_LFRBa, pos_x, pos_y);
+                render_bitmap_1bpp(dot_small, dot_color, 2, 2, buffer, RING_LFRBa, pos_x, pos_y, 0);
                 continue;
             }
 
@@ -116,44 +116,44 @@ void render_field(int buffer, uint8_t grid[8][32])
     
                 if (neighbor_has_dot[-1+1][0+1]){            // above
                     if (neighbor_has_dot[0+1][-1+1]){        // left
-                        render_bitmap_1bpp(corner_left_top, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
+                        render_bitmap_1bpp(corner_left_top, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y, 0);
                     }
                     else if (neighbor_has_dot[0+1][1+1]){    // right
-                        render_bitmap_1bpp(corner_right_top, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
+                        render_bitmap_1bpp(corner_right_top, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y, 0);
                     }
                     else{
-                        render_bitmap_1bpp(border_top, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
+                        render_bitmap_1bpp(border_top, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y, 0);
                     }
                 }
                 else if (neighbor_has_dot[1+1][0+1]){        // below
                     if (neighbor_has_dot[0+1][-1+1]){        // left
-                        render_bitmap_1bpp(corner_left_bottom, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
+                        render_bitmap_1bpp(corner_left_bottom, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y, 0);
                     }
                     else if (neighbor_has_dot[0+1][1+1]){    // right
-                        render_bitmap_1bpp(corner_right_bottom, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
+                        render_bitmap_1bpp(corner_right_bottom, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y, 0);
                     }
                     else{
-                        render_bitmap_1bpp(border_bottom, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
+                        render_bitmap_1bpp(border_bottom, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y, 0);
                     }
                 }
                 else if (neighbor_has_dot[0+1][-1+1]){       // left
-                    render_bitmap_1bpp(border_left, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
+                    render_bitmap_1bpp(border_left, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y, 0);
                 }
                 else if (neighbor_has_dot[0+1][1+1]){       // right
-                    render_bitmap_1bpp(border_right, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
+                    render_bitmap_1bpp(border_right, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y, 0);
                 }
     
                 else if (neighbor_has_dot[-1+1][1+1]){        // above-right
-                    render_bitmap_1bpp(corner_left_bottom, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
+                    render_bitmap_1bpp(corner_left_bottom, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y, 0);
                 }
                 else if (neighbor_has_dot[-1+1][-1+1]){        // above-left
-                    render_bitmap_1bpp(corner_right_bottom, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
+                    render_bitmap_1bpp(corner_right_bottom, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y, 0);
                 }
                 else if (neighbor_has_dot[1+1][1+1]){        // below-right
-                    render_bitmap_1bpp(corner_left_top, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
+                    render_bitmap_1bpp(corner_left_top, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y, 0);
                 }
                 else if (neighbor_has_dot[1+1][-1+1]){        // below-left
-                    render_bitmap_1bpp(corner_right_top, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y);
+                    render_bitmap_1bpp(corner_right_top, border_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y, 0);
                 }
             }
 
@@ -248,7 +248,15 @@ void pacman_render()
 
     uint16_t *current_pac       = pacman_state.pacman.mouth_open ? pacman_open : pacman_closed;
 
-    render_bitmap_1bpp(current_pac, pac_color, 16, 16, scratch_buf, RING_LFRBa, (pacman_state.pacman.pos_x) % (4*HUB75S_SIDE_WIDTH), pacman_state.pacman.pos_y);
+    int rotation = 0;
+    switch(pacman_state.pacman.dir){
+        case RIGHT: { rotation =   0; break; }    
+        case LEFT:  { rotation = 180; break; }    
+        case UP:    { rotation =  90; break; }    
+        case DOWN:  { rotation = 270; break; }    
+    }
+
+    render_bitmap_1bpp(current_pac, pac_color, 16, 16, scratch_buf, RING_LFRBa, (pacman_state.pacman.pos_x) % (4*HUB75S_SIDE_WIDTH), pacman_state.pacman.pos_y, rotation);
 
     int chase_dist = 20;
     int ghost_delta = 12;
