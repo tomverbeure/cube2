@@ -1,4 +1,6 @@
 
+#include <stdlib.h> 
+
 #include "pacman.h"
 
 #include "pacman_bitmaps.h"
@@ -35,10 +37,11 @@ const uint8_t grid1[GRID_HEIGHT][GRID_WIDTH] = {
 uint8_t active_grid[GRID_HEIGHT][GRID_WIDTH];
 
 typedef enum e_direction {
-    UP      = 0,
+    // RIGHT == LEFT ^3, DOWN = UP ^ 3
+    RIGHT   = 0,
     DOWN    = 1,
-    LEFT    = 2,
-    RIGHT   = 3
+    UP      = 2,
+    LEFT    = 3,
 } t_direction;
 
 typedef struct s_pacman {
@@ -168,17 +171,59 @@ void pacman_init()
 
     pacman_state.pacman.dir         = RIGHT;
     pacman_state.pacman.pos_x       = 0     * 8;
-    pacman_state.pacman.pos_x       = 24    * 8;
+    pacman_state.pacman.pos_x       = 16    * 8;
     pacman_state.pacman.mouth_open  = 0;
 }
 
 void pacman_update()
 {
+    t_pacman *p  = &pacman_state.pacman;
+
     if (REG_RD(HUB75S_FRAME_CNTR) % 32 >= 16){
-        pacman_state.pacman.mouth_open  =   0;
+        p->mouth_open   = 0;
     }
     else{
-        pacman_state.pacman.mouth_open  =   1;
+        p->mouth_open   = 1;
+    }
+
+    if ( (p->pos_x & 7) == 0 && (p->pos_y & 7) == 0){
+        // In the center of a square. Decided where to go next.
+
+        int g_pos_x  = p->pos_x >> 3;
+        int g_pos_y  = p->pos_y >> 3;
+
+        if (active_grid[g_pos_y][g_pos_x] == GRID_DOT){
+            active_grid[g_pos_y][g_pos_x] = GRID_EMPTY;
+        }
+
+        int has_wall[4];
+        has_wall[RIGHT]  = active_grid[g_pos_y][ (g_pos_x+1) % GRID_WIDTH ]     == GRID_WALL;
+        has_wall[LEFT]   = active_grid[g_pos_y][ (g_pos_x-1) % GRID_WIDTH ]     == GRID_WALL;
+        has_wall[UP]     = g_pos_y == 0             ? 1 : active_grid[ (g_pos_y-1) % GRID_HEIGHT ][ g_pos_x ] == GRID_WALL;
+        has_wall[DOWN]   = g_pos_y == GRID_HEIGHT-2 ? 1 : active_grid[ (g_pos_y+1) % GRID_HEIGHT ][ g_pos_x ] == GRID_WALL;
+
+        // Don't go the inverse direction
+        has_wall[p->dir ^ 3]    = 1;
+
+        int r = random() & 3;
+        while(has_wall[r]){
+            r = (r + 1)&3;
+        }
+        p->dir  = r;
+    }
+
+    if (p->dir == RIGHT){
+        p->pos_x    = (p->pos_x + 1) % (4*HUB75S_SIDE_WIDTH);
+    }
+    else if (p->dir == LEFT){
+        p->pos_x    = (p->pos_x - 1) % (4*HUB75S_SIDE_WIDTH);
+    }
+
+    if (p->dir == UP){
+        p->pos_y    = (p->pos_y - 1) % (1*HUB75S_SIDE_WIDTH);
+    }
+    else if (p->dir == DOWN){
+        p->pos_y    = (p->pos_y + 1) % (1*HUB75S_SIDE_WIDTH);
     }
 }
 
@@ -203,8 +248,7 @@ void pacman_render()
 
     uint16_t *current_pac       = pacman_state.pacman.mouth_open ? pacman_open : pacman_closed;
 
-    //render_bitmap_1bpp(current_pac, pac_color, 16, 16, scratch_buf, RING_LFRBa, (pacman_state.pacman.pos_x) % (4*HUB75S_SIDE_WIDTH), pacman_state.pacman.pos_y);
-    render_bitmap_1bpp(current_pac, pac_color, 16, 16, scratch_buf, RING_LFRBa, pos_x % (4*HUB75S_SIDE_WIDTH), pos_y);
+    render_bitmap_1bpp(current_pac, pac_color, 16, 16, scratch_buf, RING_LFRBa, (pacman_state.pacman.pos_x) % (4*HUB75S_SIDE_WIDTH), pacman_state.pacman.pos_y);
 
     int chase_dist = 20;
     int ghost_delta = 12;
