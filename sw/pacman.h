@@ -3,7 +3,8 @@
 
 #include <stdint-gcc.h>
 
-void init_pacman();
-void play_pacman(int nr_loops);
+void pacman_init();
+void pacman_update();
+void pacman_render();
 
 #endif

@@ -341,11 +341,12 @@ int main()
 
     hub75s_start();
 
-    init_pacman();
+    pacman_init();
 
     while(1){
         //play_rick(120 * 3);
-        play_pacman(1);
+        pacman_update();
+        pacman_render();
         //play_mario(120 * 6);
     }
 }

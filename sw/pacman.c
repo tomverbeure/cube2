@@ -45,11 +45,15 @@ typedef struct s_pacman {
     t_direction     dir;
     int             pos_x;
     int             pos_y;
+    int             mouth_open;
+    
 } t_pacman;
 
 typedef struct s_pacman_state {
     t_pacman        pacman;
 } t_pacman_state;
+
+t_pacman_state  pacman_state;
 
 
 void render_field(int buffer, uint8_t grid[8][32])
@@ -154,64 +158,73 @@ void render_field(int buffer, uint8_t grid[8][32])
     }
 }
 
-void init_pacman()
+void pacman_init()
 {
     for(int h=0; h<GRID_HEIGHT; ++h){
         for(int w=0; w<GRID_WIDTH; ++w){
             active_grid[h][w]   = grid1[h][w];
         }
     }
+
+    pacman_state.pacman.dir         = RIGHT;
+    pacman_state.pacman.pos_x       = 0     * 8;
+    pacman_state.pacman.pos_x       = 24    * 8;
+    pacman_state.pacman.mouth_open  = 0;
 }
 
-void play_pacman(int nr_loops)
+void pacman_update()
 {
-    uint32_t scratch_buf = 1;
-
-    int pos_x = 0;
-    int pos_y = 24;
-
-    //uint32_t start_frame = REG_RD(HUB75S_FRAME_CNTR);
-
-    for(int i=0;i<nr_loops;++i){
-        for(int j=0;j<HUB75S_SIDE_WIDTH*4;++i){
-            led_mem_clear(scratch_buf);
-
-            render_field(scratch_buf,active_grid);
-    
-            uint32_t *current_ghost         = ghost_left_0;
-            uint32_t *current_ghost_scared  = ghost_scared_0;
-            uint16_t *current_pac           = pacman_open;
-            
-            if (REG_RD(HUB75S_FRAME_CNTR) % 30 > 15){
-                current_ghost           = ghost_left_1;
-                current_ghost_scared    = ghost_scared_1;
-                current_pac             = pacman_closed;
-            }
-    
-            render_bitmap_1bpp(current_pac, pac_color, 16, 16, scratch_buf, RING_LFRBa, (pos_x) % (4*HUB75S_SIDE_WIDTH), pos_y);
-
-            int chase_dist = 20;
-            int ghost_delta = 12;
-    
-            render_bitmap_2bpp(current_ghost,   ghost_pink_colors,    14, 14, scratch_buf, RING_LFRBa, (pos_x - chase_dist - 0 * ghost_delta) % (4*HUB75S_SIDE_WIDTH), pos_y);
-            render_bitmap_2bpp(current_ghost,   ghost_red_colors,     14, 14, scratch_buf, RING_LFRBa, (pos_x - chase_dist - 1 * ghost_delta) % (4*HUB75S_SIDE_WIDTH), pos_y);
-            render_bitmap_2bpp(current_ghost,   ghost_orange_colors,  14, 14, scratch_buf, RING_LFRBa, (pos_x - chase_dist - 2 * ghost_delta) % (4*HUB75S_SIDE_WIDTH), pos_y);
-            render_bitmap_2bpp(current_ghost,   ghost_cyan_colors,    14, 14, scratch_buf, RING_LFRBa, (pos_x - chase_dist - 3 * ghost_delta) % (4*HUB75S_SIDE_WIDTH), pos_y);
-    
-            render_bitmap_2bpp(current_ghost_scared, ghost_scared_colors,  14, 14, scratch_buf, RING_LFRBa, (pos_x + 30) % (4*HUB75S_SIDE_WIDTH), pos_y);
-    
-            render_bitmap_2bpp(cherry, cherry_colors, 12, 12, scratch_buf, RING_LFRBa, 10 + HUB75S_SIDE_WIDTH, 10-HUB75S_SIDE_WIDTH);
-    
-            pos_x = (pos_x + 1) % (4 * HUB75S_SIDE_WIDTH);
-    
-            uint32_t prev_frame_cntr = REG_RD(HUB75S_FRAME_CNTR);
-            while(REG_RD(HUB75S_FRAME_CNTR) < prev_frame_cntr + 15) ;
-    
-            REG_WR_FIELD(HUB75S_CONFIG, BUFFER_NR, scratch_buf);
-            while(REG_RD_FIELD(HUB75S_STATUS, CUR_BUFFER_NR) != scratch_buf) 
-                ;
-    
-            scratch_buf ^= 1;
-        }
+    if (REG_RD(HUB75S_FRAME_CNTR) % 32 >= 16){
+        pacman_state.pacman.mouth_open  =   0;
     }
+    else{
+        pacman_state.pacman.mouth_open  =   1;
+    }
+}
+
+void pacman_render()
+{
+    static uint32_t scratch_buf = 0;
+
+    static int pos_x = 0;
+    static int pos_y = 24;
+
+    scratch_buf ^= 1;
+    led_mem_clear(scratch_buf);
+    render_field(scratch_buf,active_grid);
+
+    uint32_t *current_ghost         = ghost_left_0;
+    uint32_t *current_ghost_scared  = ghost_scared_0;
+    
+    if (REG_RD(HUB75S_FRAME_CNTR) % 32 >= 16){
+        current_ghost           = ghost_left_1;
+        current_ghost_scared    = ghost_scared_1;
+    }
+
+    uint16_t *current_pac       = pacman_state.pacman.mouth_open ? pacman_open : pacman_closed;
+
+    //render_bitmap_1bpp(current_pac, pac_color, 16, 16, scratch_buf, RING_LFRBa, (pacman_state.pacman.pos_x) % (4*HUB75S_SIDE_WIDTH), pacman_state.pacman.pos_y);
+    render_bitmap_1bpp(current_pac, pac_color, 16, 16, scratch_buf, RING_LFRBa, pos_x % (4*HUB75S_SIDE_WIDTH), pos_y);
+
+    int chase_dist = 20;
+    int ghost_delta = 12;
+
+    render_bitmap_2bpp(current_ghost,   ghost_pink_colors,    14, 14, scratch_buf, RING_LFRBa, (pos_x - chase_dist - 0 * ghost_delta) % (4*HUB75S_SIDE_WIDTH), pos_y);
+    render_bitmap_2bpp(current_ghost,   ghost_red_colors,     14, 14, scratch_buf, RING_LFRBa, (pos_x - chase_dist - 1 * ghost_delta) % (4*HUB75S_SIDE_WIDTH), pos_y);
+    render_bitmap_2bpp(current_ghost,   ghost_orange_colors,  14, 14, scratch_buf, RING_LFRBa, (pos_x - chase_dist - 2 * ghost_delta) % (4*HUB75S_SIDE_WIDTH), pos_y);
+    render_bitmap_2bpp(current_ghost,   ghost_cyan_colors,    14, 14, scratch_buf, RING_LFRBa, (pos_x - chase_dist - 3 * ghost_delta) % (4*HUB75S_SIDE_WIDTH), pos_y);
+
+    render_bitmap_2bpp(current_ghost_scared, ghost_scared_colors,  14, 14, scratch_buf, RING_LFRBa, (pos_x + 30) % (4*HUB75S_SIDE_WIDTH), pos_y);
+
+    render_bitmap_2bpp(cherry, cherry_colors, 12, 12, scratch_buf, RING_LFRBa, 10 + HUB75S_SIDE_WIDTH, 10-HUB75S_SIDE_WIDTH);
+
+    pos_x = (pos_x + 1) % (4 * HUB75S_SIDE_WIDTH);
+
+    REG_WR_FIELD(HUB75S_CONFIG, BUFFER_NR, scratch_buf);
+    while(REG_RD_FIELD(HUB75S_STATUS, CUR_BUFFER_NR) != scratch_buf) 
+        ;
+
+    uint32_t prev_frame_cntr = REG_RD(HUB75S_FRAME_CNTR);
+    while(REG_RD(HUB75S_FRAME_CNTR) < prev_frame_cntr + 15) ;
+
 }
