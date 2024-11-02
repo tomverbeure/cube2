@@ -178,13 +178,22 @@ void render_field(int buffer, uint8_t grid[8][32])
     }
 }
 
+int nr_dots = 0;
+int max_nr_dots = 0;
+
 void pacman_init()
 {
     for(int h=0; h<GRID_HEIGHT; ++h){
         for(int w=0; w<GRID_WIDTH; ++w){
             active_grid[h][w]   = grid1[h][w];
+
+            if (active_grid[h][w] == GRID_DOT){
+                ++nr_dots;
+            }
         }
     }
+
+    max_nr_dots = nr_dots;
 
     pacman_state.pacman.nav.dir         = RIGHT;
     pacman_state.pacman.nav.pos_x       = 22     * 8;
@@ -227,6 +236,7 @@ void pacman_navigate(t_navigation *nav, int eat_dot)
         if (eat_dot){
             if (active_grid[g_pos_y][g_pos_x] == GRID_DOT){
                 active_grid[g_pos_y][g_pos_x] = GRID_EMPTY;
+                --nr_dots;
             }
         }
 
@@ -279,6 +289,17 @@ void pacman_update()
     pacman_navigate(&pacman_state.ghosts[2].nav, 0);
     pacman_navigate(&pacman_state.ghosts[3].nav, 0);
 
+#if 1
+    if (nr_dots < max_nr_dots*2/3){
+        int g_pos_x = xorshift32() % GRID_WIDTH;
+        int g_pos_y = xorshift32() % GRID_HEIGHT;
+
+        if (active_grid[g_pos_y][g_pos_x] == GRID_EMPTY){
+            active_grid[g_pos_y][g_pos_x] = GRID_DOT;
+            ++nr_dots;
+        }
+    }
+#endif
 }
 
 void pacman_render()
