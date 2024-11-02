@@ -37,6 +37,7 @@ extern uint32_t ghost_cyan_colors[4];
 extern uint32_t ghost_red_colors[4];
 extern uint32_t ghost_orange_colors[4];
 extern uint32_t ghost_scared_colors[4];
+extern uint32_t ghost_scared_inv_colors[4];
 extern uint32_t cherry_colors[4];
 
 extern uint32_t border_color;

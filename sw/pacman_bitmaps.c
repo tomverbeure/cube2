@@ -404,11 +404,12 @@ uint16_t border_right[8] = {
 
 uint32_t pac_color = 0x36fffe;
 
-uint32_t ghost_pink_colors[4]    = { 0x000000, 0xcb98ff, 0xff0000, 0xffffff };
-uint32_t ghost_cyan_colors[4]    = { 0x000000, 0xfffe2c, 0xff0000, 0xffffff };
-uint32_t ghost_red_colors[4]     = { 0x000000, 0x0711ff, 0xff0000, 0xffffff };
-uint32_t ghost_orange_colors[4]  = { 0x000000, 0x42cfff, 0xff0000, 0xffffff };
-uint32_t ghost_scared_colors[4]  = { 0x000000, 0xfb1313, 0x000000, 0x42cfff };
+uint32_t ghost_pink_colors[4]       = { 0x000000, 0xcb98ff, 0xff0000, 0xffffff };
+uint32_t ghost_cyan_colors[4]       = { 0x000000, 0xfffe2c, 0xff0000, 0xffffff };
+uint32_t ghost_red_colors[4]        = { 0x000000, 0x0711ff, 0xff0000, 0xffffff };
+uint32_t ghost_orange_colors[4]     = { 0x000000, 0x42cfff, 0xff0000, 0xffffff };
+uint32_t ghost_scared_colors[4]     = { 0x000000, 0xfb1313, 0x000000, 0x42cfff };
+uint32_t ghost_scared_inv_colors[4] = { 0x000000, 0x42cfff, 0x000000, 0xfb1313 };
 
 uint32_t cherry_colors[4]        = { 0x000000, 0x0711ff, 0x5599de, 0xffffff };
 

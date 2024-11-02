@@ -12,9 +12,10 @@
 #define GRID_WIDTH  32
 #define GRID_HEIGHT 8
 
-#define GRID_WALL   0x00
-#define GRID_DOT    0x01
-#define GRID_EMPTY  0x02
+#define GRID_WALL       0x00
+#define GRID_DOT        0x01
+#define GRID_EMPTY      0x02
+#define GRID_DOT_LARGE  0x03
 
 // Each cell is 8x8 pixels -> 8x8 cells per LED Panel
 const uint8_t grid1[GRID_HEIGHT][GRID_WIDTH] = {
@@ -24,7 +25,7 @@ const uint8_t grid1[GRID_HEIGHT][GRID_WIDTH] = {
     // Left                                             Front                                             Right                                             Back
     { 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,   0x00, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,   0x01, 0x01, 0x01, 0x01, 0x00, 0x00, 0x01, 0x01,   0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x00 },
     { 0x01, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01,   0x00, 0x00, 0x01, 0x00, 0x00, 0x01, 0x00, 0x00,   0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x01, 0x00,   0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00 },
-    { 0x01, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01,   0x00, 0x00, 0x01, 0x00, 0x00, 0x01, 0x00, 0x00,   0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01, 0x00,   0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01 },
+    { 0x01, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01,   0x00, 0x00, 0x01, 0x00, 0x00, 0x01, 0x00, 0x00,   0x00, 0x00, 0x00, 0x03, 0x01, 0x01, 0x01, 0x00,   0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01 },
     { 0x01, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01,   0x01, 0x01, 0x01, 0x00, 0x00, 0x01, 0x01, 0x01,   0x01, 0x01, 0x01, 0x01, 0x00, 0x00, 0x01, 0x00,   0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x00 },
     { 0x01, 0x00, 0x00, 0x01, 0x00, 0x00, 0x01, 0x00,   0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x01,   0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00,   0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00 },
     { 0x01, 0x00, 0x00, 0x01, 0x00, 0x00, 0x01, 0x00,   0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x00, 0x01,   0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00,   0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00 },
@@ -55,7 +56,8 @@ typedef struct s_pacman {
 
 typedef struct s_ghost {
     t_navigation    nav;
-    int             phase;
+    int             vulnerable;
+    int             anim_phase;
     uint32_t *      colors;
 } t_ghost;
 
@@ -87,7 +89,7 @@ void render_field(int buffer, uint8_t grid[8][32])
             int pos_y = grid_y * 8 + 8;
 
             //============================================================
-            // Render edible dot
+            // Render edible small dot
             //============================================================
             if (cell==GRID_DOT){
                 // FIXME: currently looks better this way when not supporting top and bottom
@@ -99,6 +101,20 @@ void render_field(int buffer, uint8_t grid[8][32])
                 render_bitmap_1bpp(dot_small, dot_color, 2, 2, buffer, RING_LFRBa, pos_x, pos_y, 0);
                 continue;
             }
+
+            //============================================================
+            // Render edible small dot
+            //============================================================
+            if (cell==GRID_DOT_LARGE){
+                if (grid_y==7){
+                    continue;
+                }
+                pos_x -= 4;
+                pos_y -= 4;
+                render_bitmap_1bpp(dot_large, dot_color, 8, 8, buffer, RING_LFRBa, pos_x, pos_y, 0);
+                continue;
+            }
+
 
             // -width/2
             pos_x -= 4;
@@ -187,7 +203,7 @@ void pacman_init()
         for(int w=0; w<GRID_WIDTH; ++w){
             active_grid[h][w]   = grid1[h][w];
 
-            if (active_grid[h][w] == GRID_DOT){
+            if (active_grid[h][w] == GRID_DOT || active_grid[h][w] == GRID_DOT_LARGE){
                 ++nr_dots;
             }
         }
@@ -203,25 +219,29 @@ void pacman_init()
     pacman_state.ghosts[0].nav.dir      = RIGHT;
     pacman_state.ghosts[0].nav.pos_x    = 20     * 8 + 2;
     pacman_state.ghosts[0].nav.pos_y    = 2      * 8;
-    pacman_state.ghosts[0].phase        = 0;
+    pacman_state.ghosts[0].vulnerable   = 0;
+    pacman_state.ghosts[0].anim_phase   = 0;
     pacman_state.ghosts[0].colors       = ghost_pink_colors;
 
     pacman_state.ghosts[1].nav.dir      = DOWN;
     pacman_state.ghosts[1].nav.pos_x    = 19     * 8;
     pacman_state.ghosts[1].nav.pos_y    = 1      * 8 + 2;
-    pacman_state.ghosts[1].phase        = 0;
+    pacman_state.ghosts[1].vulnerable   = 0;
+    pacman_state.ghosts[1].anim_phase   = 0;
     pacman_state.ghosts[1].colors       = ghost_red_colors;
 
     pacman_state.ghosts[2].nav.dir      = DOWN;
     pacman_state.ghosts[2].nav.pos_x    = 19     * 8;
     pacman_state.ghosts[2].nav.pos_y    = 0      * 8 + 2;
-    pacman_state.ghosts[2].phase        = 0;
+    pacman_state.ghosts[2].vulnerable   = 0;
+    pacman_state.ghosts[2].anim_phase   = 0;
     pacman_state.ghosts[2].colors       = ghost_orange_colors;
 
     pacman_state.ghosts[3].nav.dir      = DOWN;
     pacman_state.ghosts[3].nav.pos_x    = 18     * 8;
     pacman_state.ghosts[3].nav.pos_y    = 0      * 8 + 2;
-    pacman_state.ghosts[3].phase        = 0;
+    pacman_state.ghosts[3].vulnerable   = 0;
+    pacman_state.ghosts[3].anim_phase   = 0;
     pacman_state.ghosts[3].colors       = ghost_cyan_colors;
 }
 
@@ -237,6 +257,15 @@ void pacman_navigate(t_navigation *nav, int eat_dot)
             if (active_grid[g_pos_y][g_pos_x] == GRID_DOT){
                 active_grid[g_pos_y][g_pos_x] = GRID_EMPTY;
                 --nr_dots;
+            }
+
+            if (active_grid[g_pos_y][g_pos_x] == GRID_DOT_LARGE){
+                active_grid[g_pos_y][g_pos_x] = GRID_EMPTY;
+                --nr_dots;
+
+                for(int i=0;i<4;++i){
+                    pacman_state.ghosts[i].vulnerable   = 120;
+                }
             }
         }
 
@@ -284,7 +313,11 @@ void pacman_update()
     }
 
     for(int i=0;i<4;++i){
-        pacman_state.ghosts[i].phase    = p->mouth_open;
+        t_ghost *g = &pacman_state.ghosts[i];
+        g->anim_phase   = p->mouth_open;
+        if (g->vulnerable > 0){
+            --g->vulnerable;
+        }
     }
 
     pacman_navigate(&p->nav, 1);
@@ -293,7 +326,6 @@ void pacman_update()
     pacman_navigate(&pacman_state.ghosts[2].nav, 0);
     pacman_navigate(&pacman_state.ghosts[3].nav, 0);
 
-#if 1
     if (nr_dots < max_nr_dots*2/3){
         int g_pos_x = xorshift32() % GRID_WIDTH;
         int g_pos_y = xorshift32() % GRID_HEIGHT;
@@ -303,25 +335,16 @@ void pacman_update()
             ++nr_dots;
         }
     }
-#endif
+
 }
 
 void pacman_render()
 {
     static uint32_t scratch_buf = 0;
 
-    static int pos_x = 0;
-    static int pos_y = 24;
-
     scratch_buf ^= 1;
     led_mem_clear(scratch_buf);
     render_field(scratch_buf,active_grid);
-
-    uint32_t *current_ghost_scared  = ghost_scared_0;
-    
-    if (REG_RD(HUB75S_FRAME_CNTR) % 32 >= 16){
-        current_ghost_scared    = ghost_scared_1;
-    }
 
     uint16_t *current_pac       = pacman_state.pacman.mouth_open ? pacman_open : pacman_closed;
 
@@ -335,37 +358,37 @@ void pacman_render()
 
     render_bitmap_1bpp(current_pac, pac_color, 15, 15, scratch_buf, RING_LFRBa, (pacman_state.pacman.nav.pos_x) % (4*HUB75S_SIDE_WIDTH), pacman_state.pacman.nav.pos_y, rotation);
 
-    int chase_dist = 20;
-    int ghost_delta = 12;
-
     for(int i=0;i<4;++i){
         t_ghost *g = &pacman_state.ghosts[i];
+
         uint32_t *current_ghost;
+        uint32_t *current_ghost_colors = g->colors;
+
         int rotation = ROT_0;
 
         switch(g->nav.dir){
             default:
-            case RIGHT:     { current_ghost = g->phase ? ghost_right_0 : ghost_right_1; break; }
-            case LEFT:      { current_ghost = g->phase ? ghost_right_0 : ghost_right_1; rotation = ROT_FLIP_Y; break; }
-            case UP:        { current_ghost = g->phase ? ghost_up_0    : ghost_up_1;    break; }
-            case DOWN:      { current_ghost = g->phase ? ghost_down_0  : ghost_down_1;  break; }
+            case RIGHT:     { current_ghost = g->anim_phase ? ghost_right_0 : ghost_right_1; break; }
+            case LEFT:      { current_ghost = g->anim_phase ? ghost_right_0 : ghost_right_1; rotation = ROT_FLIP_Y; break; }
+            case UP:        { current_ghost = g->anim_phase ? ghost_up_0    : ghost_up_1;    break; }
+            case DOWN:      { current_ghost = g->anim_phase ? ghost_down_0  : ghost_down_1;  break; }
         }
 
-        render_bitmap_2bpp(current_ghost, g->colors, 14, 14, scratch_buf, RING_LFRBa, (g->nav.pos_x+1) % (4*HUB75S_SIDE_WIDTH), g->nav.pos_y, rotation);
+        if (g->vulnerable > 0){
+            current_ghost           = g->anim_phase ? ghost_scared_0 : ghost_scared_1;
+
+            if (g->vulnerable < 40){
+                current_ghost_colors    = ((g->vulnerable/4) & 1) == 0 ? ghost_scared_colors : ghost_scared_inv_colors;
+            }
+            else{
+                current_ghost_colors    = ghost_scared_colors;
+            }
+        }
+
+        render_bitmap_2bpp(current_ghost, current_ghost_colors, 14, 14, scratch_buf, RING_LFRBa, (g->nav.pos_x+1) % (4*HUB75S_SIDE_WIDTH), g->nav.pos_y, rotation);
     }
 
-    /*
-    render_bitmap_2bpp(current_ghost,   ghost_pink_colors,    14, 14, scratch_buf, RING_LFRBa, (pos_x - chase_dist - 0 * ghost_delta) % (4*HUB75S_SIDE_WIDTH), pos_y);
-    render_bitmap_2bpp(current_ghost,   ghost_red_colors,     14, 14, scratch_buf, RING_LFRBa, (pos_x - chase_dist - 1 * ghost_delta) % (4*HUB75S_SIDE_WIDTH), pos_y);
-    render_bitmap_2bpp(current_ghost,   ghost_orange_colors,  14, 14, scratch_buf, RING_LFRBa, (pos_x - chase_dist - 2 * ghost_delta) % (4*HUB75S_SIDE_WIDTH), pos_y);
-    render_bitmap_2bpp(current_ghost,   ghost_cyan_colors,    14, 14, scratch_buf, RING_LFRBa, (pos_x - chase_dist - 3 * ghost_delta) % (4*HUB75S_SIDE_WIDTH), pos_y);
-
-    render_bitmap_2bpp(current_ghost_scared, ghost_scared_colors,  14, 14, scratch_buf, RING_LFRBa, (pos_x + 30) % (4*HUB75S_SIDE_WIDTH), pos_y, 0);
-    */
-
     render_bitmap_2bpp(cherry, cherry_colors, 12, 12, scratch_buf, RING_LFRBa, 10 + HUB75S_SIDE_WIDTH, 10-HUB75S_SIDE_WIDTH, 0);
-
-    pos_x = (pos_x + 1) % (4 * HUB75S_SIDE_WIDTH);
 
     REG_WR_FIELD(HUB75S_CONFIG, BUFFER_NR, scratch_buf);
     while(REG_RD_FIELD(HUB75S_STATUS, CUR_BUFFER_NR) != scratch_buf) 
