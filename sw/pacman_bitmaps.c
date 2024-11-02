@@ -3,6 +3,7 @@
 
 #include <stdint-gcc.h>
 
+#if 0
 uint16_t pacman_closed1[11] = {
     0b00011111000,
     0b00111111100,
@@ -30,6 +31,7 @@ uint16_t pacman_open1[11] = {
     0b00111111100,
     0b00011111000
 };
+#endif
 
 uint16_t pacman_closed[16] = {
     0b0000000000000000,
@@ -83,6 +85,8 @@ uint16_t pacman_test[11] = {
     0b10000000001,
 };
 
+#if 0
+// Currently identical to ghost_right
 uint32_t ghost_left_0[16] = {
     0b00000000000000000000000000000000,
     0b00000000000001010101000000000000,
@@ -120,6 +124,7 @@ uint32_t ghost_left_1[16] = {
     0b00010000000101000001010000000100,
     0b00000000000000000000000000000000,
 };
+#endif
 
 uint32_t ghost_right_0[16] = {
     0b00000000000000000000000000000000,
@@ -395,6 +400,7 @@ uint16_t border_right[8] = {
     0b00001000,
     0b00001000,
 };
+
 
 uint32_t pac_color = 0x36fffe;
 

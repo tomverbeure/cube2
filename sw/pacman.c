@@ -275,12 +275,16 @@ void pacman_navigate(t_navigation *nav, int eat_dot)
 void pacman_update()
 {
     t_pacman *p  = &pacman_state.pacman;
-
+    
     if (REG_RD(HUB75S_FRAME_CNTR) % 32 >= 16){
         p->mouth_open   = 0;
     }
     else{
         p->mouth_open   = 1;
+    }
+
+    for(int i=0;i<4;++i){
+        pacman_state.ghosts[i].phase    = p->mouth_open;
     }
 
     pacman_navigate(&p->nav, 1);
@@ -336,15 +340,15 @@ void pacman_render()
 
     for(int i=0;i<4;++i){
         t_ghost *g = &pacman_state.ghosts[i];
-        uint32_t *current_ghost         = ghost_left_0;
+        uint32_t *current_ghost;
         int rotation = ROT_0;
 
         switch(g->nav.dir){
             default:
-            case RIGHT:     { current_ghost = ghost_right_0; break; }
-            case LEFT:      { current_ghost = ghost_right_0; rotation = ROT_FLIP_Y; break; }
-            case UP:        { current_ghost = ghost_up_0;    break; }
-            case DOWN:      { current_ghost = ghost_down_0;  break; }
+            case RIGHT:     { current_ghost = g->phase ? ghost_right_0 : ghost_right_1; break; }
+            case LEFT:      { current_ghost = g->phase ? ghost_right_0 : ghost_right_1; rotation = ROT_FLIP_Y; break; }
+            case UP:        { current_ghost = g->phase ? ghost_up_0    : ghost_up_1;    break; }
+            case DOWN:      { current_ghost = g->phase ? ghost_down_0  : ghost_down_1;  break; }
         }
 
         render_bitmap_2bpp(current_ghost, g->colors, 14, 14, scratch_buf, RING_LFRBa, (g->nav.pos_x+1) % (4*HUB75S_SIDE_WIDTH), g->nav.pos_y, rotation);
