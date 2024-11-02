@@ -65,24 +65,34 @@ void render_bitmap_1bpp(uint16_t *bitmap, uint32_t color, int size_x, int size_y
 
                 switch(rotation){
                     default:
-                    case 0: {
+                    case ROT_0: {
                         x = pos_x + rx;
                         y = pos_y + ry;
                         break;
                     }
-                    case 90: {
+                    case ROT_90: {
                         x = pos_x + ry;
                         y = pos_y + size_x - rx -1;
                         break;
                     }
-                    case 180: {
+                    case ROT_180: {
                         x = pos_x + size_x - rx;
                         y = pos_y + size_y - ry -1;
                         break;
                     }
-                    case 270: {
+                    case ROT_270: {
                         x = pos_x + size_y - ry -1;
                         y = pos_y + rx;
+                        break;
+                    }
+                    case ROT_FLIP_X: {
+                        x = pos_x + rx;
+                        y = pos_y + size_y - ry -1;
+                        break;
+                    }
+                    case ROT_FLIP_Y: {
+                        x = pos_x + size_x - rx -1;
+                        y = pos_y + ry;
                         break;
                     }
                 }
@@ -97,11 +107,65 @@ void render_bitmap_1bpp(uint16_t *bitmap, uint32_t color, int size_x, int size_y
     }
 }
 
-void render_bitmap_2bpp(uint32_t *bitmap, uint32_t *colors, int size_x, int size_y, int buffer_nr, e_hub75_ring ring, int pos_x, int pos_y)
+void render_bitmap_2bpp(uint32_t *bitmap, uint32_t *colors, int size_x, int size_y, int buffer_nr, e_hub75_ring ring, int pos_x, int pos_y, int rotation)
 {
+    for(int ry=0; ry<size_y;++ry){
+        for(int rx=0; rx<size_x;++rx){
+                uint32_t bits = (bitmap[ry] >> (2*size_x-2 - 2*rx)) & 3;
+                if (!bits)
+                    continue;
+
+                uint32_t color = colors[bits];
+
+                int x;
+                int y;
+
+                switch(rotation){
+                    default:
+                    case ROT_0: {
+                        x = pos_x + rx;
+                        y = pos_y + ry;
+                        break;
+                    }
+                    case ROT_90: {
+                        x = pos_x + ry;
+                        y = pos_y + size_x - rx -1;
+                        break;
+                    }
+                    case ROT_180: {
+                        x = pos_x + size_x - rx;
+                        y = pos_y + size_y - ry -1;
+                        break;
+                    }
+                    case ROT_270: {
+                        x = pos_x + size_y - ry -1;
+                        y = pos_y + rx;
+                        break;
+                    }
+                    case ROT_FLIP_X: {
+                        x = pos_x + rx;
+                        y = pos_y + size_y - ry -1;
+                        break;
+                    }
+                    case ROT_FLIP_Y: {
+                        x = pos_x + size_x - rx -1;
+                        y = pos_y + ry;
+                        break;
+                    }
+                }
+
+                // FIXME: currently no support for top and bottom sides
+                if (pos_y+ry>=64){
+                    continue;
+                }
+                int phys_addr = hub75s_ring_coord2addr(buffer_nr, 0, x, y);
+                MEM_WR(LED_MEM, phys_addr, color);
+        }
+    }
+
+#if 0
     for(int y=0; y<size_y;++y){
         for(int x=0; x<size_x;++x){
-                //uint32_t bit = (bitmap[y] >> (size_x-1-x)) & 1;
                 uint32_t bits = (bitmap[y] >> (2*size_x-2 - 2*x)) & 3;
                 if (bits == 0)
                     continue;
@@ -112,4 +176,5 @@ void render_bitmap_2bpp(uint32_t *bitmap, uint32_t *colors, int size_x, int size
                 MEM_WR(LED_MEM, phys_addr, color);
         }
     }
+#endif
 }

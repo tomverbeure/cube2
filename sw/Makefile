@@ -1,6 +1,6 @@
 
-MEM_BYTES		= 16384
-MEM_WORDS       = 4096
+MEM_BYTES		= 20480
+MEM_WORDS       = 5120
 
 GAMMA           = 1.3
 DIM             = 0.35

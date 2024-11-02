@@ -10,6 +10,8 @@ extern uint16_t pacman_open[16];
 extern uint16_t pacman_test[11];
 extern uint32_t ghost_left_0[16];
 extern uint32_t ghost_left_1[16];
+extern uint32_t ghost_right_0[16];
+extern uint32_t ghost_right_1[16];
 extern uint32_t ghost_up_0[16];
 extern uint32_t ghost_up_1[16];
 extern uint32_t ghost_down_0[16];

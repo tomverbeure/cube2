@@ -292,10 +292,10 @@ void play_mario(int total_nr_frames)
         pos_y = 14;
 
         for(int i=0;i<256;i+=16){
-            render_bitmap_2bpp(mario_ground, mario_ground_colors, 16, 3, scratch_buf, RING_LFRBa, i % (4*HUB75S_SIDE_WIDTH), 29);
+            render_bitmap_2bpp(mario_ground, mario_ground_colors, 16, 3, scratch_buf, RING_LFRBa, i % (4*HUB75S_SIDE_WIDTH), 29, 0);
         }
 
-        render_bitmap_2bpp(current_mario,   mario_colors,    16, 16, scratch_buf, RING_LFRBa, (pos_x) % (4*HUB75S_SIDE_WIDTH), pos_y);
+        render_bitmap_2bpp(current_mario,   mario_colors,    16, 16, scratch_buf, RING_LFRBa, (pos_x) % (4*HUB75S_SIDE_WIDTH), pos_y, 0);
 
         pos_x = (pos_x + 1) % (4 * HUB75S_SIDE_WIDTH);
 
