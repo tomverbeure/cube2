@@ -391,7 +391,7 @@ void pacman_update()
     if (p->dead){
         p->mouth_open   = 0;
 
-        if (p->dead == 110){
+        if (p->dead == 50){
             p->dead     = 0;
         }
         else{
