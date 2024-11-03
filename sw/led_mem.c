@@ -52,7 +52,7 @@ void led_mem_effect(int buffer_nr)
     }
 }
 
-void render_bitmap_1bpp(uint16_t *bitmap, uint32_t color, int size_x, int size_y, int buffer_nr, e_hub75_ring ring, int pos_x, int pos_y, int rotation)
+void render_bitmap_1bpp(const uint16_t *bitmap, uint32_t color, int size_x, int size_y, int buffer_nr, e_hub75_ring ring, int pos_x, int pos_y, int rotation)
 {
     for(int ry=0; ry<size_y;++ry){
         for(int rx=0; rx<size_x;++rx){

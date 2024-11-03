@@ -52,6 +52,7 @@ typedef struct s_navigation {
 typedef struct s_pacman {
     t_navigation    nav;
     int             mouth_open;
+    int             dead;
 } t_pacman;
 
 typedef struct s_ghost {
@@ -218,6 +219,7 @@ void pacman_init()
     pacman_state.pacman.nav.pos_x       = 22     * 8;
     pacman_state.pacman.nav.pos_y       = 2      * 8;
     pacman_state.pacman.mouth_open      = 0;
+    pacman_state.pacman.dead            = 0;
 
     pacman_state.ghosts[0].nav.dir      = RIGHT;
     pacman_state.ghosts[0].nav.pos_x    = 20     * 8 + 2;
@@ -256,6 +258,8 @@ void pacman_navigate(t_navigation *nav, int eat_dot)
         int g_pos_x  = (nav->pos_x >> 3) % GRID_WIDTH;
         int g_pos_y  = (nav->pos_y >> 3) % GRID_HEIGHT;
 
+        int ghost_vulnerable_duration = 200;
+
         if (eat_dot){
             if (active_grid[g_pos_y][g_pos_x] == GRID_DOT){
                 active_grid[g_pos_y][g_pos_x] = GRID_EMPTY;
@@ -267,7 +271,9 @@ void pacman_navigate(t_navigation *nav, int eat_dot)
                 --nr_dots;
 
                 for(int i=0;i<4;++i){
-                    pacman_state.ghosts[i].vulnerable   = 200;
+                    if (pacman_state.ghosts[i].vulnerable >= 0){
+                        pacman_state.ghosts[i].vulnerable   = ghost_vulnerable_duration;
+                    }
                 }
             }
         }
@@ -316,15 +322,16 @@ void pacman_update()
         p->mouth_open   = 1;
     }
 
-    // Pacman eats ghost
     for(int i=0;i<4;++i){
         t_ghost *g = &pacman_state.ghosts[i];
 
         int eat_distance = 6;
 
+        int diff_x = p->nav.pos_x - g->nav.pos_x;
+        int diff_y = p->nav.pos_y - g->nav.pos_y;
+
+        // Pacman eats ghost
         if (g->vulnerable > 0){
-            int diff_x = p->nav.pos_x - g->nav.pos_x;
-            int diff_y = p->nav.pos_y - g->nav.pos_y;
 
             int eyes_only_duration = -120;
     
@@ -353,6 +360,43 @@ void pacman_update()
                 }
             }
         }
+        else if (g->vulnerable == 0 && !p->dead){
+            if (diff_y == 0){
+                if (g->nav.dir == LEFT){
+                    if (diff_x >= 0 && diff_x < eat_distance){
+                        p->dead         = 1;
+                    }
+                }
+                else if (g->nav.dir == RIGHT){
+                    if (diff_x <= 0 && diff_x > -eat_distance){
+                        p->dead         = 1;
+                    }
+                }
+            }
+            if (diff_x == 0){
+                if (g->nav.dir == UP){
+                    if (diff_y >= 0 && diff_y < eat_distance){
+                        p->dead         = 1;
+                    }
+                }
+                else if (g->nav.dir == DOWN){
+                    if (diff_y <= 0 && diff_y > -eat_distance){
+                        p->dead         = 1;
+                    }
+                }
+            }
+        }
+    }
+
+    if (p->dead){
+        p->mouth_open   = 0;
+
+        if (p->dead == 110){
+            p->dead     = 0;
+        }
+        else{
+            ++p->dead;
+        }
     }
 
     for(int i=0;i<4;++i){
@@ -366,7 +410,9 @@ void pacman_update()
         }
     }
 
-    pacman_navigate(&p->nav, 1);
+    if (!p->dead){
+        pacman_navigate(&p->nav, 1);
+    }
 
     for (int i=0;i<4;++i){
         t_ghost *g = &pacman_state.ghosts[i];
@@ -404,17 +450,6 @@ void pacman_render()
     led_mem_clear(scratch_buf);
     render_field(scratch_buf,active_grid);
 
-    uint16_t *current_pac       = pacman_state.pacman.mouth_open ? pacman_open : pacman_closed;
-
-    int rotation = 0;
-    switch(pacman_state.pacman.nav.dir){
-        case RIGHT: { rotation = ROT_0;   break; }    
-        case LEFT:  { rotation = ROT_180; break; }    
-        case UP:    { rotation = ROT_90;  break; }    
-        case DOWN:  { rotation = ROT_270; break; }    
-    }
-
-    render_bitmap_1bpp(current_pac, pac_color, 15, 15, scratch_buf, RING_LFRBa, (pacman_state.pacman.nav.pos_x) % (4*HUB75S_SIDE_WIDTH), pacman_state.pacman.nav.pos_y, rotation);
 
     for(int i=0;i<4;++i){
         t_ghost *g = &pacman_state.ghosts[i];
@@ -455,6 +490,38 @@ void pacman_render()
         }
 
         render_bitmap_2bpp(current_ghost, current_ghost_colors, 14, 14, scratch_buf, RING_LFRBa, (g->nav.pos_x+1) % (4*HUB75S_SIDE_WIDTH), g->nav.pos_y, rotation);
+    }
+
+    t_pacman *p = &pacman_state.pacman;
+    uint16_t *current_pac       = p->mouth_open ? pacman_open_0 : pacman_closed;
+
+    if (pacman_state.pacman.dead == 0){
+        int rotation = 0;
+        int x_offset = 0;
+        switch(p->nav.dir){
+            case RIGHT: { rotation = ROT_0;   break; }    
+            case LEFT:  { rotation = ROT_180; x_offset = -1; break; }    
+            case UP:    { rotation = ROT_90;  break; }    
+            case DOWN:  { rotation = ROT_270; break; }    
+        }
+    
+        render_bitmap_1bpp(current_pac, pac_color, 15, 15, scratch_buf, RING_LFRBa, (p->nav.pos_x + x_offset) % (4*HUB75S_SIDE_WIDTH), p->nav.pos_y, rotation);
+    }
+    else{
+        const uint16_t * pacman_wilts[11] = {
+            pacman_wilt_0, pacman_wilt_1, pacman_wilt_2, pacman_wilt_3, pacman_wilt_4,
+            pacman_wilt_5, pacman_wilt_6, pacman_wilt_7, pacman_wilt_8, pacman_wilt_9,
+            pacman_wilt_10,
+            };
+
+        int wilt_phase = p->dead/2;
+
+        if (wilt_phase < 10){
+            render_bitmap_1bpp(pacman_wilts[wilt_phase], pac_color, 16, 16, scratch_buf, RING_LFRBa, p->nav.pos_x % (4*HUB75S_SIDE_WIDTH), p->nav.pos_y, 0);
+        }
+        else if (wilt_phase == 11 || wilt_phase == 13){
+            render_bitmap_1bpp(pacman_wilts[10], pac_color, 16, 16, scratch_buf, RING_LFRBa, p->nav.pos_x % (4*HUB75S_SIDE_WIDTH), p->nav.pos_y-3, 0);
+        }
     }
 
     render_bitmap_2bpp(cherry, cherry_colors, 12, 12, scratch_buf, RING_LFRBa, 10 + HUB75S_SIDE_WIDTH, 10-HUB75S_SIDE_WIDTH, 0);

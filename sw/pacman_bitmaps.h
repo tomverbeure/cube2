@@ -3,11 +3,22 @@
 
 #include <stdint-gcc.h>
 
-extern uint16_t pacman_closed1[11];
-extern uint16_t pacman_open1[11];
-extern uint16_t pacman_closed[16];
-extern uint16_t pacman_open[16];
-extern uint16_t pacman_test[11];
+extern uint16_t pacman_closed[15];
+
+extern uint16_t pacman_open_0[15];
+extern uint16_t pacman_open_1[15];
+
+extern uint16_t pacman_wilt_0[15];
+extern uint16_t pacman_wilt_1[15];
+extern uint16_t pacman_wilt_2[15];
+extern uint16_t pacman_wilt_3[15];
+extern uint16_t pacman_wilt_4[15];
+extern uint16_t pacman_wilt_5[15];
+extern uint16_t pacman_wilt_6[15];
+extern uint16_t pacman_wilt_7[15];
+extern uint16_t pacman_wilt_8[15];
+extern uint16_t pacman_wilt_9[15];
+extern uint16_t pacman_wilt_10[15];
 
 extern uint32_t ghost_left_0[16];
 extern uint32_t ghost_left_1[16];
