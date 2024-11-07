@@ -30,7 +30,9 @@ class Hub75Phy(oscSpeed: HertzNumber, conf: Hub75Config) extends Component {
     def osc_clk_speed = oscSpeed
     def refresh_rate  = 180        // frame per second
 
-    val sclk_desired  = (conf.panels.size/2 * conf.panel_rows * conf.panel_cols / conf.pixels_per_clk)  * (1 << conf.bpc) * refresh_rate
+    // All panels have their own interface, so you don't need to take into
+    // account the number of panels.
+    val sclk_desired  = (conf.panel_rows * conf.panel_cols / conf.pixels_per_clk)  * (1 << conf.bpc) * refresh_rate
     val sclk_ratio    = (osc_clk_speed.toLong / sclk_desired).toInt
     val sclk_actual   = (osc_clk_speed / sclk_ratio).toLong
 

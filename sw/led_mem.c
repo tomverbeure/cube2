@@ -30,6 +30,7 @@ void led_mem_fill(int buffer_nr, unsigned char r, unsigned char g, unsigned char
             led_mem_wr(buffer_nr, 2, col, row, r, g, b);
             led_mem_wr(buffer_nr, 3, col, row, r, g, b);
             led_mem_wr(buffer_nr, 4, col, row, r, g, b);
+            led_mem_wr(buffer_nr, 5, col, row, r, g, b);
         }
     }
 }

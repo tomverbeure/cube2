@@ -19,16 +19,18 @@ class Cube2Top(isSim : Boolean = true) extends Component {
     panels += PanelInfo(-1, 1, 1,  2 /* right  */,  270,    1,-1, 0)   // Buffer 2
     panels += PanelInfo(-1, 1, 1,  3 /* back   */,  270,    1,-1, 0)   // Buffer 3
     panels += PanelInfo(-1, 1, 1,  4 /* bottom */,  180,    1,-1, 0)   // Buffer 4
+    panels += PanelInfo( 1, 1, 1,  5 /* top    */,  180,    1,-1, 0)   // Buffer 5
 
     val hub75Config = Hub75Config(
-                        nr_channels   = 5,
+                        nr_channels   = 6,
                         panel_rows    = 64,
                         panel_cols    = 64,
                         bpc           = if (isSim) 3 else 5,
                         panels        = panels.toArray
                       )
 
-    val ledMemConfig = LedMemConfig(hub75Config.nr_channels, memWords = 64 * 64, bpc = 6)
+    // 4 BPC and 6 panels fits into an ECP5-25. 5 BPC doesn't.
+    val ledMemConfig = LedMemConfig(hub75Config.nr_channels, memWords = 64 * 64, bpc = 4)
 
     val io = new Bundle {
         val osc_clk25       = in(Bool)
@@ -216,13 +218,14 @@ class Cube2Top(isSim : Boolean = true) extends Component {
 
         io.hub75_row       := RegNext(hub75.row)
 
-        if (false){
-            io.hub75_j1_r0     := RegNext(hub75.r0(4))
-            io.hub75_j1_g0     := RegNext(hub75.g0(4))
-            io.hub75_j1_b0     := RegNext(hub75.b0(4))
-            io.hub75_j1_r1     := RegNext(hub75.r1(4))
-            io.hub75_j1_g1     := RegNext(hub75.g1(4))
-            io.hub75_j1_b1     := RegNext(hub75.b1(4))
+        // Top
+        if (true){
+            io.hub75_j1_r0     := RegNext(hub75.r0(5))
+            io.hub75_j1_g0     := RegNext(hub75.g0(5))
+            io.hub75_j1_b0     := RegNext(hub75.b0(5))
+            io.hub75_j1_r1     := RegNext(hub75.r1(5))
+            io.hub75_j1_g1     := RegNext(hub75.g1(5))
+            io.hub75_j1_b1     := RegNext(hub75.b1(5))
         } else {
             io.hub75_j1_r0     := False
             io.hub75_j1_g0     := False

@@ -12,15 +12,6 @@ const int panel_cols        = 64;
 int pixels_per_panel;
 
 typedef enum {
-    SIDE_LEFT       = 0,
-    SIDE_FRONT      = 1,
-    SIDE_RIGHT      = 2,
-    SIDE_BACK       = 3,
-    SIDE_BOTTOM     = 4,
-    SIDE_TOP        = 5
-} e_side_nr;
-
-typedef enum {
     ORIENT_X_Y          = 0,
     ORIENT_X_INV_Y      = 1,
     ORIENT_INV_X_Y      = 2,
@@ -33,21 +24,14 @@ typedef enum {
 } e_orient;
 
 
+// The last 3 numbers are filled in at runtime by hub75s_config()
 t_panel_info panels[] = {
-#if 1
     { -1, 1, 1,  0 /* left   */,   90,    1,-1, 0,  0,0,0 },   // Buffer 0 
     { -1, 1, 1,  1 /* front  */,  270,    1,-1, 0,  0,0,0 },   // Buffer 1
     { -1, 1, 1,  2 /* right  */,   90,    1,-1, 0,  0,0,0 },   // Buffer 2
     { -1, 1, 1,  3 /* back   */,   90,    1,-1, 0,  0,0,0 },   // Buffer 3
     { -1, 1, 1,  4 /* bottom */,  180,    1,-1, 0,  0,0,0 },   // Buffer 4
-    { -1, 1, 1,  5 /* top */,     180,    1,-1, 0,  0,0,0 },   // Buffer 4
-#else
-    { -1, 1, 1,  0 /* left   */,  0,    1,-1, 0,  0,0,0,0 },   // Buffer 0 
-    { -1, 1, 1,  1 /* front  */,  0,    1,-1, 0,  0,0,0,0 },   // Buffer 1
-    { -1, 1, 1,  2 /* right  */,  0,    1,-1, 0,  0,0,0,0 },   // Buffer 2
-    { -1, 1, 1,  3 /* back   */,  0,    1,-1, 0,  0,0,0,0 },   // Buffer 3
-    { -1, 1, 1,  4 /* bottom */,  0,    1,-1, 0,  0,0,0,0 }    // Buffer 4
-#endif
+    {  1, 1, 1,  5 /* top */,     180,    1,-1, 0,  0,0,0 },   // Buffer 5
 };
 
 void hub75s_config(void)

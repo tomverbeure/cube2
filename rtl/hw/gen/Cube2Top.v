@@ -1,6 +1,6 @@
 // Generator : SpinalHDL v1.9.4    git head : 270018552577f3bb8e5339ee2583c9c22d324215
 // Component : Cube2Top
-// Git hash  : ee61c178d16cfdb667e4a03462ce738f7df718cf
+// Git hash  : d8d4ccad26fd05a0e990e5a3061669869dd4c5ef
 
 `timescale 1ns/1ps
 
@@ -69,11 +69,11 @@ module Cube2Top (
   wire                core_u_cpu_io_hub75_streamer_apb_PREADY;
   reg        [31:0]   core_u_cpu_io_hub75_streamer_apb_PRDATA;
   wire                core_u_cpu_io_hub75_streamer_apb_PSLVERROR;
-  reg        [4:0]    core_u_led_mem_io_led_mem_a_req;
+  reg        [5:0]    core_u_led_mem_io_led_mem_a_req;
   reg        [12:0]   core_u_led_mem_io_led_mem_a_addr;
   reg                 core_u_led_mem_io_led_mem_a_wr;
   wire                core_u_led_mem_io_led_mem_b_wr;
-  wire       [17:0]   core_u_led_mem_io_led_mem_b_wr_data;
+  wire       [11:0]   core_u_led_mem_io_led_mem_b_wr_data;
   wire       [15:0]   core_u_hub75_streamer_io_panel_infos_0_memAddrStartPh0;
   wire       [15:0]   core_u_hub75_streamer_io_panel_infos_0_memAddrStartPh1;
   wire       [7:0]    core_u_hub75_streamer_io_panel_infos_0_memAddrColMul;
@@ -94,6 +94,10 @@ module Cube2Top (
   wire       [15:0]   core_u_hub75_streamer_io_panel_infos_4_memAddrStartPh1;
   wire       [7:0]    core_u_hub75_streamer_io_panel_infos_4_memAddrColMul;
   wire       [7:0]    core_u_hub75_streamer_io_panel_infos_4_memAddrRowMul;
+  wire       [15:0]   core_u_hub75_streamer_io_panel_infos_5_memAddrStartPh0;
+  wire       [15:0]   core_u_hub75_streamer_io_panel_infos_5_memAddrStartPh1;
+  wire       [7:0]    core_u_hub75_streamer_io_panel_infos_5_memAddrColMul;
+  wire       [7:0]    core_u_hub75_streamer_io_panel_infos_5_memAddrRowMul;
   wire                core_u_hub75_streamer_io_start;
   wire                osc_src_u_main_clk_clk_out;
   wire                osc_src_u_main_clk_locked;
@@ -110,20 +114,21 @@ module Cube2Top (
   wire                core_u_cpu_io_hub75_streamer_apb_PENABLE;
   wire                core_u_cpu_io_hub75_streamer_apb_PWRITE;
   wire       [31:0]   core_u_cpu_io_hub75_streamer_apb_PWDATA;
-  wire       [17:0]   core_u_led_mem_io_led_mem_a_rd_data;
-  wire       [17:0]   core_u_led_mem_io_led_mem_b_rd_data_0;
-  wire       [17:0]   core_u_led_mem_io_led_mem_b_rd_data_1;
-  wire       [17:0]   core_u_led_mem_io_led_mem_b_rd_data_2;
-  wire       [17:0]   core_u_led_mem_io_led_mem_b_rd_data_3;
-  wire       [17:0]   core_u_led_mem_io_led_mem_b_rd_data_4;
+  wire       [11:0]   core_u_led_mem_io_led_mem_a_rd_data;
+  wire       [11:0]   core_u_led_mem_io_led_mem_b_rd_data_0;
+  wire       [11:0]   core_u_led_mem_io_led_mem_b_rd_data_1;
+  wire       [11:0]   core_u_led_mem_io_led_mem_b_rd_data_2;
+  wire       [11:0]   core_u_led_mem_io_led_mem_b_rd_data_3;
+  wire       [11:0]   core_u_led_mem_io_led_mem_b_rd_data_4;
+  wire       [11:0]   core_u_led_mem_io_led_mem_b_rd_data_5;
   wire                core_u_hub75_streamer_io_rgb_valid;
   wire                core_u_hub75_streamer_io_rgb_payload_sof;
-  wire       [4:0]    core_u_hub75_streamer_io_rgb_payload_r0;
-  wire       [4:0]    core_u_hub75_streamer_io_rgb_payload_g0;
-  wire       [4:0]    core_u_hub75_streamer_io_rgb_payload_b0;
-  wire       [4:0]    core_u_hub75_streamer_io_rgb_payload_r1;
-  wire       [4:0]    core_u_hub75_streamer_io_rgb_payload_g1;
-  wire       [4:0]    core_u_hub75_streamer_io_rgb_payload_b1;
+  wire       [5:0]    core_u_hub75_streamer_io_rgb_payload_r0;
+  wire       [5:0]    core_u_hub75_streamer_io_rgb_payload_g0;
+  wire       [5:0]    core_u_hub75_streamer_io_rgb_payload_b0;
+  wire       [5:0]    core_u_hub75_streamer_io_rgb_payload_r1;
+  wire       [5:0]    core_u_hub75_streamer_io_rgb_payload_g1;
+  wire       [5:0]    core_u_hub75_streamer_io_rgb_payload_b1;
   wire                core_u_hub75_streamer_io_eof;
   wire                core_u_hub75_streamer_io_led_mem_rd;
   wire       [12:0]   core_u_hub75_streamer_io_led_mem_rd_addr;
@@ -135,12 +140,12 @@ module Cube2Top (
   wire                core_u_hub75phy_io_hub75_lat;
   wire                core_u_hub75phy_io_hub75_oe_;
   wire       [4:0]    core_u_hub75phy_io_hub75_row;
-  wire       [4:0]    core_u_hub75phy_io_hub75_r0;
-  wire       [4:0]    core_u_hub75phy_io_hub75_g0;
-  wire       [4:0]    core_u_hub75phy_io_hub75_b0;
-  wire       [4:0]    core_u_hub75phy_io_hub75_r1;
-  wire       [4:0]    core_u_hub75phy_io_hub75_g1;
-  wire       [4:0]    core_u_hub75phy_io_hub75_b1;
+  wire       [5:0]    core_u_hub75phy_io_hub75_r0;
+  wire       [5:0]    core_u_hub75phy_io_hub75_g0;
+  wire       [5:0]    core_u_hub75phy_io_hub75_b0;
+  wire       [5:0]    core_u_hub75phy_io_hub75_r1;
+  wire       [5:0]    core_u_hub75phy_io_hub75_g1;
+  wire       [5:0]    core_u_hub75phy_io_hub75_b1;
   wire       [17:0]   _zz_core_led_mem_apb_regs_cpu_wr_addr;
   wire       [17:0]   _zz_core_led_mem_apb_regs_cpu_wr_addr_1;
   wire       [17:0]   _zz_core_led_mem_apb_regs_cpu_rd_addr;
@@ -153,8 +158,8 @@ module Cube2Top (
   wire                main_reset_;
   reg                 main_reset_gen_reset_unbuffered_;
   reg        [15:0]   main_reset_gen_reset_cntr;
-  wire       [15:0]   _zz_when_Cube2Top_l136;
-  wire                when_Cube2Top_l136;
+  wire       [15:0]   _zz_when_Cube2Top_l138;
+  wire                when_Cube2Top_l138;
   reg                 main_reset_gen_reset_unbuffered__regNext;
   reg        [23:0]   debug_leds_led_counter;
   wire                _zz_io_led_mem_apb_PSLVERROR;
@@ -165,7 +170,7 @@ module Cube2Top (
   wire       [15:0]   core_led_mem_apb_regs_cpu_wr_addr;
   wire       [15:0]   core_led_mem_apb_regs_cpu_rd_addr;
   wire       [23:0]   core_led_mem_apb_regs_bus_a_wr_data;
-  wire       [17:0]   core_led_mem_apb_regs_mem_a_wr_data;
+  wire       [11:0]   core_led_mem_apb_regs_mem_a_wr_data;
   wire       [2:0]    core_led_mem_apb_regs_ram_a_wr_inst_nr;
   wire       [2:0]    core_led_mem_apb_regs_ram_a_rd_inst_nr;
   reg                 _zz_when_BusSlaveFactory_l609;
@@ -206,6 +211,12 @@ module Cube2Top (
   reg        [1:0]    _zz_io_hub75_streamer_apb_PRDATA_27;
   reg        [1:0]    _zz_io_hub75_streamer_apb_PRDATA_28;
   reg        [1:0]    _zz_io_hub75_streamer_apb_PRDATA_29;
+  reg        [1:0]    _zz_io_hub75_streamer_apb_PRDATA_30;
+  reg        [1:0]    _zz_io_hub75_streamer_apb_PRDATA_31;
+  reg        [1:0]    _zz_io_hub75_streamer_apb_PRDATA_32;
+  reg        [1:0]    _zz_io_hub75_streamer_apb_PRDATA_33;
+  reg        [1:0]    _zz_io_hub75_streamer_apb_PRDATA_34;
+  reg        [1:0]    _zz_io_hub75_streamer_apb_PRDATA_35;
   reg                 core_hub75_streamer_regs_enable;
   reg                 core_hub75_streamer_regs_start;
   reg                 core_hub75_streamer_regs_auto_restart;
@@ -225,16 +236,22 @@ module Cube2Top (
   wire                core_hub75_lat;
   wire                core_hub75_oe_;
   wire       [4:0]    core_hub75_row;
-  wire       [4:0]    core_hub75_r0;
-  wire       [4:0]    core_hub75_g0;
-  wire       [4:0]    core_hub75_b0;
-  wire       [4:0]    core_hub75_r1;
-  wire       [4:0]    core_hub75_g1;
-  wire       [4:0]    core_hub75_b1;
+  wire       [5:0]    core_hub75_r0;
+  wire       [5:0]    core_hub75_g0;
+  wire       [5:0]    core_hub75_b0;
+  wire       [5:0]    core_hub75_r1;
+  wire       [5:0]    core_hub75_g1;
+  wire       [5:0]    core_hub75_b1;
   reg                 core_hub75_clk_regNext;
   reg                 core_hub75_lat_regNext;
   reg                 core_hub75_oe__regNext;
   reg        [4:0]    core_hub75_row_regNext;
+  reg                 _zz_hub75_j1_r0;
+  reg                 _zz_hub75_j1_g0;
+  reg                 _zz_hub75_j1_b0;
+  reg                 _zz_hub75_j1_r1;
+  reg                 _zz_hub75_j1_g1;
+  reg                 _zz_hub75_j1_b1;
   reg                 _zz_hub75_j2_r0;
   reg                 _zz_hub75_j2_g0;
   reg                 _zz_hub75_j2_b0;
@@ -305,20 +322,21 @@ module Cube2Top (
     .main_reset_                     (main_reset_                                  )  //i
   );
   LedMem core_u_led_mem (
-    .io_led_mem_a_req       (core_u_led_mem_io_led_mem_a_req[4:0]          ), //i
+    .io_led_mem_a_req       (core_u_led_mem_io_led_mem_a_req[5:0]          ), //i
     .io_led_mem_a_addr      (core_u_led_mem_io_led_mem_a_addr[12:0]        ), //i
     .io_led_mem_a_wr        (core_u_led_mem_io_led_mem_a_wr                ), //i
-    .io_led_mem_a_wr_data   (core_led_mem_apb_regs_mem_a_wr_data[17:0]     ), //i
-    .io_led_mem_a_rd_data   (core_u_led_mem_io_led_mem_a_rd_data[17:0]     ), //o
+    .io_led_mem_a_wr_data   (core_led_mem_apb_regs_mem_a_wr_data[11:0]     ), //i
+    .io_led_mem_a_rd_data   (core_u_led_mem_io_led_mem_a_rd_data[11:0]     ), //o
     .io_led_mem_b_req       (core_u_hub75_streamer_io_led_mem_rd           ), //i
     .io_led_mem_b_addr      (core_u_hub75_streamer_io_led_mem_rd_addr[12:0]), //i
     .io_led_mem_b_wr        (core_u_led_mem_io_led_mem_b_wr                ), //i
-    .io_led_mem_b_wr_data   (core_u_led_mem_io_led_mem_b_wr_data[17:0]     ), //i
-    .io_led_mem_b_rd_data_0 (core_u_led_mem_io_led_mem_b_rd_data_0[17:0]   ), //o
-    .io_led_mem_b_rd_data_1 (core_u_led_mem_io_led_mem_b_rd_data_1[17:0]   ), //o
-    .io_led_mem_b_rd_data_2 (core_u_led_mem_io_led_mem_b_rd_data_2[17:0]   ), //o
-    .io_led_mem_b_rd_data_3 (core_u_led_mem_io_led_mem_b_rd_data_3[17:0]   ), //o
-    .io_led_mem_b_rd_data_4 (core_u_led_mem_io_led_mem_b_rd_data_4[17:0]   ), //o
+    .io_led_mem_b_wr_data   (core_u_led_mem_io_led_mem_b_wr_data[11:0]     ), //i
+    .io_led_mem_b_rd_data_0 (core_u_led_mem_io_led_mem_b_rd_data_0[11:0]   ), //o
+    .io_led_mem_b_rd_data_1 (core_u_led_mem_io_led_mem_b_rd_data_1[11:0]   ), //o
+    .io_led_mem_b_rd_data_2 (core_u_led_mem_io_led_mem_b_rd_data_2[11:0]   ), //o
+    .io_led_mem_b_rd_data_3 (core_u_led_mem_io_led_mem_b_rd_data_3[11:0]   ), //o
+    .io_led_mem_b_rd_data_4 (core_u_led_mem_io_led_mem_b_rd_data_4[11:0]   ), //o
+    .io_led_mem_b_rd_data_5 (core_u_led_mem_io_led_mem_b_rd_data_5[11:0]   ), //o
     .main_clk               (main_clk                                      ), //i
     .main_reset_            (main_reset_                                   )  //i
   );
@@ -326,12 +344,12 @@ module Cube2Top (
     .io_rgb_valid                     (core_u_hub75_streamer_io_rgb_valid                          ), //o
     .io_rgb_ready                     (core_u_hub75phy_io_rgb_ready                                ), //i
     .io_rgb_payload_sof               (core_u_hub75_streamer_io_rgb_payload_sof                    ), //o
-    .io_rgb_payload_r0                (core_u_hub75_streamer_io_rgb_payload_r0[4:0]                ), //o
-    .io_rgb_payload_g0                (core_u_hub75_streamer_io_rgb_payload_g0[4:0]                ), //o
-    .io_rgb_payload_b0                (core_u_hub75_streamer_io_rgb_payload_b0[4:0]                ), //o
-    .io_rgb_payload_r1                (core_u_hub75_streamer_io_rgb_payload_r1[4:0]                ), //o
-    .io_rgb_payload_g1                (core_u_hub75_streamer_io_rgb_payload_g1[4:0]                ), //o
-    .io_rgb_payload_b1                (core_u_hub75_streamer_io_rgb_payload_b1[4:0]                ), //o
+    .io_rgb_payload_r0                (core_u_hub75_streamer_io_rgb_payload_r0[5:0]                ), //o
+    .io_rgb_payload_g0                (core_u_hub75_streamer_io_rgb_payload_g0[5:0]                ), //o
+    .io_rgb_payload_b0                (core_u_hub75_streamer_io_rgb_payload_b0[5:0]                ), //o
+    .io_rgb_payload_r1                (core_u_hub75_streamer_io_rgb_payload_r1[5:0]                ), //o
+    .io_rgb_payload_g1                (core_u_hub75_streamer_io_rgb_payload_g1[5:0]                ), //o
+    .io_rgb_payload_b1                (core_u_hub75_streamer_io_rgb_payload_b1[5:0]                ), //o
     .io_panel_infos_0_topLeftXCoord   (_zz_io_hub75_streamer_apb_PRDATA[1:0]                       ), //i
     .io_panel_infos_0_topLeftYCoord   (_zz_io_hub75_streamer_apb_PRDATA_1[1:0]                     ), //i
     .io_panel_infos_0_topLeftZCoord   (_zz_io_hub75_streamer_apb_PRDATA_2[1:0]                     ), //i
@@ -382,6 +400,16 @@ module Cube2Top (
     .io_panel_infos_4_xIncr           (_zz_io_hub75_streamer_apb_PRDATA_27[1:0]                    ), //i
     .io_panel_infos_4_yIncr           (_zz_io_hub75_streamer_apb_PRDATA_28[1:0]                    ), //i
     .io_panel_infos_4_zIncr           (_zz_io_hub75_streamer_apb_PRDATA_29[1:0]                    ), //i
+    .io_panel_infos_5_topLeftXCoord   (_zz_io_hub75_streamer_apb_PRDATA_30[1:0]                    ), //i
+    .io_panel_infos_5_topLeftYCoord   (_zz_io_hub75_streamer_apb_PRDATA_31[1:0]                    ), //i
+    .io_panel_infos_5_topLeftZCoord   (_zz_io_hub75_streamer_apb_PRDATA_32[1:0]                    ), //i
+    .io_panel_infos_5_memAddrStartPh0 (core_u_hub75_streamer_io_panel_infos_5_memAddrStartPh0[15:0]), //i
+    .io_panel_infos_5_memAddrStartPh1 (core_u_hub75_streamer_io_panel_infos_5_memAddrStartPh1[15:0]), //i
+    .io_panel_infos_5_memAddrColMul   (core_u_hub75_streamer_io_panel_infos_5_memAddrColMul[7:0]   ), //i
+    .io_panel_infos_5_memAddrRowMul   (core_u_hub75_streamer_io_panel_infos_5_memAddrRowMul[7:0]   ), //i
+    .io_panel_infos_5_xIncr           (_zz_io_hub75_streamer_apb_PRDATA_33[1:0]                    ), //i
+    .io_panel_infos_5_yIncr           (_zz_io_hub75_streamer_apb_PRDATA_34[1:0]                    ), //i
+    .io_panel_infos_5_zIncr           (_zz_io_hub75_streamer_apb_PRDATA_35[1:0]                    ), //i
     .io_enable                        (core_hub75_streamer_regs_enable                             ), //i
     .io_start                         (core_u_hub75_streamer_io_start                              ), //i
     .io_eof                           (core_u_hub75_streamer_io_eof                                ), //o
@@ -390,11 +418,12 @@ module Cube2Top (
     .io_b_dim                         (core_hub75_streamer_regs_b_dim[7:0]                         ), //i
     .io_led_mem_rd                    (core_u_hub75_streamer_io_led_mem_rd                         ), //o
     .io_led_mem_rd_addr               (core_u_hub75_streamer_io_led_mem_rd_addr[12:0]              ), //o
-    .io_led_mem_rd_data_0             (core_u_led_mem_io_led_mem_b_rd_data_0[17:0]                 ), //i
-    .io_led_mem_rd_data_1             (core_u_led_mem_io_led_mem_b_rd_data_1[17:0]                 ), //i
-    .io_led_mem_rd_data_2             (core_u_led_mem_io_led_mem_b_rd_data_2[17:0]                 ), //i
-    .io_led_mem_rd_data_3             (core_u_led_mem_io_led_mem_b_rd_data_3[17:0]                 ), //i
-    .io_led_mem_rd_data_4             (core_u_led_mem_io_led_mem_b_rd_data_4[17:0]                 ), //i
+    .io_led_mem_rd_data_0             (core_u_led_mem_io_led_mem_b_rd_data_0[11:0]                 ), //i
+    .io_led_mem_rd_data_1             (core_u_led_mem_io_led_mem_b_rd_data_1[11:0]                 ), //i
+    .io_led_mem_rd_data_2             (core_u_led_mem_io_led_mem_b_rd_data_2[11:0]                 ), //i
+    .io_led_mem_rd_data_3             (core_u_led_mem_io_led_mem_b_rd_data_3[11:0]                 ), //i
+    .io_led_mem_rd_data_4             (core_u_led_mem_io_led_mem_b_rd_data_4[11:0]                 ), //i
+    .io_led_mem_rd_data_5             (core_u_led_mem_io_led_mem_b_rd_data_5[11:0]                 ), //i
     .io_cur_buffer_nr                 (core_hub75_streamer_regs_cur_buffer_nr                      ), //i
     .io_cur_row_nr                    (core_u_hub75_streamer_io_cur_row_nr[4:0]                    ), //o
     .io_cur_bit_nr                    (core_u_hub75_streamer_io_cur_bit_nr[2:0]                    ), //o
@@ -406,22 +435,22 @@ module Cube2Top (
     .io_rgb_valid       (core_u_hub75_streamer_io_rgb_valid          ), //i
     .io_rgb_ready       (core_u_hub75phy_io_rgb_ready                ), //o
     .io_rgb_payload_sof (core_u_hub75_streamer_io_rgb_payload_sof    ), //i
-    .io_rgb_payload_r0  (core_u_hub75_streamer_io_rgb_payload_r0[4:0]), //i
-    .io_rgb_payload_g0  (core_u_hub75_streamer_io_rgb_payload_g0[4:0]), //i
-    .io_rgb_payload_b0  (core_u_hub75_streamer_io_rgb_payload_b0[4:0]), //i
-    .io_rgb_payload_r1  (core_u_hub75_streamer_io_rgb_payload_r1[4:0]), //i
-    .io_rgb_payload_g1  (core_u_hub75_streamer_io_rgb_payload_g1[4:0]), //i
-    .io_rgb_payload_b1  (core_u_hub75_streamer_io_rgb_payload_b1[4:0]), //i
+    .io_rgb_payload_r0  (core_u_hub75_streamer_io_rgb_payload_r0[5:0]), //i
+    .io_rgb_payload_g0  (core_u_hub75_streamer_io_rgb_payload_g0[5:0]), //i
+    .io_rgb_payload_b0  (core_u_hub75_streamer_io_rgb_payload_b0[5:0]), //i
+    .io_rgb_payload_r1  (core_u_hub75_streamer_io_rgb_payload_r1[5:0]), //i
+    .io_rgb_payload_g1  (core_u_hub75_streamer_io_rgb_payload_g1[5:0]), //i
+    .io_rgb_payload_b1  (core_u_hub75_streamer_io_rgb_payload_b1[5:0]), //i
     .io_hub75_clk       (core_u_hub75phy_io_hub75_clk                ), //o
     .io_hub75_lat       (core_u_hub75phy_io_hub75_lat                ), //o
     .io_hub75_oe_       (core_u_hub75phy_io_hub75_oe_                ), //o
     .io_hub75_row       (core_u_hub75phy_io_hub75_row[4:0]           ), //o
-    .io_hub75_r0        (core_u_hub75phy_io_hub75_r0[4:0]            ), //o
-    .io_hub75_g0        (core_u_hub75phy_io_hub75_g0[4:0]            ), //o
-    .io_hub75_b0        (core_u_hub75phy_io_hub75_b0[4:0]            ), //o
-    .io_hub75_r1        (core_u_hub75phy_io_hub75_r1[4:0]            ), //o
-    .io_hub75_g1        (core_u_hub75phy_io_hub75_g1[4:0]            ), //o
-    .io_hub75_b1        (core_u_hub75phy_io_hub75_b1[4:0]            ), //o
+    .io_hub75_r0        (core_u_hub75phy_io_hub75_r0[5:0]            ), //o
+    .io_hub75_g0        (core_u_hub75phy_io_hub75_g0[5:0]            ), //o
+    .io_hub75_b0        (core_u_hub75phy_io_hub75_b0[5:0]            ), //o
+    .io_hub75_r1        (core_u_hub75phy_io_hub75_r1[5:0]            ), //o
+    .io_hub75_g1        (core_u_hub75phy_io_hub75_g1[5:0]            ), //o
+    .io_hub75_b1        (core_u_hub75phy_io_hub75_b1[5:0]            ), //o
     .main_clk           (main_clk                                    ), //i
     .main_reset_        (main_reset_                                 )  //i
   );
@@ -433,17 +462,17 @@ module Cube2Top (
   assign main_clk = osc_src_u_main_clk_clk_out;
   always @(*) begin
     main_reset_gen_reset_unbuffered_ = 1'b1;
-    if(when_Cube2Top_l136) begin
+    if(when_Cube2Top_l138) begin
       main_reset_gen_reset_unbuffered_ = 1'b0;
     end
   end
 
-  assign _zz_when_Cube2Top_l136[15 : 0] = 16'hffff;
-  assign when_Cube2Top_l136 = (main_reset_gen_reset_cntr != _zz_when_Cube2Top_l136);
+  assign _zz_when_Cube2Top_l138[15 : 0] = 16'hffff;
+  assign when_Cube2Top_l138 = (main_reset_gen_reset_cntr != _zz_when_Cube2Top_l138);
   assign main_reset_ = main_reset_gen_reset_unbuffered__regNext;
   assign led = core_u_cpu_io_led_red;
   assign core_u_led_mem_io_led_mem_b_wr = 1'b0;
-  assign core_u_led_mem_io_led_mem_b_wr_data = 18'h00000;
+  assign core_u_led_mem_io_led_mem_b_wr_data = 12'h000;
   assign _zz_io_led_mem_apb_PSLVERROR = 1'b0;
   assign _zz_io_led_mem_apb_PSLVERROR_1 = 1'b0;
   always @(*) begin
@@ -460,7 +489,7 @@ module Cube2Top (
   always @(*) begin
     core_u_cpu_io_led_mem_apb_PRDATA = 32'h00000000;
     if(when_Apb3SlaveFactory_l81) begin
-      core_u_cpu_io_led_mem_apb_PRDATA[17 : 0] = core_u_led_mem_io_led_mem_a_rd_data;
+      core_u_cpu_io_led_mem_apb_PRDATA[11 : 0] = core_u_led_mem_io_led_mem_a_rd_data;
     end
   end
 
@@ -470,17 +499,17 @@ module Cube2Top (
   assign core_u_cpu_io_led_mem_apb_PSLVERROR = ((_zz_io_led_mem_apb_PSLVERROR_2 && _zz_io_led_mem_apb_PSLVERROR_1) || (_zz_io_led_mem_apb_PSLVERROR_3 && _zz_io_led_mem_apb_PSLVERROR));
   assign core_led_mem_apb_regs_cpu_wr_addr = (_zz_core_led_mem_apb_regs_cpu_wr_addr >>> 2'd2);
   assign core_led_mem_apb_regs_cpu_rd_addr = (_zz_core_led_mem_apb_regs_cpu_rd_addr >>> 2'd2);
-  assign core_led_mem_apb_regs_mem_a_wr_data = {{core_led_mem_apb_regs_bus_a_wr_data[23 : 18],core_led_mem_apb_regs_bus_a_wr_data[15 : 10]},core_led_mem_apb_regs_bus_a_wr_data[7 : 2]};
+  assign core_led_mem_apb_regs_mem_a_wr_data = {{core_led_mem_apb_regs_bus_a_wr_data[23 : 20],core_led_mem_apb_regs_bus_a_wr_data[15 : 12]},core_led_mem_apb_regs_bus_a_wr_data[7 : 4]};
   assign core_led_mem_apb_regs_ram_a_wr_inst_nr = (core_led_mem_apb_regs_cpu_wr_addr >>> 4'd13);
   assign core_led_mem_apb_regs_ram_a_rd_inst_nr = (core_led_mem_apb_regs_cpu_rd_addr >>> 4'd13);
   always @(*) begin
-    core_u_led_mem_io_led_mem_a_req = 5'h00;
+    core_u_led_mem_io_led_mem_a_req = 6'h00;
     if(when_Apb3SlaveFactory_l81) begin
       if(_zz_io_led_mem_apb_PSLVERROR_2) begin
-        core_u_led_mem_io_led_mem_a_req = _zz_io_led_mem_a_req[4 : 0];
+        core_u_led_mem_io_led_mem_a_req = _zz_io_led_mem_a_req[5 : 0];
       end
       if(_zz_1) begin
-        core_u_led_mem_io_led_mem_a_req = _zz_io_led_mem_a_req_2[4 : 0];
+        core_u_led_mem_io_led_mem_a_req = _zz_io_led_mem_a_req_2[5 : 0];
       end
     end
   end
@@ -572,6 +601,14 @@ module Cube2Top (
         core_u_cpu_io_hub75_streamer_apb_PRDATA[11 : 10] = _zz_io_hub75_streamer_apb_PRDATA_28;
         core_u_cpu_io_hub75_streamer_apb_PRDATA[13 : 12] = _zz_io_hub75_streamer_apb_PRDATA_29;
       end
+      12'h240 : begin
+        core_u_cpu_io_hub75_streamer_apb_PRDATA[1 : 0] = _zz_io_hub75_streamer_apb_PRDATA_30;
+        core_u_cpu_io_hub75_streamer_apb_PRDATA[3 : 2] = _zz_io_hub75_streamer_apb_PRDATA_31;
+        core_u_cpu_io_hub75_streamer_apb_PRDATA[5 : 4] = _zz_io_hub75_streamer_apb_PRDATA_32;
+        core_u_cpu_io_hub75_streamer_apb_PRDATA[9 : 8] = _zz_io_hub75_streamer_apb_PRDATA_33;
+        core_u_cpu_io_hub75_streamer_apb_PRDATA[11 : 10] = _zz_io_hub75_streamer_apb_PRDATA_34;
+        core_u_cpu_io_hub75_streamer_apb_PRDATA[13 : 12] = _zz_io_hub75_streamer_apb_PRDATA_35;
+      end
       12'h000 : begin
         core_u_cpu_io_hub75_streamer_apb_PRDATA[0 : 0] = core_hub75_streamer_regs_enable;
         core_u_cpu_io_hub75_streamer_apb_PRDATA[1 : 1] = core_hub75_streamer_regs_start;
@@ -615,12 +652,12 @@ module Cube2Top (
   assign hub75_lat = core_hub75_lat_regNext;
   assign hub75_oe_ = core_hub75_oe__regNext;
   assign hub75_row = core_hub75_row_regNext;
-  assign hub75_j1_r0 = 1'b0;
-  assign hub75_j1_g0 = 1'b0;
-  assign hub75_j1_b0 = 1'b0;
-  assign hub75_j1_r1 = 1'b0;
-  assign hub75_j1_g1 = 1'b0;
-  assign hub75_j1_b1 = 1'b0;
+  assign hub75_j1_r0 = _zz_hub75_j1_r0;
+  assign hub75_j1_g0 = _zz_hub75_j1_g0;
+  assign hub75_j1_b0 = _zz_hub75_j1_b0;
+  assign hub75_j1_r1 = _zz_hub75_j1_r1;
+  assign hub75_j1_g1 = _zz_hub75_j1_g1;
+  assign hub75_j1_b1 = _zz_hub75_j1_b1;
   assign hub75_j2_r0 = _zz_hub75_j2_r0;
   assign hub75_j2_g0 = _zz_hub75_j2_g0;
   assign hub75_j2_b0 = _zz_hub75_j2_b0;
@@ -664,10 +701,10 @@ module Cube2Top (
   assign hub75_j8_g1 = 1'b0;
   assign hub75_j8_b1 = 1'b0;
   assign core_led_mem_apb_regs_bus_a_wr_data = core_u_cpu_io_led_mem_apb_PWDATA[23 : 0];
-  assign when_Apb3SlaveFactory_l81 = (core_u_cpu_io_led_mem_apb_PADDR < 18'h28000);
+  assign when_Apb3SlaveFactory_l81 = (core_u_cpu_io_led_mem_apb_PADDR < 18'h30000);
   assign when_BusSlaveFactory_l609 = (! _zz_when_BusSlaveFactory_l609_3);
   always @(posedge main_clk) begin
-    if(when_Cube2Top_l136) begin
+    if(when_Cube2Top_l138) begin
       main_reset_gen_reset_cntr <= (main_reset_gen_reset_cntr + 16'h0001);
     end
   end
@@ -688,6 +725,12 @@ module Cube2Top (
     core_hub75_lat_regNext <= core_hub75_lat;
     core_hub75_oe__regNext <= core_hub75_oe_;
     core_hub75_row_regNext <= core_hub75_row;
+    _zz_hub75_j1_r0 <= core_hub75_r0[5];
+    _zz_hub75_j1_g0 <= core_hub75_g0[5];
+    _zz_hub75_j1_b0 <= core_hub75_b0[5];
+    _zz_hub75_j1_r1 <= core_hub75_r1[5];
+    _zz_hub75_j1_g1 <= core_hub75_g1[5];
+    _zz_hub75_j1_b1 <= core_hub75_b1[5];
     _zz_hub75_j2_r0 <= core_hub75_r0[4];
     _zz_hub75_j2_g0 <= core_hub75_g0[4];
     _zz_hub75_j2_b0 <= core_hub75_b0[4];
@@ -753,6 +796,12 @@ module Cube2Top (
       _zz_io_hub75_streamer_apb_PRDATA_27 <= 2'b01;
       _zz_io_hub75_streamer_apb_PRDATA_28 <= 2'b11;
       _zz_io_hub75_streamer_apb_PRDATA_29 <= 2'b00;
+      _zz_io_hub75_streamer_apb_PRDATA_30 <= 2'b01;
+      _zz_io_hub75_streamer_apb_PRDATA_31 <= 2'b01;
+      _zz_io_hub75_streamer_apb_PRDATA_32 <= 2'b01;
+      _zz_io_hub75_streamer_apb_PRDATA_33 <= 2'b01;
+      _zz_io_hub75_streamer_apb_PRDATA_34 <= 2'b11;
+      _zz_io_hub75_streamer_apb_PRDATA_35 <= 2'b00;
       core_hub75_streamer_regs_enable <= 1'b0;
       core_hub75_streamer_regs_start <= 1'b0;
       core_hub75_streamer_regs_auto_restart <= 1'b0;
@@ -817,6 +866,16 @@ module Cube2Top (
             _zz_io_hub75_streamer_apb_PRDATA_29 <= core_u_cpu_io_hub75_streamer_apb_PWDATA[13 : 12];
           end
         end
+        12'h240 : begin
+          if(_zz_io_hub75_streamer_apb_PSLVERROR_2) begin
+            _zz_io_hub75_streamer_apb_PRDATA_30 <= core_u_cpu_io_hub75_streamer_apb_PWDATA[1 : 0];
+            _zz_io_hub75_streamer_apb_PRDATA_31 <= core_u_cpu_io_hub75_streamer_apb_PWDATA[3 : 2];
+            _zz_io_hub75_streamer_apb_PRDATA_32 <= core_u_cpu_io_hub75_streamer_apb_PWDATA[5 : 4];
+            _zz_io_hub75_streamer_apb_PRDATA_33 <= core_u_cpu_io_hub75_streamer_apb_PWDATA[9 : 8];
+            _zz_io_hub75_streamer_apb_PRDATA_34 <= core_u_cpu_io_hub75_streamer_apb_PWDATA[11 : 10];
+            _zz_io_hub75_streamer_apb_PRDATA_35 <= core_u_cpu_io_hub75_streamer_apb_PWDATA[13 : 12];
+          end
+        end
         12'h000 : begin
           if(_zz_io_hub75_streamer_apb_PSLVERROR_2) begin
             core_hub75_streamer_regs_enable <= core_u_cpu_io_hub75_streamer_apb_PWDATA[0];
@@ -845,26 +904,28 @@ module Hub75Phy (
   input  wire          io_rgb_valid,
   output reg           io_rgb_ready,
   input  wire          io_rgb_payload_sof,
-  input  wire [4:0]    io_rgb_payload_r0,
-  input  wire [4:0]    io_rgb_payload_g0,
-  input  wire [4:0]    io_rgb_payload_b0,
-  input  wire [4:0]    io_rgb_payload_r1,
-  input  wire [4:0]    io_rgb_payload_g1,
-  input  wire [4:0]    io_rgb_payload_b1,
+  input  wire [5:0]    io_rgb_payload_r0,
+  input  wire [5:0]    io_rgb_payload_g0,
+  input  wire [5:0]    io_rgb_payload_b0,
+  input  wire [5:0]    io_rgb_payload_r1,
+  input  wire [5:0]    io_rgb_payload_g1,
+  input  wire [5:0]    io_rgb_payload_b1,
   output wire          io_hub75_clk,
   output wire          io_hub75_lat,
   output wire          io_hub75_oe_,
   output wire [4:0]    io_hub75_row,
-  output reg  [4:0]    io_hub75_r0,
-  output reg  [4:0]    io_hub75_g0,
-  output reg  [4:0]    io_hub75_b0,
-  output reg  [4:0]    io_hub75_r1,
-  output reg  [4:0]    io_hub75_g1,
-  output reg  [4:0]    io_hub75_b1,
+  output reg  [5:0]    io_hub75_r0,
+  output reg  [5:0]    io_hub75_g0,
+  output reg  [5:0]    io_hub75_b0,
+  output reg  [5:0]    io_hub75_r1,
+  output reg  [5:0]    io_hub75_g1,
+  output reg  [5:0]    io_hub75_b1,
   input  wire          main_clk,
   input  wire          main_reset_
 );
 
+  wire       [1:0]    _zz_clk_div_cntr_valueNext;
+  wire       [0:0]    _zz_clk_div_cntr_valueNext_1;
   wire       [6:0]    _zz_col_cntr_valueNext;
   wire       [0:0]    _zz_col_cntr_valueNext_1;
   wire       [4:0]    _zz_bin_dec_phase_valueNext;
@@ -878,8 +939,8 @@ module Hub75Phy (
   wire                when_Utils_l560;
   reg                 clk_div_cntr_willIncrement;
   reg                 clk_div_cntr_willClear;
-  reg        [0:0]    clk_div_cntr_valueNext;
-  reg        [0:0]    clk_div_cntr_value;
+  reg        [1:0]    clk_div_cntr_valueNext;
+  reg        [1:0]    clk_div_cntr_value;
   wire                clk_div_cntr_willOverflowIfInc;
   wire                clk_div_cntr_willOverflow;
   reg                 col_cntr_willIncrement;
@@ -907,80 +968,94 @@ module Hub75Phy (
   wire                row_cntr_willOverflowIfInc;
   wire                row_cntr_willOverflow;
   wire       [4:0]    bin_dec_phase_max;
-  wire                when_Hub75Phy_l59;
+  wire                when_Hub75Phy_l61;
   wire                col_active_phase;
   wire                need_data;
   wire                need_sof;
   reg                 force_clear_no_data;
   reg                 force_clear_desync;
-  wire                when_Hub75Phy_l78;
-  wire                when_Hub75Phy_l81;
-  wire                when_Hub75Phy_l89;
+  wire                when_Hub75Phy_l80;
+  wire                when_Hub75Phy_l83;
+  wire                when_Hub75Phy_l91;
   reg                 _zz_io_hub75_clk;
   reg                 _zz_io_hub75_oe_;
   reg                 _zz_io_hub75_lat;
-  wire                when_Hub75Phy_l102;
-  reg                 _zz_io_hub75_r0;
-  wire                when_Hub75Phy_l103;
-  reg                 _zz_io_hub75_g0;
   wire                when_Hub75Phy_l104;
-  reg                 _zz_io_hub75_b0;
+  reg                 _zz_io_hub75_r0;
   wire                when_Hub75Phy_l105;
-  reg                 _zz_io_hub75_r1;
+  reg                 _zz_io_hub75_g0;
   wire                when_Hub75Phy_l106;
-  reg                 _zz_io_hub75_g1;
+  reg                 _zz_io_hub75_b0;
   wire                when_Hub75Phy_l107;
+  reg                 _zz_io_hub75_r1;
+  wire                when_Hub75Phy_l108;
+  reg                 _zz_io_hub75_g1;
+  wire                when_Hub75Phy_l109;
   reg                 _zz_io_hub75_b1;
-  wire                when_Hub75Phy_l102_1;
-  reg                 _zz_io_hub75_r0_1;
-  wire                when_Hub75Phy_l103_1;
-  reg                 _zz_io_hub75_g0_1;
   wire                when_Hub75Phy_l104_1;
-  reg                 _zz_io_hub75_b0_1;
+  reg                 _zz_io_hub75_r0_1;
   wire                when_Hub75Phy_l105_1;
-  reg                 _zz_io_hub75_r1_1;
+  reg                 _zz_io_hub75_g0_1;
   wire                when_Hub75Phy_l106_1;
-  reg                 _zz_io_hub75_g1_1;
+  reg                 _zz_io_hub75_b0_1;
   wire                when_Hub75Phy_l107_1;
+  reg                 _zz_io_hub75_r1_1;
+  wire                when_Hub75Phy_l108_1;
+  reg                 _zz_io_hub75_g1_1;
+  wire                when_Hub75Phy_l109_1;
   reg                 _zz_io_hub75_b1_1;
-  wire                when_Hub75Phy_l102_2;
-  reg                 _zz_io_hub75_r0_2;
-  wire                when_Hub75Phy_l103_2;
-  reg                 _zz_io_hub75_g0_2;
   wire                when_Hub75Phy_l104_2;
-  reg                 _zz_io_hub75_b0_2;
+  reg                 _zz_io_hub75_r0_2;
   wire                when_Hub75Phy_l105_2;
-  reg                 _zz_io_hub75_r1_2;
+  reg                 _zz_io_hub75_g0_2;
   wire                when_Hub75Phy_l106_2;
-  reg                 _zz_io_hub75_g1_2;
+  reg                 _zz_io_hub75_b0_2;
   wire                when_Hub75Phy_l107_2;
+  reg                 _zz_io_hub75_r1_2;
+  wire                when_Hub75Phy_l108_2;
+  reg                 _zz_io_hub75_g1_2;
+  wire                when_Hub75Phy_l109_2;
   reg                 _zz_io_hub75_b1_2;
-  wire                when_Hub75Phy_l102_3;
-  reg                 _zz_io_hub75_r0_3;
-  wire                when_Hub75Phy_l103_3;
-  reg                 _zz_io_hub75_g0_3;
   wire                when_Hub75Phy_l104_3;
-  reg                 _zz_io_hub75_b0_3;
+  reg                 _zz_io_hub75_r0_3;
   wire                when_Hub75Phy_l105_3;
-  reg                 _zz_io_hub75_r1_3;
+  reg                 _zz_io_hub75_g0_3;
   wire                when_Hub75Phy_l106_3;
-  reg                 _zz_io_hub75_g1_3;
+  reg                 _zz_io_hub75_b0_3;
   wire                when_Hub75Phy_l107_3;
+  reg                 _zz_io_hub75_r1_3;
+  wire                when_Hub75Phy_l108_3;
+  reg                 _zz_io_hub75_g1_3;
+  wire                when_Hub75Phy_l109_3;
   reg                 _zz_io_hub75_b1_3;
-  wire                when_Hub75Phy_l102_4;
-  reg                 _zz_io_hub75_r0_4;
-  wire                when_Hub75Phy_l103_4;
-  reg                 _zz_io_hub75_g0_4;
   wire                when_Hub75Phy_l104_4;
-  reg                 _zz_io_hub75_b0_4;
+  reg                 _zz_io_hub75_r0_4;
   wire                when_Hub75Phy_l105_4;
-  reg                 _zz_io_hub75_r1_4;
+  reg                 _zz_io_hub75_g0_4;
   wire                when_Hub75Phy_l106_4;
-  reg                 _zz_io_hub75_g1_4;
+  reg                 _zz_io_hub75_b0_4;
   wire                when_Hub75Phy_l107_4;
+  reg                 _zz_io_hub75_r1_4;
+  wire                when_Hub75Phy_l108_4;
+  reg                 _zz_io_hub75_g1_4;
+  wire                when_Hub75Phy_l109_4;
   reg                 _zz_io_hub75_b1_4;
+  wire                when_Hub75Phy_l104_5;
+  reg                 _zz_io_hub75_r0_5;
+  wire                when_Hub75Phy_l105_5;
+  reg                 _zz_io_hub75_g0_5;
+  wire                when_Hub75Phy_l106_5;
+  reg                 _zz_io_hub75_b0_5;
+  wire                when_Hub75Phy_l107_5;
+  reg                 _zz_io_hub75_r1_5;
+  wire                when_Hub75Phy_l108_5;
+  reg                 _zz_io_hub75_g1_5;
+  wire                when_Hub75Phy_l109_5;
+  reg                 _zz_io_hub75_b1_5;
   reg        [4:0]    row_cntr_value_regNextWhen;
 
+  assign _zz_clk_div_cntr_valueNext_1 = clk_div_cntr_willIncrement;
+  assign _zz_clk_div_cntr_valueNext = {1'd0, _zz_clk_div_cntr_valueNext_1};
   assign _zz_col_cntr_valueNext_1 = col_cntr_willIncrement;
   assign _zz_col_cntr_valueNext = {6'd0, _zz_col_cntr_valueNext_1};
   assign _zz_bin_dec_phase_valueNext_1 = bin_dec_phase_willIncrement;
@@ -1001,17 +1076,17 @@ module Hub75Phy (
 
   always @(*) begin
     clk_div_cntr_willClear = 1'b0;
-    if(when_Hub75Phy_l89) begin
+    if(when_Hub75Phy_l91) begin
       clk_div_cntr_willClear = 1'b1;
     end
   end
 
-  assign clk_div_cntr_willOverflowIfInc = (clk_div_cntr_value == 1'b1);
+  assign clk_div_cntr_willOverflowIfInc = (clk_div_cntr_value == 2'b11);
   assign clk_div_cntr_willOverflow = (clk_div_cntr_willOverflowIfInc && clk_div_cntr_willIncrement);
   always @(*) begin
-    clk_div_cntr_valueNext = (clk_div_cntr_value + clk_div_cntr_willIncrement);
+    clk_div_cntr_valueNext = (clk_div_cntr_value + _zz_clk_div_cntr_valueNext);
     if(clk_div_cntr_willClear) begin
-      clk_div_cntr_valueNext = 1'b0;
+      clk_div_cntr_valueNext = 2'b00;
     end
   end
 
@@ -1024,7 +1099,7 @@ module Hub75Phy (
 
   always @(*) begin
     col_cntr_willClear = 1'b0;
-    if(when_Hub75Phy_l89) begin
+    if(when_Hub75Phy_l91) begin
       col_cntr_willClear = 1'b1;
     end
   end
@@ -1045,7 +1120,7 @@ module Hub75Phy (
   always @(*) begin
     bin_dec_phase_willIncrement = 1'b0;
     if(col_cntr_willOverflow) begin
-      if(!when_Hub75Phy_l59) begin
+      if(!when_Hub75Phy_l61) begin
         bin_dec_phase_willIncrement = 1'b1;
       end
     end
@@ -1054,11 +1129,11 @@ module Hub75Phy (
   always @(*) begin
     bin_dec_phase_willClear = 1'b0;
     if(col_cntr_willOverflow) begin
-      if(when_Hub75Phy_l59) begin
+      if(when_Hub75Phy_l61) begin
         bin_dec_phase_willClear = 1'b1;
       end
     end
-    if(when_Hub75Phy_l89) begin
+    if(when_Hub75Phy_l91) begin
       bin_dec_phase_willClear = 1'b1;
     end
   end
@@ -1075,7 +1150,7 @@ module Hub75Phy (
   always @(*) begin
     bit_cntr_willIncrement = 1'b0;
     if(col_cntr_willOverflow) begin
-      if(when_Hub75Phy_l59) begin
+      if(when_Hub75Phy_l61) begin
         bit_cntr_willIncrement = 1'b1;
       end
     end
@@ -1083,7 +1158,7 @@ module Hub75Phy (
 
   always @(*) begin
     bit_cntr_willClear = 1'b0;
-    if(when_Hub75Phy_l89) begin
+    if(when_Hub75Phy_l91) begin
       bit_cntr_willClear = 1'b1;
     end
   end
@@ -1110,7 +1185,7 @@ module Hub75Phy (
 
   always @(*) begin
     row_cntr_willClear = 1'b0;
-    if(when_Hub75Phy_l89) begin
+    if(when_Hub75Phy_l91) begin
       row_cntr_willClear = 1'b1;
     end
   end
@@ -1125,14 +1200,14 @@ module Hub75Phy (
   end
 
   assign bin_dec_phase_max = _zz_bin_dec_phase_max[4:0];
-  assign when_Hub75Phy_l59 = (bin_dec_phase_value == bin_dec_phase_max);
+  assign when_Hub75Phy_l61 = (bin_dec_phase_value == bin_dec_phase_max);
   assign col_active_phase = (col_cntr_value < 7'h40);
-  assign need_data = (((bin_dec_phase_value == 5'h00) && col_active_phase) && (clk_div_cntr_value == 1'b0));
+  assign need_data = (((bin_dec_phase_value == 5'h00) && col_active_phase) && (clk_div_cntr_value == 2'b00));
   assign need_sof = ((((col_cntr_value == 7'h00) && (row_cntr_value == 5'h00)) && (bit_cntr_value == 3'b000)) && (bin_dec_phase_value == 5'h00));
   always @(*) begin
     force_clear_no_data = 1'b0;
     if(need_data) begin
-      if(when_Hub75Phy_l78) begin
+      if(when_Hub75Phy_l80) begin
         force_clear_no_data = 1'b1;
       end
     end
@@ -1141,8 +1216,8 @@ module Hub75Phy (
   always @(*) begin
     force_clear_desync = 1'b0;
     if(need_data) begin
-      if(!when_Hub75Phy_l78) begin
-        if(when_Hub75Phy_l81) begin
+      if(!when_Hub75Phy_l80) begin
+        if(when_Hub75Phy_l83) begin
           force_clear_desync = 1'b1;
         end
       end
@@ -1152,102 +1227,114 @@ module Hub75Phy (
   always @(*) begin
     io_rgb_ready = 1'b0;
     if(need_data) begin
-      if(!when_Hub75Phy_l78) begin
-        if(!when_Hub75Phy_l81) begin
+      if(!when_Hub75Phy_l80) begin
+        if(!when_Hub75Phy_l83) begin
           io_rgb_ready = 1'b1;
         end
       end
     end
   end
 
-  assign when_Hub75Phy_l78 = (! io_rgb_valid);
-  assign when_Hub75Phy_l81 = (io_rgb_valid && ((io_rgb_payload_sof && (! need_sof)) || ((! io_rgb_payload_sof) && need_sof)));
-  assign when_Hub75Phy_l89 = (force_clear_no_data || force_clear_desync);
+  assign when_Hub75Phy_l80 = (! io_rgb_valid);
+  assign when_Hub75Phy_l83 = (io_rgb_valid && ((io_rgb_payload_sof && (! need_sof)) || ((! io_rgb_payload_sof) && need_sof)));
+  assign when_Hub75Phy_l91 = (force_clear_no_data || force_clear_desync);
   assign io_hub75_clk = _zz_io_hub75_clk;
   assign io_hub75_oe_ = _zz_io_hub75_oe_;
   assign io_hub75_lat = _zz_io_hub75_lat;
-  assign when_Hub75Phy_l102 = (io_rgb_valid && io_rgb_ready);
+  assign when_Hub75Phy_l104 = (io_rgb_valid && io_rgb_ready);
   always @(*) begin
     io_hub75_r0[0] = _zz_io_hub75_r0;
     io_hub75_r0[1] = _zz_io_hub75_r0_1;
     io_hub75_r0[2] = _zz_io_hub75_r0_2;
     io_hub75_r0[3] = _zz_io_hub75_r0_3;
     io_hub75_r0[4] = _zz_io_hub75_r0_4;
+    io_hub75_r0[5] = _zz_io_hub75_r0_5;
   end
 
-  assign when_Hub75Phy_l103 = (io_rgb_valid && io_rgb_ready);
+  assign when_Hub75Phy_l105 = (io_rgb_valid && io_rgb_ready);
   always @(*) begin
     io_hub75_g0[0] = _zz_io_hub75_g0;
     io_hub75_g0[1] = _zz_io_hub75_g0_1;
     io_hub75_g0[2] = _zz_io_hub75_g0_2;
     io_hub75_g0[3] = _zz_io_hub75_g0_3;
     io_hub75_g0[4] = _zz_io_hub75_g0_4;
+    io_hub75_g0[5] = _zz_io_hub75_g0_5;
   end
 
-  assign when_Hub75Phy_l104 = (io_rgb_valid && io_rgb_ready);
+  assign when_Hub75Phy_l106 = (io_rgb_valid && io_rgb_ready);
   always @(*) begin
     io_hub75_b0[0] = _zz_io_hub75_b0;
     io_hub75_b0[1] = _zz_io_hub75_b0_1;
     io_hub75_b0[2] = _zz_io_hub75_b0_2;
     io_hub75_b0[3] = _zz_io_hub75_b0_3;
     io_hub75_b0[4] = _zz_io_hub75_b0_4;
+    io_hub75_b0[5] = _zz_io_hub75_b0_5;
   end
 
-  assign when_Hub75Phy_l105 = (io_rgb_valid && io_rgb_ready);
+  assign when_Hub75Phy_l107 = (io_rgb_valid && io_rgb_ready);
   always @(*) begin
     io_hub75_r1[0] = _zz_io_hub75_r1;
     io_hub75_r1[1] = _zz_io_hub75_r1_1;
     io_hub75_r1[2] = _zz_io_hub75_r1_2;
     io_hub75_r1[3] = _zz_io_hub75_r1_3;
     io_hub75_r1[4] = _zz_io_hub75_r1_4;
+    io_hub75_r1[5] = _zz_io_hub75_r1_5;
   end
 
-  assign when_Hub75Phy_l106 = (io_rgb_valid && io_rgb_ready);
+  assign when_Hub75Phy_l108 = (io_rgb_valid && io_rgb_ready);
   always @(*) begin
     io_hub75_g1[0] = _zz_io_hub75_g1;
     io_hub75_g1[1] = _zz_io_hub75_g1_1;
     io_hub75_g1[2] = _zz_io_hub75_g1_2;
     io_hub75_g1[3] = _zz_io_hub75_g1_3;
     io_hub75_g1[4] = _zz_io_hub75_g1_4;
+    io_hub75_g1[5] = _zz_io_hub75_g1_5;
   end
 
-  assign when_Hub75Phy_l107 = (io_rgb_valid && io_rgb_ready);
+  assign when_Hub75Phy_l109 = (io_rgb_valid && io_rgb_ready);
   always @(*) begin
     io_hub75_b1[0] = _zz_io_hub75_b1;
     io_hub75_b1[1] = _zz_io_hub75_b1_1;
     io_hub75_b1[2] = _zz_io_hub75_b1_2;
     io_hub75_b1[3] = _zz_io_hub75_b1_3;
     io_hub75_b1[4] = _zz_io_hub75_b1_4;
+    io_hub75_b1[5] = _zz_io_hub75_b1_5;
   end
 
-  assign when_Hub75Phy_l102_1 = (io_rgb_valid && io_rgb_ready);
-  assign when_Hub75Phy_l103_1 = (io_rgb_valid && io_rgb_ready);
   assign when_Hub75Phy_l104_1 = (io_rgb_valid && io_rgb_ready);
   assign when_Hub75Phy_l105_1 = (io_rgb_valid && io_rgb_ready);
   assign when_Hub75Phy_l106_1 = (io_rgb_valid && io_rgb_ready);
   assign when_Hub75Phy_l107_1 = (io_rgb_valid && io_rgb_ready);
-  assign when_Hub75Phy_l102_2 = (io_rgb_valid && io_rgb_ready);
-  assign when_Hub75Phy_l103_2 = (io_rgb_valid && io_rgb_ready);
+  assign when_Hub75Phy_l108_1 = (io_rgb_valid && io_rgb_ready);
+  assign when_Hub75Phy_l109_1 = (io_rgb_valid && io_rgb_ready);
   assign when_Hub75Phy_l104_2 = (io_rgb_valid && io_rgb_ready);
   assign when_Hub75Phy_l105_2 = (io_rgb_valid && io_rgb_ready);
   assign when_Hub75Phy_l106_2 = (io_rgb_valid && io_rgb_ready);
   assign when_Hub75Phy_l107_2 = (io_rgb_valid && io_rgb_ready);
-  assign when_Hub75Phy_l102_3 = (io_rgb_valid && io_rgb_ready);
-  assign when_Hub75Phy_l103_3 = (io_rgb_valid && io_rgb_ready);
+  assign when_Hub75Phy_l108_2 = (io_rgb_valid && io_rgb_ready);
+  assign when_Hub75Phy_l109_2 = (io_rgb_valid && io_rgb_ready);
   assign when_Hub75Phy_l104_3 = (io_rgb_valid && io_rgb_ready);
   assign when_Hub75Phy_l105_3 = (io_rgb_valid && io_rgb_ready);
   assign when_Hub75Phy_l106_3 = (io_rgb_valid && io_rgb_ready);
   assign when_Hub75Phy_l107_3 = (io_rgb_valid && io_rgb_ready);
-  assign when_Hub75Phy_l102_4 = (io_rgb_valid && io_rgb_ready);
-  assign when_Hub75Phy_l103_4 = (io_rgb_valid && io_rgb_ready);
+  assign when_Hub75Phy_l108_3 = (io_rgb_valid && io_rgb_ready);
+  assign when_Hub75Phy_l109_3 = (io_rgb_valid && io_rgb_ready);
   assign when_Hub75Phy_l104_4 = (io_rgb_valid && io_rgb_ready);
   assign when_Hub75Phy_l105_4 = (io_rgb_valid && io_rgb_ready);
   assign when_Hub75Phy_l106_4 = (io_rgb_valid && io_rgb_ready);
   assign when_Hub75Phy_l107_4 = (io_rgb_valid && io_rgb_ready);
+  assign when_Hub75Phy_l108_4 = (io_rgb_valid && io_rgb_ready);
+  assign when_Hub75Phy_l109_4 = (io_rgb_valid && io_rgb_ready);
+  assign when_Hub75Phy_l104_5 = (io_rgb_valid && io_rgb_ready);
+  assign when_Hub75Phy_l105_5 = (io_rgb_valid && io_rgb_ready);
+  assign when_Hub75Phy_l106_5 = (io_rgb_valid && io_rgb_ready);
+  assign when_Hub75Phy_l107_5 = (io_rgb_valid && io_rgb_ready);
+  assign when_Hub75Phy_l108_5 = (io_rgb_valid && io_rgb_ready);
+  assign when_Hub75Phy_l109_5 = (io_rgb_valid && io_rgb_ready);
   assign io_hub75_row = row_cntr_value_regNextWhen;
   always @(posedge main_clk or negedge main_reset_) begin
     if(!main_reset_) begin
-      clk_div_cntr_value <= 1'b0;
+      clk_div_cntr_value <= 2'b00;
       col_cntr_value <= 7'h00;
       bin_dec_phase_value <= 5'h00;
       bit_cntr_value <= 3'b000;
@@ -1262,7 +1349,7 @@ module Hub75Phy (
       bin_dec_phase_value <= bin_dec_phase_valueNext;
       bit_cntr_value <= bit_cntr_valueNext;
       row_cntr_value <= row_cntr_valueNext;
-      _zz_io_hub75_clk <= (((bin_dec_phase_value == 5'h00) && col_active_phase) && (1'b1 <= clk_div_cntr_value));
+      _zz_io_hub75_clk <= (((bin_dec_phase_value == 5'h00) && col_active_phase) && (2'b10 <= clk_div_cntr_value));
       _zz_io_hub75_oe_ <= ((bin_dec_phase_value == 5'h00) && (! col_active_phase));
       _zz_io_hub75_lat <= ((bin_dec_phase_value == 5'h00) && (col_cntr_value == 7'h41));
       if(col_cntr_willOverflow) begin
@@ -1272,95 +1359,113 @@ module Hub75Phy (
   end
 
   always @(posedge main_clk) begin
-    if(when_Hub75Phy_l102) begin
+    if(when_Hub75Phy_l104) begin
       _zz_io_hub75_r0 <= io_rgb_payload_r0[0];
     end
-    if(when_Hub75Phy_l103) begin
+    if(when_Hub75Phy_l105) begin
       _zz_io_hub75_g0 <= io_rgb_payload_g0[0];
     end
-    if(when_Hub75Phy_l104) begin
+    if(when_Hub75Phy_l106) begin
       _zz_io_hub75_b0 <= io_rgb_payload_b0[0];
     end
-    if(when_Hub75Phy_l105) begin
+    if(when_Hub75Phy_l107) begin
       _zz_io_hub75_r1 <= io_rgb_payload_r1[0];
     end
-    if(when_Hub75Phy_l106) begin
+    if(when_Hub75Phy_l108) begin
       _zz_io_hub75_g1 <= io_rgb_payload_g1[0];
     end
-    if(when_Hub75Phy_l107) begin
+    if(when_Hub75Phy_l109) begin
       _zz_io_hub75_b1 <= io_rgb_payload_b1[0];
     end
-    if(when_Hub75Phy_l102_1) begin
+    if(when_Hub75Phy_l104_1) begin
       _zz_io_hub75_r0_1 <= io_rgb_payload_r0[1];
     end
-    if(when_Hub75Phy_l103_1) begin
+    if(when_Hub75Phy_l105_1) begin
       _zz_io_hub75_g0_1 <= io_rgb_payload_g0[1];
     end
-    if(when_Hub75Phy_l104_1) begin
+    if(when_Hub75Phy_l106_1) begin
       _zz_io_hub75_b0_1 <= io_rgb_payload_b0[1];
     end
-    if(when_Hub75Phy_l105_1) begin
+    if(when_Hub75Phy_l107_1) begin
       _zz_io_hub75_r1_1 <= io_rgb_payload_r1[1];
     end
-    if(when_Hub75Phy_l106_1) begin
+    if(when_Hub75Phy_l108_1) begin
       _zz_io_hub75_g1_1 <= io_rgb_payload_g1[1];
     end
-    if(when_Hub75Phy_l107_1) begin
+    if(when_Hub75Phy_l109_1) begin
       _zz_io_hub75_b1_1 <= io_rgb_payload_b1[1];
     end
-    if(when_Hub75Phy_l102_2) begin
+    if(when_Hub75Phy_l104_2) begin
       _zz_io_hub75_r0_2 <= io_rgb_payload_r0[2];
     end
-    if(when_Hub75Phy_l103_2) begin
+    if(when_Hub75Phy_l105_2) begin
       _zz_io_hub75_g0_2 <= io_rgb_payload_g0[2];
     end
-    if(when_Hub75Phy_l104_2) begin
+    if(when_Hub75Phy_l106_2) begin
       _zz_io_hub75_b0_2 <= io_rgb_payload_b0[2];
     end
-    if(when_Hub75Phy_l105_2) begin
+    if(when_Hub75Phy_l107_2) begin
       _zz_io_hub75_r1_2 <= io_rgb_payload_r1[2];
     end
-    if(when_Hub75Phy_l106_2) begin
+    if(when_Hub75Phy_l108_2) begin
       _zz_io_hub75_g1_2 <= io_rgb_payload_g1[2];
     end
-    if(when_Hub75Phy_l107_2) begin
+    if(when_Hub75Phy_l109_2) begin
       _zz_io_hub75_b1_2 <= io_rgb_payload_b1[2];
     end
-    if(when_Hub75Phy_l102_3) begin
+    if(when_Hub75Phy_l104_3) begin
       _zz_io_hub75_r0_3 <= io_rgb_payload_r0[3];
     end
-    if(when_Hub75Phy_l103_3) begin
+    if(when_Hub75Phy_l105_3) begin
       _zz_io_hub75_g0_3 <= io_rgb_payload_g0[3];
     end
-    if(when_Hub75Phy_l104_3) begin
+    if(when_Hub75Phy_l106_3) begin
       _zz_io_hub75_b0_3 <= io_rgb_payload_b0[3];
     end
-    if(when_Hub75Phy_l105_3) begin
+    if(when_Hub75Phy_l107_3) begin
       _zz_io_hub75_r1_3 <= io_rgb_payload_r1[3];
     end
-    if(when_Hub75Phy_l106_3) begin
+    if(when_Hub75Phy_l108_3) begin
       _zz_io_hub75_g1_3 <= io_rgb_payload_g1[3];
     end
-    if(when_Hub75Phy_l107_3) begin
+    if(when_Hub75Phy_l109_3) begin
       _zz_io_hub75_b1_3 <= io_rgb_payload_b1[3];
     end
-    if(when_Hub75Phy_l102_4) begin
+    if(when_Hub75Phy_l104_4) begin
       _zz_io_hub75_r0_4 <= io_rgb_payload_r0[4];
     end
-    if(when_Hub75Phy_l103_4) begin
+    if(when_Hub75Phy_l105_4) begin
       _zz_io_hub75_g0_4 <= io_rgb_payload_g0[4];
     end
-    if(when_Hub75Phy_l104_4) begin
+    if(when_Hub75Phy_l106_4) begin
       _zz_io_hub75_b0_4 <= io_rgb_payload_b0[4];
     end
-    if(when_Hub75Phy_l105_4) begin
+    if(when_Hub75Phy_l107_4) begin
       _zz_io_hub75_r1_4 <= io_rgb_payload_r1[4];
     end
-    if(when_Hub75Phy_l106_4) begin
+    if(when_Hub75Phy_l108_4) begin
       _zz_io_hub75_g1_4 <= io_rgb_payload_g1[4];
     end
-    if(when_Hub75Phy_l107_4) begin
+    if(when_Hub75Phy_l109_4) begin
       _zz_io_hub75_b1_4 <= io_rgb_payload_b1[4];
+    end
+    if(when_Hub75Phy_l104_5) begin
+      _zz_io_hub75_r0_5 <= io_rgb_payload_r0[5];
+    end
+    if(when_Hub75Phy_l105_5) begin
+      _zz_io_hub75_g0_5 <= io_rgb_payload_g0[5];
+    end
+    if(when_Hub75Phy_l106_5) begin
+      _zz_io_hub75_b0_5 <= io_rgb_payload_b0[5];
+    end
+    if(when_Hub75Phy_l107_5) begin
+      _zz_io_hub75_r1_5 <= io_rgb_payload_r1[5];
+    end
+    if(when_Hub75Phy_l108_5) begin
+      _zz_io_hub75_g1_5 <= io_rgb_payload_g1[5];
+    end
+    if(when_Hub75Phy_l109_5) begin
+      _zz_io_hub75_b1_5 <= io_rgb_payload_b1[5];
     end
   end
 
@@ -1371,12 +1476,12 @@ module Hub75Streamer (
   output wire          io_rgb_valid,
   input  wire          io_rgb_ready,
   output wire          io_rgb_payload_sof,
-  output wire [4:0]    io_rgb_payload_r0,
-  output wire [4:0]    io_rgb_payload_g0,
-  output wire [4:0]    io_rgb_payload_b0,
-  output wire [4:0]    io_rgb_payload_r1,
-  output wire [4:0]    io_rgb_payload_g1,
-  output wire [4:0]    io_rgb_payload_b1,
+  output wire [5:0]    io_rgb_payload_r0,
+  output wire [5:0]    io_rgb_payload_g0,
+  output wire [5:0]    io_rgb_payload_b0,
+  output wire [5:0]    io_rgb_payload_r1,
+  output wire [5:0]    io_rgb_payload_g1,
+  output wire [5:0]    io_rgb_payload_b1,
   input  wire [1:0]    io_panel_infos_0_topLeftXCoord,
   input  wire [1:0]    io_panel_infos_0_topLeftYCoord,
   input  wire [1:0]    io_panel_infos_0_topLeftZCoord,
@@ -1427,6 +1532,16 @@ module Hub75Streamer (
   input  wire [1:0]    io_panel_infos_4_xIncr,
   input  wire [1:0]    io_panel_infos_4_yIncr,
   input  wire [1:0]    io_panel_infos_4_zIncr,
+  input  wire [1:0]    io_panel_infos_5_topLeftXCoord,
+  input  wire [1:0]    io_panel_infos_5_topLeftYCoord,
+  input  wire [1:0]    io_panel_infos_5_topLeftZCoord,
+  input  wire [15:0]   io_panel_infos_5_memAddrStartPh0,
+  input  wire [15:0]   io_panel_infos_5_memAddrStartPh1,
+  input  wire [7:0]    io_panel_infos_5_memAddrColMul,
+  input  wire [7:0]    io_panel_infos_5_memAddrRowMul,
+  input  wire [1:0]    io_panel_infos_5_xIncr,
+  input  wire [1:0]    io_panel_infos_5_yIncr,
+  input  wire [1:0]    io_panel_infos_5_zIncr,
   input  wire          io_enable,
   input  wire          io_start,
   output wire          io_eof,
@@ -1435,11 +1550,12 @@ module Hub75Streamer (
   input  wire [7:0]    io_b_dim,
   output wire          io_led_mem_rd,
   output wire [12:0]   io_led_mem_rd_addr,
-  input  wire [17:0]   io_led_mem_rd_data_0,
-  input  wire [17:0]   io_led_mem_rd_data_1,
-  input  wire [17:0]   io_led_mem_rd_data_2,
-  input  wire [17:0]   io_led_mem_rd_data_3,
-  input  wire [17:0]   io_led_mem_rd_data_4,
+  input  wire [11:0]   io_led_mem_rd_data_0,
+  input  wire [11:0]   io_led_mem_rd_data_1,
+  input  wire [11:0]   io_led_mem_rd_data_2,
+  input  wire [11:0]   io_led_mem_rd_data_3,
+  input  wire [11:0]   io_led_mem_rd_data_4,
+  input  wire [11:0]   io_led_mem_rd_data_5,
   input  wire [0:0]    io_cur_buffer_nr,
   output wire [4:0]    io_cur_row_nr,
   output wire [2:0]    io_cur_bit_nr,
@@ -1454,12 +1570,12 @@ module Hub75Streamer (
   wire                u_output_fifo_io_push_ready;
   wire                u_output_fifo_io_pop_valid;
   wire                u_output_fifo_io_pop_payload_sof;
-  wire       [4:0]    u_output_fifo_io_pop_payload_r0;
-  wire       [4:0]    u_output_fifo_io_pop_payload_g0;
-  wire       [4:0]    u_output_fifo_io_pop_payload_b0;
-  wire       [4:0]    u_output_fifo_io_pop_payload_r1;
-  wire       [4:0]    u_output_fifo_io_pop_payload_g1;
-  wire       [4:0]    u_output_fifo_io_pop_payload_b1;
+  wire       [5:0]    u_output_fifo_io_pop_payload_r0;
+  wire       [5:0]    u_output_fifo_io_pop_payload_g0;
+  wire       [5:0]    u_output_fifo_io_pop_payload_b0;
+  wire       [5:0]    u_output_fifo_io_pop_payload_r1;
+  wire       [5:0]    u_output_fifo_io_pop_payload_g1;
+  wire       [5:0]    u_output_fifo_io_pop_payload_b1;
   wire       [3:0]    u_output_fifo_io_occupancy;
   wire       [3:0]    u_output_fifo_io_availability;
   wire       [5:0]    _zz_col_cntr_valueNext;
@@ -1501,24 +1617,27 @@ module Hub75Streamer (
   wire       [4:0]    _zz__zz_r_vec_4;
   wire       [4:0]    _zz__zz_g_vec_4;
   wire       [4:0]    _zz__zz_b_vec_4;
+  wire       [4:0]    _zz__zz_r_vec_5;
+  wire       [4:0]    _zz__zz_g_vec_5;
+  wire       [4:0]    _zz__zz_b_vec_5;
   wire                output_fifo_wr_valid;
   wire                output_fifo_wr_ready;
   wire                output_fifo_wr_payload_sof;
-  reg        [4:0]    output_fifo_wr_payload_r0;
-  reg        [4:0]    output_fifo_wr_payload_g0;
-  reg        [4:0]    output_fifo_wr_payload_b0;
-  reg        [4:0]    output_fifo_wr_payload_r1;
-  reg        [4:0]    output_fifo_wr_payload_g1;
-  reg        [4:0]    output_fifo_wr_payload_b1;
+  reg        [5:0]    output_fifo_wr_payload_r0;
+  reg        [5:0]    output_fifo_wr_payload_g0;
+  reg        [5:0]    output_fifo_wr_payload_b0;
+  reg        [5:0]    output_fifo_wr_payload_r1;
+  reg        [5:0]    output_fifo_wr_payload_g1;
+  reg        [5:0]    output_fifo_wr_payload_b1;
   wire                output_fifo_rd_valid;
   wire                output_fifo_rd_ready;
   wire                output_fifo_rd_payload_sof;
-  wire       [4:0]    output_fifo_rd_payload_r0;
-  wire       [4:0]    output_fifo_rd_payload_g0;
-  wire       [4:0]    output_fifo_rd_payload_b0;
-  wire       [4:0]    output_fifo_rd_payload_r1;
-  wire       [4:0]    output_fifo_rd_payload_g1;
-  wire       [4:0]    output_fifo_rd_payload_b1;
+  wire       [5:0]    output_fifo_rd_payload_r0;
+  wire       [5:0]    output_fifo_rd_payload_g0;
+  wire       [5:0]    output_fifo_rd_payload_b0;
+  wire       [5:0]    output_fifo_rd_payload_r1;
+  wire       [5:0]    output_fifo_rd_payload_g1;
+  wire       [5:0]    output_fifo_rd_payload_b1;
   wire       [3:0]    output_fifo_availability;
   reg                 col_cntr_willIncrement;
   reg                 col_cntr_willClear;
@@ -1592,24 +1711,27 @@ module Hub75Streamer (
   wire       [4:0]    gammaTable_29;
   wire       [4:0]    gammaTable_30;
   wire       [4:0]    gammaTable_31;
-  reg        [9:0]    r_vec;
-  reg        [9:0]    g_vec;
-  reg        [9:0]    b_vec;
+  reg        [11:0]   r_vec;
+  reg        [11:0]   g_vec;
+  reg        [11:0]   b_vec;
   wire       [4:0]    led_r_debug_0;
   wire       [4:0]    led_r_debug_1;
   wire       [4:0]    led_r_debug_2;
   wire       [4:0]    led_r_debug_3;
   wire       [4:0]    led_r_debug_4;
+  wire       [4:0]    led_r_debug_5;
   wire       [4:0]    led_g_debug_0;
   wire       [4:0]    led_g_debug_1;
   wire       [4:0]    led_g_debug_2;
   wire       [4:0]    led_g_debug_3;
   wire       [4:0]    led_g_debug_4;
+  wire       [4:0]    led_g_debug_5;
   wire       [4:0]    led_b_debug_0;
   wire       [4:0]    led_b_debug_1;
   wire       [4:0]    led_b_debug_2;
   wire       [4:0]    led_b_debug_3;
   wire       [4:0]    led_b_debug_4;
+  wire       [4:0]    led_b_debug_5;
   wire       [4:0]    _zz_led_r_debug_0;
   wire       [4:0]    _zz_led_g_debug_0;
   wire       [4:0]    _zz_led_b_debug_0;
@@ -1645,6 +1767,13 @@ module Hub75Streamer (
   wire                _zz_g_vec_4;
   wire                _zz_b_vec_4;
   wire                when_Hub75Streamer_l240;
+  wire       [4:0]    _zz_led_r_debug_5;
+  wire       [4:0]    _zz_led_g_debug_5;
+  wire       [4:0]    _zz_led_b_debug_5;
+  wire                _zz_r_vec_5;
+  wire                _zz_g_vec_5;
+  wire                _zz_b_vec_5;
+  wire                when_Hub75Streamer_l251;
   reg                 fifo_wr_p3;
   reg                 sof_p3;
   `ifndef SYNTHESIS
@@ -1691,25 +1820,28 @@ module Hub75Streamer (
   assign _zz__zz_r_vec_4 = (_zz_led_r_debug_4 >>> bit_cntr_p2);
   assign _zz__zz_g_vec_4 = (_zz_led_g_debug_4 >>> bit_cntr_p2);
   assign _zz__zz_b_vec_4 = (_zz_led_b_debug_4 >>> bit_cntr_p2);
+  assign _zz__zz_r_vec_5 = (_zz_led_r_debug_5 >>> bit_cntr_p2);
+  assign _zz__zz_g_vec_5 = (_zz_led_g_debug_5 >>> bit_cntr_p2);
+  assign _zz__zz_b_vec_5 = (_zz_led_b_debug_5 >>> bit_cntr_p2);
   StreamFifo u_output_fifo (
     .io_push_valid       (output_fifo_wr_valid                ), //i
     .io_push_ready       (u_output_fifo_io_push_ready         ), //o
     .io_push_payload_sof (output_fifo_wr_payload_sof          ), //i
-    .io_push_payload_r0  (output_fifo_wr_payload_r0[4:0]      ), //i
-    .io_push_payload_g0  (output_fifo_wr_payload_g0[4:0]      ), //i
-    .io_push_payload_b0  (output_fifo_wr_payload_b0[4:0]      ), //i
-    .io_push_payload_r1  (output_fifo_wr_payload_r1[4:0]      ), //i
-    .io_push_payload_g1  (output_fifo_wr_payload_g1[4:0]      ), //i
-    .io_push_payload_b1  (output_fifo_wr_payload_b1[4:0]      ), //i
+    .io_push_payload_r0  (output_fifo_wr_payload_r0[5:0]      ), //i
+    .io_push_payload_g0  (output_fifo_wr_payload_g0[5:0]      ), //i
+    .io_push_payload_b0  (output_fifo_wr_payload_b0[5:0]      ), //i
+    .io_push_payload_r1  (output_fifo_wr_payload_r1[5:0]      ), //i
+    .io_push_payload_g1  (output_fifo_wr_payload_g1[5:0]      ), //i
+    .io_push_payload_b1  (output_fifo_wr_payload_b1[5:0]      ), //i
     .io_pop_valid        (u_output_fifo_io_pop_valid          ), //o
     .io_pop_ready        (output_fifo_rd_ready                ), //i
     .io_pop_payload_sof  (u_output_fifo_io_pop_payload_sof    ), //o
-    .io_pop_payload_r0   (u_output_fifo_io_pop_payload_r0[4:0]), //o
-    .io_pop_payload_g0   (u_output_fifo_io_pop_payload_g0[4:0]), //o
-    .io_pop_payload_b0   (u_output_fifo_io_pop_payload_b0[4:0]), //o
-    .io_pop_payload_r1   (u_output_fifo_io_pop_payload_r1[4:0]), //o
-    .io_pop_payload_g1   (u_output_fifo_io_pop_payload_g1[4:0]), //o
-    .io_pop_payload_b1   (u_output_fifo_io_pop_payload_b1[4:0]), //o
+    .io_pop_payload_r0   (u_output_fifo_io_pop_payload_r0[5:0]), //o
+    .io_pop_payload_g0   (u_output_fifo_io_pop_payload_g0[5:0]), //o
+    .io_pop_payload_b0   (u_output_fifo_io_pop_payload_b0[5:0]), //o
+    .io_pop_payload_r1   (u_output_fifo_io_pop_payload_r1[5:0]), //o
+    .io_pop_payload_g1   (u_output_fifo_io_pop_payload_g1[5:0]), //o
+    .io_pop_payload_b1   (u_output_fifo_io_pop_payload_b1[5:0]), //o
     .io_flush            (u_output_fifo_io_flush              ), //i
     .io_occupancy        (u_output_fifo_io_occupancy[3:0]     ), //o
     .io_availability     (u_output_fifo_io_availability[3:0]  ), //o
@@ -1876,9 +2008,9 @@ module Hub75Streamer (
   assign gammaTable_29 = 5'h1a;
   assign gammaTable_30 = 5'h1c;
   assign gammaTable_31 = 5'h1f;
-  assign _zz_led_r_debug_0 = ({io_led_mem_rd_data_0[5 : 0],2'b00} >>> 2'd3);
-  assign _zz_led_g_debug_0 = ({io_led_mem_rd_data_0[11 : 6],2'b00} >>> 2'd3);
-  assign _zz_led_b_debug_0 = ({io_led_mem_rd_data_0[17 : 12],2'b00} >>> 2'd3);
+  assign _zz_led_r_debug_0 = ({io_led_mem_rd_data_0[3 : 0],4'b0000} >>> 2'd3);
+  assign _zz_led_g_debug_0 = ({io_led_mem_rd_data_0[7 : 4],4'b0000} >>> 2'd3);
+  assign _zz_led_b_debug_0 = ({io_led_mem_rd_data_0[11 : 8],4'b0000} >>> 2'd3);
   assign led_r_debug_0 = _zz_led_r_debug_0;
   assign led_g_debug_0 = _zz_led_g_debug_0;
   assign led_b_debug_0 = _zz_led_b_debug_0;
@@ -1886,9 +2018,9 @@ module Hub75Streamer (
   assign _zz_g_vec = _zz__zz_g_vec[0];
   assign _zz_b_vec = _zz__zz_b_vec[0];
   assign when_Hub75Streamer_l196 = (led_mem_phase_p2 == 1'b0);
-  assign _zz_led_r_debug_1 = ({io_led_mem_rd_data_1[5 : 0],2'b00} >>> 2'd3);
-  assign _zz_led_g_debug_1 = ({io_led_mem_rd_data_1[11 : 6],2'b00} >>> 2'd3);
-  assign _zz_led_b_debug_1 = ({io_led_mem_rd_data_1[17 : 12],2'b00} >>> 2'd3);
+  assign _zz_led_r_debug_1 = ({io_led_mem_rd_data_1[3 : 0],4'b0000} >>> 2'd3);
+  assign _zz_led_g_debug_1 = ({io_led_mem_rd_data_1[7 : 4],4'b0000} >>> 2'd3);
+  assign _zz_led_b_debug_1 = ({io_led_mem_rd_data_1[11 : 8],4'b0000} >>> 2'd3);
   assign led_r_debug_1 = _zz_led_r_debug_1;
   assign led_g_debug_1 = _zz_led_g_debug_1;
   assign led_b_debug_1 = _zz_led_b_debug_1;
@@ -1896,9 +2028,9 @@ module Hub75Streamer (
   assign _zz_g_vec_1 = _zz__zz_g_vec_1[0];
   assign _zz_b_vec_1 = _zz__zz_b_vec_1[0];
   assign when_Hub75Streamer_l207 = (led_mem_phase_p2 == 1'b0);
-  assign _zz_led_r_debug_2 = ({io_led_mem_rd_data_2[5 : 0],2'b00} >>> 2'd3);
-  assign _zz_led_g_debug_2 = ({io_led_mem_rd_data_2[11 : 6],2'b00} >>> 2'd3);
-  assign _zz_led_b_debug_2 = ({io_led_mem_rd_data_2[17 : 12],2'b00} >>> 2'd3);
+  assign _zz_led_r_debug_2 = ({io_led_mem_rd_data_2[3 : 0],4'b0000} >>> 2'd3);
+  assign _zz_led_g_debug_2 = ({io_led_mem_rd_data_2[7 : 4],4'b0000} >>> 2'd3);
+  assign _zz_led_b_debug_2 = ({io_led_mem_rd_data_2[11 : 8],4'b0000} >>> 2'd3);
   assign led_r_debug_2 = _zz_led_r_debug_2;
   assign led_g_debug_2 = _zz_led_g_debug_2;
   assign led_b_debug_2 = _zz_led_b_debug_2;
@@ -1906,9 +2038,9 @@ module Hub75Streamer (
   assign _zz_g_vec_2 = _zz__zz_g_vec_2[0];
   assign _zz_b_vec_2 = _zz__zz_b_vec_2[0];
   assign when_Hub75Streamer_l218 = (led_mem_phase_p2 == 1'b0);
-  assign _zz_led_r_debug_3 = ({io_led_mem_rd_data_3[5 : 0],2'b00} >>> 2'd3);
-  assign _zz_led_g_debug_3 = ({io_led_mem_rd_data_3[11 : 6],2'b00} >>> 2'd3);
-  assign _zz_led_b_debug_3 = ({io_led_mem_rd_data_3[17 : 12],2'b00} >>> 2'd3);
+  assign _zz_led_r_debug_3 = ({io_led_mem_rd_data_3[3 : 0],4'b0000} >>> 2'd3);
+  assign _zz_led_g_debug_3 = ({io_led_mem_rd_data_3[7 : 4],4'b0000} >>> 2'd3);
+  assign _zz_led_b_debug_3 = ({io_led_mem_rd_data_3[11 : 8],4'b0000} >>> 2'd3);
   assign led_r_debug_3 = _zz_led_r_debug_3;
   assign led_g_debug_3 = _zz_led_g_debug_3;
   assign led_b_debug_3 = _zz_led_b_debug_3;
@@ -1916,9 +2048,9 @@ module Hub75Streamer (
   assign _zz_g_vec_3 = _zz__zz_g_vec_3[0];
   assign _zz_b_vec_3 = _zz__zz_b_vec_3[0];
   assign when_Hub75Streamer_l229 = (led_mem_phase_p2 == 1'b0);
-  assign _zz_led_r_debug_4 = ({io_led_mem_rd_data_4[5 : 0],2'b00} >>> 2'd3);
-  assign _zz_led_g_debug_4 = ({io_led_mem_rd_data_4[11 : 6],2'b00} >>> 2'd3);
-  assign _zz_led_b_debug_4 = ({io_led_mem_rd_data_4[17 : 12],2'b00} >>> 2'd3);
+  assign _zz_led_r_debug_4 = ({io_led_mem_rd_data_4[3 : 0],4'b0000} >>> 2'd3);
+  assign _zz_led_g_debug_4 = ({io_led_mem_rd_data_4[7 : 4],4'b0000} >>> 2'd3);
+  assign _zz_led_b_debug_4 = ({io_led_mem_rd_data_4[11 : 8],4'b0000} >>> 2'd3);
   assign led_r_debug_4 = _zz_led_r_debug_4;
   assign led_g_debug_4 = _zz_led_g_debug_4;
   assign led_b_debug_4 = _zz_led_b_debug_4;
@@ -1926,6 +2058,16 @@ module Hub75Streamer (
   assign _zz_g_vec_4 = _zz__zz_g_vec_4[0];
   assign _zz_b_vec_4 = _zz__zz_b_vec_4[0];
   assign when_Hub75Streamer_l240 = (led_mem_phase_p2 == 1'b0);
+  assign _zz_led_r_debug_5 = ({io_led_mem_rd_data_5[3 : 0],4'b0000} >>> 2'd3);
+  assign _zz_led_g_debug_5 = ({io_led_mem_rd_data_5[7 : 4],4'b0000} >>> 2'd3);
+  assign _zz_led_b_debug_5 = ({io_led_mem_rd_data_5[11 : 8],4'b0000} >>> 2'd3);
+  assign led_r_debug_5 = _zz_led_r_debug_5;
+  assign led_g_debug_5 = _zz_led_g_debug_5;
+  assign led_b_debug_5 = _zz_led_b_debug_5;
+  assign _zz_r_vec_5 = _zz__zz_r_vec_5[0];
+  assign _zz_g_vec_5 = _zz__zz_g_vec_5[0];
+  assign _zz_b_vec_5 = _zz__zz_b_vec_5[0];
+  assign when_Hub75Streamer_l251 = (led_mem_phase_p2 == 1'b0);
   assign output_fifo_wr_valid = fifo_wr_p3;
   assign output_fifo_wr_payload_sof = sof_p3;
   always @(*) begin
@@ -1934,6 +2076,7 @@ module Hub75Streamer (
     output_fifo_wr_payload_r0[2] = r_vec[4];
     output_fifo_wr_payload_r0[3] = r_vec[6];
     output_fifo_wr_payload_r0[4] = r_vec[8];
+    output_fifo_wr_payload_r0[5] = r_vec[10];
   end
 
   always @(*) begin
@@ -1942,6 +2085,7 @@ module Hub75Streamer (
     output_fifo_wr_payload_g0[2] = g_vec[4];
     output_fifo_wr_payload_g0[3] = g_vec[6];
     output_fifo_wr_payload_g0[4] = g_vec[8];
+    output_fifo_wr_payload_g0[5] = g_vec[10];
   end
 
   always @(*) begin
@@ -1950,6 +2094,7 @@ module Hub75Streamer (
     output_fifo_wr_payload_b0[2] = b_vec[4];
     output_fifo_wr_payload_b0[3] = b_vec[6];
     output_fifo_wr_payload_b0[4] = b_vec[8];
+    output_fifo_wr_payload_b0[5] = b_vec[10];
   end
 
   always @(*) begin
@@ -1958,6 +2103,7 @@ module Hub75Streamer (
     output_fifo_wr_payload_r1[2] = r_vec[5];
     output_fifo_wr_payload_r1[3] = r_vec[7];
     output_fifo_wr_payload_r1[4] = r_vec[9];
+    output_fifo_wr_payload_r1[5] = r_vec[11];
   end
 
   always @(*) begin
@@ -1966,6 +2112,7 @@ module Hub75Streamer (
     output_fifo_wr_payload_g1[2] = g_vec[5];
     output_fifo_wr_payload_g1[3] = g_vec[7];
     output_fifo_wr_payload_g1[4] = g_vec[9];
+    output_fifo_wr_payload_g1[5] = g_vec[11];
   end
 
   always @(*) begin
@@ -1974,6 +2121,7 @@ module Hub75Streamer (
     output_fifo_wr_payload_b1[2] = b_vec[5];
     output_fifo_wr_payload_b1[3] = b_vec[7];
     output_fifo_wr_payload_b1[4] = b_vec[9];
+    output_fifo_wr_payload_b1[5] = b_vec[11];
   end
 
   assign output_fifo_wr_ready = u_output_fifo_io_push_ready;
@@ -2008,9 +2156,9 @@ module Hub75Streamer (
       active <= 1'b0;
       led_mem_rd_p2 <= 1'b0;
       led_mem_phase_p2 <= 1'b0;
-      r_vec <= 10'h000;
-      g_vec <= 10'h000;
-      b_vec <= 10'h000;
+      r_vec <= 12'h000;
+      g_vec <= 12'h000;
+      b_vec <= 12'h000;
       fifo_wr_p3 <= 1'b0;
       sof_p3 <= 1'b0;
     end else begin
@@ -2097,6 +2245,17 @@ module Hub75Streamer (
           b_vec[9] <= _zz_b_vec_4;
         end
       end
+      if(led_mem_rd_p2) begin
+        if(when_Hub75Streamer_l251) begin
+          r_vec[10] <= _zz_r_vec_5;
+          g_vec[10] <= _zz_g_vec_5;
+          b_vec[10] <= _zz_b_vec_5;
+        end else begin
+          r_vec[11] <= _zz_r_vec_5;
+          g_vec[11] <= _zz_g_vec_5;
+          b_vec[11] <= _zz_b_vec_5;
+        end
+      end
       fifo_wr_p3 <= (led_mem_rd_p2 && (led_mem_phase_p2 == 1'b1));
       sof_p3 <= sof_p2;
     end
@@ -2114,64 +2273,73 @@ module Hub75Streamer (
 endmodule
 
 module LedMem (
-  input  wire [4:0]    io_led_mem_a_req,
+  input  wire [5:0]    io_led_mem_a_req,
   input  wire [12:0]   io_led_mem_a_addr,
   input  wire          io_led_mem_a_wr,
-  input  wire [17:0]   io_led_mem_a_wr_data,
-  output wire [17:0]   io_led_mem_a_rd_data,
+  input  wire [11:0]   io_led_mem_a_wr_data,
+  output wire [11:0]   io_led_mem_a_rd_data,
   input  wire          io_led_mem_b_req,
   input  wire [12:0]   io_led_mem_b_addr,
   input  wire          io_led_mem_b_wr,
-  input  wire [17:0]   io_led_mem_b_wr_data,
-  output wire [17:0]   io_led_mem_b_rd_data_0,
-  output wire [17:0]   io_led_mem_b_rd_data_1,
-  output wire [17:0]   io_led_mem_b_rd_data_2,
-  output wire [17:0]   io_led_mem_b_rd_data_3,
-  output wire [17:0]   io_led_mem_b_rd_data_4,
+  input  wire [11:0]   io_led_mem_b_wr_data,
+  output wire [11:0]   io_led_mem_b_rd_data_0,
+  output wire [11:0]   io_led_mem_b_rd_data_1,
+  output wire [11:0]   io_led_mem_b_rd_data_2,
+  output wire [11:0]   io_led_mem_b_rd_data_3,
+  output wire [11:0]   io_led_mem_b_rd_data_4,
+  output wire [11:0]   io_led_mem_b_rd_data_5,
   input  wire          main_clk,
   input  wire          main_reset_
 );
 
-  reg        [17:0]   _zz__zz_1_port0;
-  reg        [17:0]   _zz__zz_1_port1;
-  reg        [17:0]   _zz__zz_4_port0;
-  reg        [17:0]   _zz__zz_4_port1;
-  reg        [17:0]   _zz__zz_7_port0;
-  reg        [17:0]   _zz__zz_7_port1;
-  reg        [17:0]   _zz__zz_10_port0;
-  reg        [17:0]   _zz__zz_10_port1;
-  reg        [17:0]   _zz__zz_13_port0;
-  reg        [17:0]   _zz__zz_13_port1;
-  wire       [17:0]   led_mem_a_rd_data_raw_0;
-  wire       [17:0]   led_mem_a_rd_data_raw_1;
-  wire       [17:0]   led_mem_a_rd_data_raw_2;
-  wire       [17:0]   led_mem_a_rd_data_raw_3;
-  wire       [17:0]   led_mem_a_rd_data_raw_4;
-  wire       [17:0]   led_mem_b_rd_data_raw_0;
-  wire       [17:0]   led_mem_b_rd_data_raw_1;
-  wire       [17:0]   led_mem_b_rd_data_raw_2;
-  wire       [17:0]   led_mem_b_rd_data_raw_3;
-  wire       [17:0]   led_mem_b_rd_data_raw_4;
+  reg        [11:0]   _zz__zz_1_port0;
+  reg        [11:0]   _zz__zz_1_port1;
+  reg        [11:0]   _zz__zz_4_port0;
+  reg        [11:0]   _zz__zz_4_port1;
+  reg        [11:0]   _zz__zz_7_port0;
+  reg        [11:0]   _zz__zz_7_port1;
+  reg        [11:0]   _zz__zz_10_port0;
+  reg        [11:0]   _zz__zz_10_port1;
+  reg        [11:0]   _zz__zz_13_port0;
+  reg        [11:0]   _zz__zz_13_port1;
+  reg        [11:0]   _zz__zz_16_port0;
+  reg        [11:0]   _zz__zz_16_port1;
+  wire       [11:0]   led_mem_a_rd_data_raw_0;
+  wire       [11:0]   led_mem_a_rd_data_raw_1;
+  wire       [11:0]   led_mem_a_rd_data_raw_2;
+  wire       [11:0]   led_mem_a_rd_data_raw_3;
+  wire       [11:0]   led_mem_a_rd_data_raw_4;
+  wire       [11:0]   led_mem_a_rd_data_raw_5;
+  wire       [11:0]   led_mem_b_rd_data_raw_0;
+  wire       [11:0]   led_mem_b_rd_data_raw_1;
+  wire       [11:0]   led_mem_b_rd_data_raw_2;
+  wire       [11:0]   led_mem_b_rd_data_raw_3;
+  wire       [11:0]   led_mem_b_rd_data_raw_4;
+  wire       [11:0]   led_mem_b_rd_data_raw_5;
   wire                _zz_led_mem_a_rd_data_raw_0;
-  wire       [17:0]   _zz_led_mem_a_rd_data_raw_0_1;
-  wire       [17:0]   _zz_led_mem_b_rd_data_raw_0;
+  wire       [11:0]   _zz_led_mem_a_rd_data_raw_0_1;
+  wire       [11:0]   _zz_led_mem_b_rd_data_raw_0;
   wire                _zz_led_mem_a_rd_data_raw_1;
-  wire       [17:0]   _zz_led_mem_a_rd_data_raw_1_1;
-  wire       [17:0]   _zz_led_mem_b_rd_data_raw_1;
+  wire       [11:0]   _zz_led_mem_a_rd_data_raw_1_1;
+  wire       [11:0]   _zz_led_mem_b_rd_data_raw_1;
   wire                _zz_led_mem_a_rd_data_raw_2;
-  wire       [17:0]   _zz_led_mem_a_rd_data_raw_2_1;
-  wire       [17:0]   _zz_led_mem_b_rd_data_raw_2;
+  wire       [11:0]   _zz_led_mem_a_rd_data_raw_2_1;
+  wire       [11:0]   _zz_led_mem_b_rd_data_raw_2;
   wire                _zz_led_mem_a_rd_data_raw_3;
-  wire       [17:0]   _zz_led_mem_a_rd_data_raw_3_1;
-  wire       [17:0]   _zz_led_mem_b_rd_data_raw_3;
+  wire       [11:0]   _zz_led_mem_a_rd_data_raw_3_1;
+  wire       [11:0]   _zz_led_mem_b_rd_data_raw_3;
   wire                _zz_led_mem_a_rd_data_raw_4;
-  wire       [17:0]   _zz_led_mem_a_rd_data_raw_4_1;
-  wire       [17:0]   _zz_led_mem_b_rd_data_raw_4;
-  (* ramstyle = "no_rw_check" *) reg [17:0] _zz_1 [0:8191];
-  (* ramstyle = "no_rw_check" *) reg [17:0] _zz_4 [0:8191];
-  (* ramstyle = "no_rw_check" *) reg [17:0] _zz_7 [0:8191];
-  (* ramstyle = "no_rw_check" *) reg [17:0] _zz_10 [0:8191];
-  (* ramstyle = "no_rw_check" *) reg [17:0] _zz_13 [0:8191];
+  wire       [11:0]   _zz_led_mem_a_rd_data_raw_4_1;
+  wire       [11:0]   _zz_led_mem_b_rd_data_raw_4;
+  wire                _zz_led_mem_a_rd_data_raw_5;
+  wire       [11:0]   _zz_led_mem_a_rd_data_raw_5_1;
+  wire       [11:0]   _zz_led_mem_b_rd_data_raw_5;
+  (* ramstyle = "no_rw_check" *) reg [11:0] _zz_1 [0:8191];
+  (* ramstyle = "no_rw_check" *) reg [11:0] _zz_4 [0:8191];
+  (* ramstyle = "no_rw_check" *) reg [11:0] _zz_7 [0:8191];
+  (* ramstyle = "no_rw_check" *) reg [11:0] _zz_10 [0:8191];
+  (* ramstyle = "no_rw_check" *) reg [11:0] _zz_13 [0:8191];
+  (* ramstyle = "no_rw_check" *) reg [11:0] _zz_16 [0:8191];
 
   always @(posedge main_clk) begin
     if(_zz_led_mem_a_rd_data_raw_0) begin
@@ -2293,6 +2461,30 @@ module LedMem (
     end
   end
 
+  always @(posedge main_clk) begin
+    if(_zz_led_mem_a_rd_data_raw_5) begin
+      _zz__zz_16_port0 <= _zz_16[io_led_mem_a_addr];
+    end
+  end
+
+  always @(posedge main_clk) begin
+    if(_zz_led_mem_a_rd_data_raw_5 && io_led_mem_a_wr ) begin
+      _zz_16[io_led_mem_a_addr] <= _zz_led_mem_a_rd_data_raw_5_1;
+    end
+  end
+
+  always @(posedge main_clk) begin
+    if(io_led_mem_b_req) begin
+      _zz__zz_16_port1 <= _zz_16[io_led_mem_b_addr];
+    end
+  end
+
+  always @(posedge main_clk) begin
+    if(io_led_mem_b_req && io_led_mem_b_wr ) begin
+      _zz_16[io_led_mem_b_addr] <= _zz_led_mem_b_rd_data_raw_5;
+    end
+  end
+
   assign io_led_mem_a_rd_data = led_mem_a_rd_data_raw_0;
   assign _zz_led_mem_a_rd_data_raw_0 = io_led_mem_a_req[0];
   assign _zz_led_mem_a_rd_data_raw_0_1 = io_led_mem_a_wr_data;
@@ -2324,6 +2516,12 @@ module LedMem (
   assign _zz_led_mem_b_rd_data_raw_4 = io_led_mem_b_wr_data;
   assign led_mem_b_rd_data_raw_4 = _zz__zz_13_port1;
   assign io_led_mem_b_rd_data_4 = led_mem_b_rd_data_raw_4;
+  assign _zz_led_mem_a_rd_data_raw_5 = io_led_mem_a_req[5];
+  assign _zz_led_mem_a_rd_data_raw_5_1 = io_led_mem_a_wr_data;
+  assign led_mem_a_rd_data_raw_5 = _zz__zz_16_port0;
+  assign _zz_led_mem_b_rd_data_raw_5 = io_led_mem_b_wr_data;
+  assign led_mem_b_rd_data_raw_5 = _zz__zz_16_port1;
+  assign io_led_mem_b_rd_data_5 = led_mem_b_rd_data_raw_5;
 
 endmodule
 
@@ -2536,21 +2734,21 @@ module StreamFifo (
   input  wire          io_push_valid,
   output wire          io_push_ready,
   input  wire          io_push_payload_sof,
-  input  wire [4:0]    io_push_payload_r0,
-  input  wire [4:0]    io_push_payload_g0,
-  input  wire [4:0]    io_push_payload_b0,
-  input  wire [4:0]    io_push_payload_r1,
-  input  wire [4:0]    io_push_payload_g1,
-  input  wire [4:0]    io_push_payload_b1,
+  input  wire [5:0]    io_push_payload_r0,
+  input  wire [5:0]    io_push_payload_g0,
+  input  wire [5:0]    io_push_payload_b0,
+  input  wire [5:0]    io_push_payload_r1,
+  input  wire [5:0]    io_push_payload_g1,
+  input  wire [5:0]    io_push_payload_b1,
   output wire          io_pop_valid,
   input  wire          io_pop_ready,
   output wire          io_pop_payload_sof,
-  output wire [4:0]    io_pop_payload_r0,
-  output wire [4:0]    io_pop_payload_g0,
-  output wire [4:0]    io_pop_payload_b0,
-  output wire [4:0]    io_pop_payload_r1,
-  output wire [4:0]    io_pop_payload_g1,
-  output wire [4:0]    io_pop_payload_b1,
+  output wire [5:0]    io_pop_payload_r0,
+  output wire [5:0]    io_pop_payload_g0,
+  output wire [5:0]    io_pop_payload_b0,
+  output wire [5:0]    io_pop_payload_r1,
+  output wire [5:0]    io_pop_payload_g1,
+  output wire [5:0]    io_pop_payload_b1,
   input  wire          io_flush,
   output wire [3:0]    io_occupancy,
   output wire [3:0]    io_availability,
@@ -2558,13 +2756,13 @@ module StreamFifo (
   input  wire          main_reset_
 );
 
-  reg        [30:0]   _zz_logic_ram_port1;
+  reg        [36:0]   _zz_logic_ram_port1;
   wire       [3:0]    _zz_logic_ptr_notPow2_counter;
   wire       [3:0]    _zz_logic_ptr_notPow2_counter_1;
   wire       [0:0]    _zz_logic_ptr_notPow2_counter_2;
   wire       [3:0]    _zz_logic_ptr_notPow2_counter_3;
   wire       [0:0]    _zz_logic_ptr_notPow2_counter_4;
-  wire       [30:0]   _zz_logic_ram_port;
+  wire       [36:0]   _zz_logic_ram_port;
   reg                 _zz_1;
   wire                logic_ptr_doPush;
   wire                logic_ptr_doPop;
@@ -2584,12 +2782,12 @@ module StreamFifo (
   wire                logic_push_onRam_write_valid;
   wire       [3:0]    logic_push_onRam_write_payload_address;
   wire                logic_push_onRam_write_payload_data_sof;
-  wire       [4:0]    logic_push_onRam_write_payload_data_r0;
-  wire       [4:0]    logic_push_onRam_write_payload_data_g0;
-  wire       [4:0]    logic_push_onRam_write_payload_data_b0;
-  wire       [4:0]    logic_push_onRam_write_payload_data_r1;
-  wire       [4:0]    logic_push_onRam_write_payload_data_g1;
-  wire       [4:0]    logic_push_onRam_write_payload_data_b1;
+  wire       [5:0]    logic_push_onRam_write_payload_data_r0;
+  wire       [5:0]    logic_push_onRam_write_payload_data_g0;
+  wire       [5:0]    logic_push_onRam_write_payload_data_b0;
+  wire       [5:0]    logic_push_onRam_write_payload_data_r1;
+  wire       [5:0]    logic_push_onRam_write_payload_data_g1;
+  wire       [5:0]    logic_push_onRam_write_payload_data_b1;
   wire                logic_pop_addressGen_valid;
   reg                 logic_pop_addressGen_ready;
   wire       [3:0]    logic_pop_addressGen_payload;
@@ -2603,25 +2801,25 @@ module StreamFifo (
   wire                logic_pop_sync_readPort_cmd_valid;
   wire       [3:0]    logic_pop_sync_readPort_cmd_payload;
   wire                logic_pop_sync_readPort_rsp_sof;
-  wire       [4:0]    logic_pop_sync_readPort_rsp_r0;
-  wire       [4:0]    logic_pop_sync_readPort_rsp_g0;
-  wire       [4:0]    logic_pop_sync_readPort_rsp_b0;
-  wire       [4:0]    logic_pop_sync_readPort_rsp_r1;
-  wire       [4:0]    logic_pop_sync_readPort_rsp_g1;
-  wire       [4:0]    logic_pop_sync_readPort_rsp_b1;
-  wire       [30:0]   _zz_logic_pop_sync_readPort_rsp_sof;
+  wire       [5:0]    logic_pop_sync_readPort_rsp_r0;
+  wire       [5:0]    logic_pop_sync_readPort_rsp_g0;
+  wire       [5:0]    logic_pop_sync_readPort_rsp_b0;
+  wire       [5:0]    logic_pop_sync_readPort_rsp_r1;
+  wire       [5:0]    logic_pop_sync_readPort_rsp_g1;
+  wire       [5:0]    logic_pop_sync_readPort_rsp_b1;
+  wire       [36:0]   _zz_logic_pop_sync_readPort_rsp_sof;
   wire                logic_pop_sync_readArbitation_translated_valid;
   wire                logic_pop_sync_readArbitation_translated_ready;
   wire                logic_pop_sync_readArbitation_translated_payload_sof;
-  wire       [4:0]    logic_pop_sync_readArbitation_translated_payload_r0;
-  wire       [4:0]    logic_pop_sync_readArbitation_translated_payload_g0;
-  wire       [4:0]    logic_pop_sync_readArbitation_translated_payload_b0;
-  wire       [4:0]    logic_pop_sync_readArbitation_translated_payload_r1;
-  wire       [4:0]    logic_pop_sync_readArbitation_translated_payload_g1;
-  wire       [4:0]    logic_pop_sync_readArbitation_translated_payload_b1;
+  wire       [5:0]    logic_pop_sync_readArbitation_translated_payload_r0;
+  wire       [5:0]    logic_pop_sync_readArbitation_translated_payload_g0;
+  wire       [5:0]    logic_pop_sync_readArbitation_translated_payload_b0;
+  wire       [5:0]    logic_pop_sync_readArbitation_translated_payload_r1;
+  wire       [5:0]    logic_pop_sync_readArbitation_translated_payload_g1;
+  wire       [5:0]    logic_pop_sync_readArbitation_translated_payload_b1;
   wire                logic_pop_sync_readArbitation_fire;
   reg        [3:0]    logic_pop_sync_popReg;
-  reg [30:0] logic_ram [0:9];
+  reg [36:0] logic_ram [0:9];
 
   assign _zz_logic_ptr_notPow2_counter = (logic_ptr_notPow2_counter + _zz_logic_ptr_notPow2_counter_1);
   assign _zz_logic_ptr_notPow2_counter_2 = io_push_fire;
@@ -2683,12 +2881,12 @@ module StreamFifo (
   assign logic_pop_sync_readArbitation_payload = logic_pop_addressGen_rData;
   assign _zz_logic_pop_sync_readPort_rsp_sof = _zz_logic_ram_port1;
   assign logic_pop_sync_readPort_rsp_sof = _zz_logic_pop_sync_readPort_rsp_sof[0];
-  assign logic_pop_sync_readPort_rsp_r0 = _zz_logic_pop_sync_readPort_rsp_sof[5 : 1];
-  assign logic_pop_sync_readPort_rsp_g0 = _zz_logic_pop_sync_readPort_rsp_sof[10 : 6];
-  assign logic_pop_sync_readPort_rsp_b0 = _zz_logic_pop_sync_readPort_rsp_sof[15 : 11];
-  assign logic_pop_sync_readPort_rsp_r1 = _zz_logic_pop_sync_readPort_rsp_sof[20 : 16];
-  assign logic_pop_sync_readPort_rsp_g1 = _zz_logic_pop_sync_readPort_rsp_sof[25 : 21];
-  assign logic_pop_sync_readPort_rsp_b1 = _zz_logic_pop_sync_readPort_rsp_sof[30 : 26];
+  assign logic_pop_sync_readPort_rsp_r0 = _zz_logic_pop_sync_readPort_rsp_sof[6 : 1];
+  assign logic_pop_sync_readPort_rsp_g0 = _zz_logic_pop_sync_readPort_rsp_sof[12 : 7];
+  assign logic_pop_sync_readPort_rsp_b0 = _zz_logic_pop_sync_readPort_rsp_sof[18 : 13];
+  assign logic_pop_sync_readPort_rsp_r1 = _zz_logic_pop_sync_readPort_rsp_sof[24 : 19];
+  assign logic_pop_sync_readPort_rsp_g1 = _zz_logic_pop_sync_readPort_rsp_sof[30 : 25];
+  assign logic_pop_sync_readPort_rsp_b1 = _zz_logic_pop_sync_readPort_rsp_sof[36 : 31];
   assign logic_pop_sync_readPort_cmd_valid = logic_pop_addressGen_fire;
   assign logic_pop_sync_readPort_cmd_payload = logic_pop_addressGen_payload;
   assign logic_pop_sync_readArbitation_translated_valid = logic_pop_sync_readArbitation_valid;

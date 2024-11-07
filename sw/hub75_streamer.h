@@ -16,10 +16,18 @@ typedef struct {
     int zIncr;
 
     int memAddrStartPh0;
-    //int memAddrStartPh1;
     int memAddrColMul;
     int memAddrRowMul;
 } t_panel_info;
+
+typedef enum {
+    SIDE_LEFT       = 0,
+    SIDE_FRONT      = 1,
+    SIDE_RIGHT      = 2,
+    SIDE_BACK       = 3,
+    SIDE_BOTTOM     = 4,
+    SIDE_TOP        = 5
+} e_side_nr;
 
 extern t_panel_info panels[];
 
@@ -51,7 +59,7 @@ inline int hub75s_coord2addr(int buffer_nr, int side, int x, int y)
 {
     int addr;
 
-    addr    = buffer_nr * HUB75S_SIDE_SIZE;
+    addr    = buffer_nr * HUB75S_SIDE_SIZE;     // Phase 0 or phase 1 buffer
     addr    += panels[side].memAddrStartPh0;
     addr    += y * panels[side].memAddrRowMul;
     addr    += x * panels[side].memAddrColMul;

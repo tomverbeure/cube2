@@ -448,6 +448,8 @@ void pacman_render()
 
     scratch_buf ^= 1;
     led_mem_clear(scratch_buf);
+
+    #if 1
     render_field(scratch_buf,active_grid);
 
 
@@ -523,14 +525,18 @@ void pacman_render()
             render_bitmap_1bpp(pacman_wilts[10], pac_color, 16, 16, scratch_buf, RING_LFRBa, p->nav.pos_x % (4*HUB75S_SIDE_WIDTH), p->nav.pos_y-3, 0);
         }
     }
+    #endif
 
-    render_bitmap_2bpp(cherry, cherry_colors, 12, 12, scratch_buf, RING_LFRBa, 10 + HUB75S_SIDE_WIDTH, 10-HUB75S_SIDE_WIDTH, 0);
+    render_bitmap_2bpp(cherry, cherry_colors, 12, 12, scratch_buf, RING_LFRBa, 10, 10-HUB75S_SIDE_WIDTH, 0);
+    //led_mem_wr(scratch_buf, SIDE_LEFT, 0, 0, 255, 0, 0);
 
     REG_WR_FIELD(HUB75S_CONFIG, BUFFER_NR, scratch_buf);
     while(REG_RD_FIELD(HUB75S_STATUS, CUR_BUFFER_NR) != scratch_buf) 
         ;
 
     uint32_t prev_frame_cntr = REG_RD(HUB75S_FRAME_CNTR);
-    while(REG_RD(HUB75S_FRAME_CNTR) < prev_frame_cntr + 15) ;
+    while(REG_RD(HUB75S_FRAME_CNTR) < prev_frame_cntr + 7) ;
+
+    //while(1);
 
 }
