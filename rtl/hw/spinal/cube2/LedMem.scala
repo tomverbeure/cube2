@@ -51,15 +51,6 @@ class LedMem(conf: LedMemConfig, isSim: Boolean = true) extends Component {
     val led_mem_a_rd_data_raw = Vec(Bits(conf.ramInstanceDataBits bits), conf.nrInstances) 
     val led_mem_b_rd_data_raw = Vec(Bits(conf.ramInstanceDataBits bits), conf.nrInstances) 
 
-    /*
-    led_mem_b_rd_data_raw(0)    := B(( 0<<12) | (  15<<6) | 0, conf.ramInstanceDataBits bits)
-    led_mem_b_rd_data_raw(1)    := B(( 0<<12) | (  15<<6) | 0, conf.ramInstanceDataBits bits)
-    led_mem_b_rd_data_raw(2)    := B(( 0<<12) | (  15<<6) | 0, conf.ramInstanceDataBits bits)
-    led_mem_b_rd_data_raw(3)    := B(( 0<<12) | (  15<<6) | 0, conf.ramInstanceDataBits bits)
-    led_mem_b_rd_data_raw(4)    := B(( 0<<12) | (  15<<6) | 0, conf.ramInstanceDataBits bits)
-    led_mem_b_rd_data_raw(5)    := B(( 0<<12) | (  15<<6) | 0, conf.ramInstanceDataBits bits)
-    */
-
     io.led_mem_a_rd_data    := led_mem_a_rd_data_raw(0)
 
     println(s"LED mem:\n")
@@ -79,16 +70,23 @@ class LedMem(conf: LedMemConfig, isSim: Boolean = true) extends Component {
                 data      = io.led_mem_a_wr_data.asUInt
                 ).asBits
 
-            led_mem_b_rd_data_raw(i) := u_led_ram.readWriteSync(
-                enable    = io.led_mem_b_req,
-                address   = io.led_mem_b_addr,
-                write     = io.led_mem_b_wr, 
-                data      = io.led_mem_b_wr_data.asUInt
-                ).asBits
+            if (true){
+                led_mem_b_rd_data_raw(i) := u_led_ram.readWriteSync(
+                    enable    = io.led_mem_b_req,
+                    address   = io.led_mem_b_addr,
+                    write     = io.led_mem_b_wr, 
+                    data      = io.led_mem_b_wr_data.asUInt
+                    ).asBits
+            }
+            else{
+                // Debug: drive a constant value to all LED panels
+                led_mem_b_rd_data_raw(i)    := B(( 0<<(2*conf.bpc)) | (  2<< conf.bpc) | 0, conf.ramInstanceDataBits bits)
+            }
 
             io.led_mem_b_rd_data(i) := led_mem_b_rd_data_raw(i)
         }
         else {
+            // Use when explicitly instantiating a BRAM instead of inferring it.
             /*
             val u_led_ram = new led_ram()
     
