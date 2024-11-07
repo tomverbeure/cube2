@@ -62,6 +62,11 @@ class LedMem(conf: LedMemConfig, isSim: Boolean = true) extends Component {
 
     io.led_mem_a_rd_data    := led_mem_a_rd_data_raw(0)
 
+    println(s"LED mem:\n")
+    println(s"    nr of RAMs:   ${conf.nrInstances}")
+    println(s"    nr addresses: ${2 * conf.memWords}")
+    println(s"    nr bits:      ${conf.ramInstanceDataBits}")
+
     for(i <- 0 until conf.nrInstances){
         //if (isSim){
         if (true){
