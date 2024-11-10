@@ -19,7 +19,7 @@ class Cube2Top(isSim : Boolean = true) extends Component {
     panels += PanelInfo(-1, 1, 1,  2 /* right  */,  270,    1,-1, 0)   // Buffer 2
     panels += PanelInfo(-1, 1, 1,  3 /* back   */,  270,    1,-1, 0)   // Buffer 3
     panels += PanelInfo(-1, 1, 1,  4 /* bottom */,  180,    1,-1, 0)   // Buffer 4
-    panels += PanelInfo( 1, 1, 1,  5 /* top    */,  180,    1,-1, 0)   // Buffer 5
+    panels += PanelInfo( 1, 1, 1,  5 /* top    */,    0,    1,-1, 0)   // Buffer 5
 
     val hub75Config = Hub75Config(
                         nr_channels   = 6,

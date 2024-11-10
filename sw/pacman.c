@@ -527,8 +527,14 @@ void pacman_render()
     }
     #endif
 
-    render_bitmap_2bpp(cherry, cherry_colors, 12, 12, scratch_buf, RING_LFRBa, 10, 10-HUB75S_SIDE_WIDTH, 0);
-    //led_mem_wr(scratch_buf, SIDE_LEFT, 0, 0, 255, 0, 0);
+    render_bitmap_2bpp(cherry, cherry_colors, 12, 12, scratch_buf, RING_LFRBa, 26+HUB75S_SIDE_WIDTH*0, -16, ROT_0);
+    render_bitmap_2bpp(cherry, cherry_colors, 12, 12, scratch_buf, RING_LFRBa, 26+HUB75S_SIDE_WIDTH*1, -16, ROT_0);
+    render_bitmap_2bpp(cherry, cherry_colors, 12, 12, scratch_buf, RING_LFRBa, 26+HUB75S_SIDE_WIDTH*2, -16, ROT_0);
+    render_bitmap_2bpp(cherry, cherry_colors, 12, 12, scratch_buf, RING_LFRBa, 26+HUB75S_SIDE_WIDTH*3, -16, ROT_0);
+
+    //led_mem_wr(scratch_buf, SIDE_TOP,  63-0, 63-10, 255, 0, 0);
+    //led_mem_wr(scratch_buf, SIDE_TOP,  5, 10, 0, 255, 0);
+    //led_mem_wr(scratch_buf, SIDE_FRONT, 10, 0, 0, 255, 0);
 
     REG_WR_FIELD(HUB75S_CONFIG, BUFFER_NR, scratch_buf);
     while(REG_RD_FIELD(HUB75S_STATUS, CUR_BUFFER_NR) != scratch_buf) 

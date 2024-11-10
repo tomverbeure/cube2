@@ -2,6 +2,16 @@
 Cube2
 =====
 
+# Build Instructions
+
+*Verilog generation*
+
+The cube uses a Colorlight 5A-75B HUB75 controller board, revision v6.1. It has
+an ECP5-25 FPGA that's running a custom bitstream.
+
+The RTL for that bitstream can be found in the `./rtl` directory. It's written
+with the SpinalHDL framework.
+
 # macOS
 
 ```

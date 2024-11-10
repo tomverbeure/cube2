@@ -4,6 +4,7 @@
 
 #include "top_defines.h"
 #include "reg.h"
+#include "led_mem.h"
 #include "hub75_streamer.h"
 
 
@@ -31,7 +32,7 @@ t_panel_info panels[] = {
     { -1, 1, 1,  2 /* right  */,   90,    1,-1, 0,  0,0,0 },   // Buffer 2
     { -1, 1, 1,  3 /* back   */,   90,    1,-1, 0,  0,0,0 },   // Buffer 3
     { -1, 1, 1,  4 /* bottom */,  180,    1,-1, 0,  0,0,0 },   // Buffer 4
-    {  1, 1, 1,  5 /* top */,     180,    1,-1, 0,  0,0,0 },   // Buffer 5
+    {  1, 1, 1,  5 /* top */,       0,    1,-1, 0,  0,0,0 },   // Buffer 5
 };
 
 void hub75s_config(void)
@@ -129,30 +130,67 @@ int hub75s_get_scratch_buffer(void)
 
 uint32_t hub75s_ring_coord2addr(int buffer_nr, int ring_nr, int x, int y)
 {
-    const uint8_t side_nr_lut[3][3][4] = {
+    typedef struct s_ring2panel {
+        uint8_t side_nr;
+        uint8_t rotation;
+    } t_ring2panel;
+
+    // LEFT: (0,-1) -> TOP (0,63)   : y = y + 64
+    // BACK: (0,-1) -> TOP (0, 0)   : y = y + 64, rotate +90
+
+    const t_ring2panel ring2panel[3][3][4] = {
         // Ring 0: | L | F | R | Ba
         {
-            { SIDE_TOP,     SIDE_TOP,      SIDE_TOP,      SIDE_TOP      },
-            { SIDE_LEFT,    SIDE_FRONT,    SIDE_RIGHT,    SIDE_BACK     },
-            { SIDE_BOTTOM,  SIDE_BOTTOM,   SIDE_BOTTOM,   SIDE_BOTTOM   }
+            { {SIDE_TOP,   ROT_0 }, { SIDE_TOP,    ROT_270 }, { SIDE_TOP,   ROT_180 },  { SIDE_TOP,    ROT_90 }   },
+            { {SIDE_LEFT,  ROT_0 }, { SIDE_FRONT,  ROT_0   }, { SIDE_RIGHT, ROT_0   },  { SIDE_BACK,   ROT_0  }   },
+            { {SIDE_BOTTOM,ROT_0 }, { SIDE_BOTTOM, ROT_0   }, { SIDE_BOTTOM,ROT_0   },  { SIDE_BOTTOM, ROT_0  }   }
         }
     };
 
-    if (x<0){
-        x += 4*HUB75S_SIDE_WIDTH;
-    }
-
-    // FIXME: deal with y being larger than 2*HUB75S_SIDE_HEIGHT
-    int vert_strip_nr   = (y<0)                   ? 0 :  
-                          (y>HUB75S_SIDE_HEIGHT)  ? 2 :
+    int vert_strip_nr   = (y< 0)                  ? 0 :  
+                          (y>=HUB75S_SIDE_HEIGHT) ? 2 :
                                                     1 ;
 
     int horiz_panel_nr  = (x / HUB75S_SIDE_WIDTH) % 4;
-    int side_nr     = side_nr_lut[ring_nr][vert_strip_nr][horiz_panel_nr];
 
+    while(x<0){
+        x += 4*HUB75S_SIDE_WIDTH;
+    }
+
+    while(y<0){
+        y += HUB75S_SIDE_HEIGHT;
+    }
 
     x = x % HUB75S_SIDE_WIDTH;
-    y = y % HUB75S_SIDE_HEIGHT;     // FIXME: this is totally wrong for <0 and >= HUB75S_SIDE_HEIGHT 
+    y = y % HUB75S_SIDE_HEIGHT;
+
+    int side_nr     = ring2panel[ring_nr][vert_strip_nr][horiz_panel_nr].side_nr;
+    int rotation    = ring2panel[ring_nr][vert_strip_nr][horiz_panel_nr].rotation;
+
+    switch(rotation){
+        default: 
+        case ROT_0: {
+            break;
+        }
+        case ROT_90: {
+            int tmp = y;
+            y = x;
+            x = 63-tmp;
+            break;
+        }
+        case ROT_180: {
+            int tmp = y;
+            y = 63-y;
+            x = 63-x;
+            break;
+        }
+        case ROT_270: {
+            int tmp = y;
+            y = 63-x;
+            x = tmp;
+            break;
+        }
+    }
 
     int addr = hub75s_coord2addr(buffer_nr, side_nr, x, y);
     return addr;

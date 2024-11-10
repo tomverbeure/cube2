@@ -102,7 +102,7 @@ void render_bitmap_1bpp(const uint16_t *bitmap, uint32_t color, int size_x, int 
                 if (pos_y+ry>=64){
                     continue;
                 }
-                int phys_addr = hub75s_ring_coord2addr(buffer_nr, 0, x, y);
+                int phys_addr = hub75s_ring_coord2addr(buffer_nr, ring, x, y);
                 MEM_WR(LED_MEM, phys_addr, color);
         }
     }
@@ -159,7 +159,7 @@ void render_bitmap_2bpp(uint32_t *bitmap, uint32_t *colors, int size_x, int size
                 if (pos_y+ry>=64){
                     continue;
                 }
-                int phys_addr = hub75s_ring_coord2addr(buffer_nr, 0, x, y);
+                int phys_addr = hub75s_ring_coord2addr(buffer_nr, ring, x, y);
                 MEM_WR(LED_MEM, phys_addr, color);
         }
     }

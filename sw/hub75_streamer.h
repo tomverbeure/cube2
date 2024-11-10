@@ -31,6 +31,8 @@ typedef enum {
 
 extern t_panel_info panels[];
 
+// Ba -> Back
+// Bo -> Bottom
 typedef enum {
     RING_LFRBa      = 0,
     RING_FBoBaT     = 1,
