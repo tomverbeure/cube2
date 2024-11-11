@@ -11,18 +11,22 @@
 // 4 panels (left, front, right, back), 8x8 for each panel
 #define GRID_WIDTH  32
 #define GRID_HEIGHT 8
+#define GRID_ABOVE  4
 
 #define GRID_WALL       0x00
 #define GRID_DOT        0x01
 #define GRID_EMPTY      0x02
 #define GRID_DOT_LARGE  0x03
+#define GRID_IGNORE     0x04
 
 // Each cell is 8x8 pixels -> 8x8 cells per LED Panel
-const uint8_t grid1[GRID_HEIGHT][GRID_WIDTH] = {
-    // 0x00     -> location has nothing but characters can still walk there
-    // 0x01     -> location with regular dot. The dot is rendered in the middle of the 8x8 cell.
-
+const uint8_t grid1[GRID_HEIGHT+GRID_ABOVE][GRID_WIDTH] = {
     // Left                                             Front                                             Right                                             Back
+    { 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04,   0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04,   0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04,   0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04 },
+    { 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04,   0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04,   0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04,   0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04 },
+    { 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04,   0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04,   0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04,   0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04 },
+    { 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04,   0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04,   0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04,   0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04, 0x04 },
+
     { 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,   0x00, 0x00, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,   0x01, 0x01, 0x01, 0x01, 0x00, 0x00, 0x01, 0x01,   0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x00, 0x00 },
     { 0x01, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01,   0x00, 0x00, 0x01, 0x00, 0x00, 0x01, 0x00, 0x00,   0x00, 0x00, 0x00, 0x01, 0x00, 0x00, 0x01, 0x00,   0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x00, 0x00 },
     { 0x01, 0x00, 0x00, 0x01, 0x00, 0x00, 0x00, 0x01,   0x00, 0x00, 0x01, 0x00, 0x00, 0x01, 0x00, 0x00,   0x00, 0x00, 0x00, 0x03, 0x01, 0x01, 0x01, 0x00,   0x00, 0x01, 0x00, 0x00, 0x00, 0x01, 0x01, 0x01 },
@@ -33,7 +37,7 @@ const uint8_t grid1[GRID_HEIGHT][GRID_WIDTH] = {
     { 0x00, 0x00, 0x00, 0x01, 0x01, 0x01, 0x01, 0x00,   0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x01,   0x01, 0x01, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,   0x00, 0x00, 0x01, 0x01, 0x01, 0x00, 0x00, 0x00 }
 };
 
-uint8_t active_grid[GRID_HEIGHT][GRID_WIDTH];
+uint8_t active_grid[GRID_HEIGHT+GRID_ABOVE][GRID_WIDTH];
 
 typedef enum e_direction {
     // RIGHT == LEFT ^3, DOWN = UP ^ 3
@@ -82,12 +86,13 @@ uint32_t xorshift32()
     return x;
 }
 
-void render_field(int buffer, uint8_t grid[8][32])
+void render_field(int buffer, uint8_t grid[GRID_HEIGHT+GRID_ABOVE][32])
 {
     // FIXME: add support for top and bottom
-    for(int grid_y=0; grid_y<8;++grid_y){
-        for(int grid_x=0; grid_x<32;++grid_x){
-            int cell = grid[grid_y][grid_x];
+    for(int grid_y=0; grid_y<GRID_HEIGHT;++grid_y){
+        for(int grid_x=0; grid_x<GRID_WIDTH;++grid_x){
+
+            int cell = grid[grid_y + GRID_ABOVE][grid_x];
             
             int pos_x = grid_x * 8 + 8;     // middle coordinate of 8x8 cell
             int pos_y = grid_y * 8 + 8;
@@ -144,7 +149,7 @@ void render_field(int buffer, uint8_t grid[8][32])
                             has_dot = 0;
                         }
                         else{
-                            has_dot = rx==64 ? grid[ry][ 0] != GRID_WALL : grid[ry][rx] != GRID_WALL;
+                            has_dot = rx==64 ? grid[ry + GRID_ABOVE][ 0] != GRID_WALL : grid[ry + GRID_ABOVE][rx] != GRID_WALL;
                         }
     
                         neighbor_has_dot[hd_y+1][hd_x+1] = has_dot;
@@ -203,7 +208,7 @@ int max_nr_dots = 0;
 
 void pacman_init()
 {
-    for(int h=0; h<GRID_HEIGHT; ++h){
+    for(int h=0; h<GRID_HEIGHT + GRID_ABOVE; ++h){
         for(int w=0; w<GRID_WIDTH; ++w){
             active_grid[h][w]   = grid1[h][w];
 
@@ -261,13 +266,13 @@ void pacman_navigate(t_navigation *nav, int eat_dot)
         int ghost_vulnerable_duration = 200;
 
         if (eat_dot){
-            if (active_grid[g_pos_y][g_pos_x] == GRID_DOT){
-                active_grid[g_pos_y][g_pos_x] = GRID_EMPTY;
+            if (active_grid[g_pos_y + GRID_ABOVE][g_pos_x] == GRID_DOT){
+                active_grid[g_pos_y + GRID_ABOVE][g_pos_x] = GRID_EMPTY;
                 --nr_dots;
             }
 
-            if (active_grid[g_pos_y][g_pos_x] == GRID_DOT_LARGE){
-                active_grid[g_pos_y][g_pos_x] = GRID_EMPTY;
+            if (active_grid[g_pos_y + GRID_ABOVE][g_pos_x] == GRID_DOT_LARGE){
+                active_grid[g_pos_y + GRID_ABOVE][g_pos_x] = GRID_EMPTY;
                 --nr_dots;
 
                 for(int i=0;i<4;++i){
@@ -279,10 +284,10 @@ void pacman_navigate(t_navigation *nav, int eat_dot)
         }
 
         int has_wall[4];
-        has_wall[RIGHT]  = active_grid[g_pos_y][ (g_pos_x+1) % GRID_WIDTH ]     == GRID_WALL;
-        has_wall[LEFT]   = active_grid[g_pos_y][ (g_pos_x-1 + GRID_WIDTH) % GRID_WIDTH ]     == GRID_WALL;
-        has_wall[UP]     = g_pos_y == 0             ? 1 : active_grid[ (g_pos_y-1 + GRID_HEIGHT) % GRID_HEIGHT ][ g_pos_x ] == GRID_WALL;
-        has_wall[DOWN]   = g_pos_y == GRID_HEIGHT-2 ? 1 : active_grid[ (g_pos_y+1) % GRID_HEIGHT ][ g_pos_x ] == GRID_WALL;
+        has_wall[RIGHT]  = active_grid[g_pos_y + GRID_ABOVE][ (g_pos_x+1) % GRID_WIDTH ]     == GRID_WALL;
+        has_wall[LEFT]   = active_grid[g_pos_y + GRID_ABOVE][ (g_pos_x-1 + GRID_WIDTH) % GRID_WIDTH ]     == GRID_WALL;
+        has_wall[UP]     = g_pos_y == 0             ? 1 : active_grid[ (g_pos_y-1 + GRID_HEIGHT) % GRID_HEIGHT + GRID_ABOVE ][ g_pos_x ] == GRID_WALL;
+        has_wall[DOWN]   = g_pos_y == GRID_HEIGHT-2 ? 1 : active_grid[ (g_pos_y+1)               % GRID_HEIGHT + GRID_ABOVE ][ g_pos_x ] == GRID_WALL;
 
         // Don't go the inverse direction
         has_wall[nav->dir ^ 3]    = 1;
@@ -428,13 +433,13 @@ void pacman_update()
         int g_pos_x = xorshift32() % GRID_WIDTH;
         int g_pos_y = xorshift32() % GRID_HEIGHT;
 
-        if (active_grid[g_pos_y][g_pos_x] == GRID_EMPTY){
+        if (active_grid[g_pos_y + GRID_ABOVE][g_pos_x] == GRID_EMPTY){
 
-            if (grid1[g_pos_y][g_pos_x] == GRID_DOT_LARGE){
-                active_grid[g_pos_y][g_pos_x] = GRID_DOT_LARGE;
+            if (grid1[g_pos_y + GRID_ABOVE][g_pos_x] == GRID_DOT_LARGE){
+                active_grid[g_pos_y + GRID_ABOVE][g_pos_x] = GRID_DOT_LARGE;
             }
             else{
-                active_grid[g_pos_y][g_pos_x] = GRID_DOT;
+                active_grid[g_pos_y + GRID_ABOVE][g_pos_x] = GRID_DOT;
             }
             ++nr_dots;
         }
@@ -534,7 +539,7 @@ void pacman_render()
 
     //led_mem_wr(scratch_buf, SIDE_TOP,  63-0, 63-10, 255, 0, 0);
     //led_mem_wr(scratch_buf, SIDE_TOP,  5, 10, 0, 255, 0);
-    //led_mem_wr(scratch_buf, SIDE_FRONT, 10, 0, 0, 255, 0);
+    //led_mem_wr(scratch_buf, SIDE_LEFT, 10, 0, 0, 255, 0);
 
     REG_WR_FIELD(HUB75S_CONFIG, BUFFER_NR, scratch_buf);
     while(REG_RD_FIELD(HUB75S_STATUS, CUR_BUFFER_NR) != scratch_buf) 
