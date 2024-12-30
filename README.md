@@ -12,6 +12,36 @@ an ECP5-25 FPGA that's running a custom bitstream.
 The RTL for that bitstream can be found in the `./rtl` directory. It's written
 with the SpinalHDL framework.
 
+# RISC-V Toolchain
+
+On Ubuntu, I did:
+
+```sh
+git clone https://github.com/riscv/riscv-gnu-toolchain
+cd riscv-gnu-toolchain
+./configure --prefix="/opt/riscv-multi --enable-multilib
+make -j $(nproc)
+```
+
+This compiles a RISC-V compile that supports all possible configurations, including
+RV32. You can check the configurations with:
+
+```sh
+opt/riscv-multi/bin/riscv64-unknown-elf-gcc --print-multi-lib
+```
+```
+.;
+rv32i/ilp32;@march=rv32i@mabi=ilp32
+rv32im/ilp32;@march=rv32im@mabi=ilp32
+rv32iac/ilp32;@march=rv32iac@mabi=ilp32
+rv32imac/ilp32;@march=rv32imac@mabi=ilp32
+rv32imafc/ilp32f;@march=rv32imafc@mabi=ilp32f
+rv64imac/lp64;@march=rv64imac@mabi=lp64
+rv64imafdc/lp64d;@march=rv64imafdc@mabi=lp64d
+```
+
+Total area is ~2GB.
+
 # macOS
 
 ```
