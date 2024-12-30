@@ -1,5 +1,5 @@
 
-MEM_BYTES		= 20480
+MEM_BYTES	= 20480
 MEM_WORDS       = 5120
 
 GAMMA           = 1.3
@@ -7,17 +7,20 @@ DIM             = 0.35
 
 OBJ_FILES       = start.o main.o led_render.o hub75_streamer.o pacman.o led_mem.o pacman_bitmaps.o
 
+MARCH			= rv32imc
+MABI			= ilp32
+
 #TOOLS_PREFIX    = /opt/homebrew/bin
 TOOLS_PREFIX    = /opt/riscv64-unknown-elf-toolchain/bin
 TARGET          = $(TOOLS_PREFIX)/riscv64-unknown-elf
 AS              = $(TARGET)-as
-ASFLAGS         = -march=rv32imc -mabi=ilp32
+ASFLAGS         = -march=$(MARCH) -mabi=$(MABI)
 LD              = $(TARGET)-gcc
-LDFLAGS         = -march=rv32imc -mabi=ilp32 -Wl,-Tsections.lds,-Map,progmem.map -ffreestanding -nostartfiles
+LDFLAGS         = -march=$(MARCH) -mabi=$(MABI) -Wl,-Tsections.lds,-Map,progmem.map -ffreestanding -nostartfiles 
 CC              = $(TARGET)-gcc
-#CFLAGS          = -march=rv32imc -mabi=ilp32 -Wall -Wextra -pedantic -DFREQ=$(FREQ_PLL)000000 -O2
-#CFLAGS          = -march=rv32imc -mabi=ilp32 -Wall -Wextra -Wpedantic -DFREQ=$(FREQ_PLL)000000 -O2
-CFLAGS          = -march=rv32imc -mabi=ilp32 -DFREQ=$(FREQ_PLL)000000 -O2
+#CFLAGS          = -march=$(MARCH) -mabi=$(MABI) -Wall -Wextra -pedantic -DFREQ=$(FREQ_PLL)000000 -O2
+#CFLAGS          = -march=$(MARCH) -mabi=$(MABI) -Wall -Wextra -Wpedantic -DFREQ=$(FREQ_PLL)000000 -O2
+CFLAGS          = -march=$(MARCH) -mabi=$(MABI) -DFREQ=$(FREQ_PLL)000000 -O2
 OBJCOPY         = $(TARGET)-objcopy
 OBJDUMP         = $(TARGET)-objdump
 
