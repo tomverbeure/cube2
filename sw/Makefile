@@ -9,7 +9,10 @@ OBJ_FILES       = start.o main.o led_render.o hub75_streamer.o pacman.o led_mem.
 
 #TOOLS_PREFIX    = /opt/homebrew/bin
 TOOLS_PREFIX    = /opt/riscv64-unknown-elf-toolchain/bin
+#TOOLS_PREFIX    = /opt/riscv-multi/bin
+
 TARGET          = $(TOOLS_PREFIX)/riscv64-unknown-elf
+
 AS              = $(TARGET)-as
 ASFLAGS         = -march=rv32imc -mabi=ilp32
 LD              = $(TARGET)-gcc
