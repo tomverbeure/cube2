@@ -1,7 +1,7 @@
 #ifndef MARIO_H
 #define MARIO_H
 
-#include <stdint-gcc.h>
+#include <stdint.h>
 
 uint32_t mario_ground[3] = {
     0b01111111111111111110011111111101,

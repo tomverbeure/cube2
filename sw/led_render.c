@@ -1,6 +1,6 @@
 
 #include <stddef.h>
-#include <stdint-gcc.h>
+#include <stdint.h>
 
 #include "led_render.h"
 #include "top_defines.h"

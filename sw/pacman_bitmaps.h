@@ -1,7 +1,7 @@
 #ifndef PACMAN_BITMAPS_H
 #define PACMAN_BITMAPS_H
 
-#include <stdint-gcc.h>
+#include <stdint.h>
 
 extern uint16_t pacman_closed[15];
 

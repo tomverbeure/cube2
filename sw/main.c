@@ -1,4 +1,4 @@
-#include <stdint-gcc.h>
+#include <stdint.h>
 
 #include "reg.h"
 #include "top_defines.h"

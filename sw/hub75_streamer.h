@@ -1,7 +1,7 @@
 #ifndef HUB75_STREAMER_H
 #define HUB75_STREAMER_H
 
-#include <stdint-gcc.h>
+#include <stdint.h>
 
 typedef struct {
     int topLeftCoordX;

@@ -1,7 +1,7 @@
 
 #include "pacman_bitmaps.h"
 
-#include <stdint-gcc.h>
+#include <stdint.h>
 
 uint16_t pacman_closed[15] = {
     0b0000000000000000,

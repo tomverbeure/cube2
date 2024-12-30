@@ -1,6 +1,6 @@
 
 #include <stddef.h>
-#include <stdint-gcc.h>
+#include <stdint.h>
 
 #include "top_defines.h"
 #include "reg.h"
